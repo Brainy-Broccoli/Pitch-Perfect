@@ -1,12 +1,37 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-const Profile = () => {
-  return (
-    <div>
-      <h1>This is the profile page</h1>
-    </div>
-  );
-};
+import { Grid, Image } from 'semantic-ui-react'
 
+class Profile extends Component {
+  render() {
+    return (
+      <Grid>
+        <Grid.Column width={4}>
+          <Image src={this.props.profile.photo}/>
+          {this.props.profile.name}
+          <div>
+          </div>
+        </Grid.Column>
+        <Grid.Column width={9}>
+          {this.props.profile.badges}
+          <div>
+            {this.props.profile.mentor}
+          </div>
+          <div>
+            {this.props.profile.recent}
+          </div>
+        </Grid.Column>
+      </Grid>
+    )
+  }
+}
 
-export default Profile;
+function mapStateToProps(state) {
+  // Whatever is returned will show up as props 
+  return {
+    profile: state.profile
+  };
+}
+
+export default connect(mapStateToProps)(Profile);
