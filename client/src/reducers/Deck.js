@@ -11,3 +11,13 @@
 // teach the reducer to handle different action types
 
 // export default reducerFunctionReference
+
+const deck = (state = [], action) => {
+  // actions -- changing the deck
+  switch (action.type) {
+    default:
+      return state; 
+  }
+};
+
+export default deck;
