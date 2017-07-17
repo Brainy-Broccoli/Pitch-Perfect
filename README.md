@@ -1,13 +1,13 @@
-# Project Name
+# Pitch Perfect
 
-The project description
+A tonal language learning web application. 
 
 ## Team
 
-- teamMember
-- teamMember
-- teamMember
-- teamMember
+- Joshua D. Broberg (@guyinjeans)
+- Michael Chang (@chiangshtaa)
+- Yermek Alzhanov (@nikerys)
+- Mason Raasch (@man-of-seafood)
 
 ## Roadmap
 
@@ -39,7 +39,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 ## Development
 
 ### Installing System Dependencies
-
+ß
 ```
 brew install yarn
 brew install redis
