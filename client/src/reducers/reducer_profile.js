@@ -26,7 +26,7 @@ const initialState = {
     }
   ],
   mentor: {
-    illegible: true,
+    elegible: true,
     icon: 'https://static3.bigstockphoto.com/4/8/9/small2/98422448.jpg'
   }
 };
