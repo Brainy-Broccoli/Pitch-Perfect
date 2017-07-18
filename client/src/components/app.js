@@ -46,18 +46,18 @@ class App extends Component {
       </Router>
     );
   }
-};
+}
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   // Whatever is returned will show up as props 
   return {
     activePage: state.activePage
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({ selectPage: selectPage }, dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
 

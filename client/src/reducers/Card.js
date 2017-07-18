@@ -1,4 +1,3 @@
-
 const card = (state = {}, action) => {
   // action -- updating the card info
   switch (action.type) {

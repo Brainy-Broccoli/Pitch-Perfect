@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { component } from 'react';
 
-const PracticePage = () => {
-  return (
-    <div>
-      <h1>This is the practice page</h1>
-    </div>
-  );
-};
+class PracticePage extends Component {
+  constructor(props) {
+    super(props);
+
+
+  }
+
+  render() {
+    return (
+      <div>
+        <h1> This is the practice page</h1>
+      </div>
+    );
+  }
+}
 
 
 export default PracticePage;
