@@ -3,8 +3,6 @@ import React, { component } from 'react';
 class PracticePage extends Component {
   constructor(props) {
     super(props);
-
-
   }
 
   render() {
