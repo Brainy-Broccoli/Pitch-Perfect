@@ -19,7 +19,7 @@ import Deck from '../components/Deck';
 const DecksContainer = (props) => {
   var image = 'http://www.freeiconspng.com/uploads/grey-plus-icon-8.png';
   return (
-    <Grid>
+    <Grid verticalAlign="middle" padded>
       <Grid.Row>
         {
           props.decksInfo.decks.map((deck) => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Grid, Image } from 'semantic-ui-react'
+import { Card, Grid, Image } from 'semantic-ui-react'
 
 // const Deck = () => {
 class Deck extends React.Component {
@@ -10,14 +10,14 @@ class Deck extends React.Component {
   render() {
     return (
       <Grid.Column width={5}>
-        <div>
+        <Card>
           <div>
-            {this.props.topic}
+            <strong>{this.props.topic}</strong>
           </div>
           <div>
-            <Image src={this.props.image} />
+            <Image src={this.props.image} style={{height: 200, width: 400}} />
           </div>
-        </div>
+        </Card>
       </Grid.Column>
     );
   }
