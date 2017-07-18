@@ -1,8 +1,10 @@
-export default function(state = null, action) {
-  switch(action.type) {
+const activePage = (state = 'home', action) => {
+  switch (action.type) {
   case 'PAGE_SELECTED':
-    return action.payload;
+    return action.pageName;
+  default:
+    return state;
   }
-  
-  return state;
-}
+};
+
+export default activePage;

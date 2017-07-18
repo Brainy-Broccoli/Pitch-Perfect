@@ -27,11 +27,11 @@ class Profile extends Component {
   }
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   // Whatever is returned will show up as props 
   return {
-    profile: state.profile
+    profile: state.profileInfo
   };
-}
+};
 
 export default connect(mapStateToProps)(Profile);

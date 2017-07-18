@@ -1,7 +1,9 @@
-export function selectPage(page) {
+import { PAGE_SELECTED } from './actionTypes';
+
+export const selectPage = (pageName) => {
   console.log('clicked');
   return {
-    type: 'PAGE_SELECTED',
-    payload: page
+    type: PAGE_SELECTED,
+    pageName: pageName
   };
-}
+};
