@@ -1,4 +1,5 @@
-import React, { component } from 'react';
+import React, { Component } from 'react';
+import { Header } from 'semantic-ui-react';
 
 class PracticePage extends Component {
   constructor(props) {
@@ -8,7 +9,7 @@ class PracticePage extends Component {
   render() {
     return (
       <div>
-        <h1> This is the practice page</h1>
+        <Header as="h1">this.props.currentCard.character</Header>
       </div>
     );
   }

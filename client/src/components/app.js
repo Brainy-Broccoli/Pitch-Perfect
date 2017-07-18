@@ -13,6 +13,7 @@ import Profile from './Profile';
 import DecksContainer from '../containers/DecksContainer';
 import PremiumContent from './PremiumContent';
 import Logout from './Logout';
+import VisiblePracticePage from '../containers/VisiblePracticePage';
 
 import { Menu, Segment } from 'semantic-ui-react';
 
@@ -27,9 +28,14 @@ class App extends Component {
       <Router>
         <div>
           <Menu pointing secondary>
-            <Menu.Item name='home' as={Link} to='/' active={this.props.activePage === 'home'} onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
-            <Menu.Item name='decks' as={Link} to='/decks' active={this.props.activePage === 'decks'} onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
-            <Menu.Item name='Premium' as={Link} to='/premium-content' active={this.props.activePage === 'Premium'} onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
+            <Menu.Item name='home' as={Link} to='/' active={this.props.activePage === 'home'} 
+              onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
+            <Menu.Item name='decks' as={Link} to='/decks' active={this.props.activePage === 'decks'} 
+              onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
+            <Menu.Item name='Premium' as={Link} to='/premium-content' active={this.props.activePage === 'Premium'} 
+              onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
+            <Menu.Item name='Practice Page' as={Link} to='/practice-page' active={this.props.activePage === 'Practice Page'} 
+              onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             <Menu.Menu position='right'>
               <Menu.Item name='logout' as={Link} to='/logout' active={this.props.activePage === 'logout'} onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             </Menu.Menu>
@@ -40,6 +46,7 @@ class App extends Component {
             <Route exact path="/" component={Profile}/>
             <Route path="/decks" component={DecksContainer}/>
             <Route path="/premium-content" component={PremiumContent}/>
+            <Route path="/practice-page" component={VisiblePracticePage}/>
             <Route path="/logout" component={Logout}/>
           </Segment>
         </div>
