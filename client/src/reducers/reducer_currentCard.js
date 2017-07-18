@@ -1,4 +1,4 @@
-const card = (state = {}, action) => {
+const currentCard = (state = {}, action) => {
   // action -- updating the card info
   switch (action.type) {
     default:
@@ -6,4 +6,4 @@ const card = (state = {}, action) => {
   }
 };
 
-export default card;
+export default currentCard;
