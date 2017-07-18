@@ -5,7 +5,7 @@ const cardMom = {
   soundUrl: 'soundcloud.com',
   translation: 'mom',
   userAccuracy: 85,
-  positionInDeck: 1 
+  positionInDeck: 0 
 };
 
 const initialState = cardMom;
@@ -13,7 +13,7 @@ const initialState = cardMom;
 const currentCard = (state = initialState, action) => {
   // action -- updating the card info
   switch (action.type) {
-    case 'DROPDOWN_CARD_SELECTED':
+    case 'SELECT_CARD':
       return action.newCard;
     default:
       return state;

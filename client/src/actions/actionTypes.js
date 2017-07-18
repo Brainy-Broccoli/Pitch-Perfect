@@ -7,3 +7,7 @@ Be sure to specify in a comment which reducers will make use of these action typ
 
 // Used by the nav bar
 export const PAGE_SELECTED = 'PAGE_SELECTED';
+
+
+// Used for the dropdown on the practice page 
+export const SELECT_CARD = 'SELECT_CARD';

@@ -20,7 +20,7 @@ class PracticePage extends Component {
           </Grid.Column>
           <Grid.Column>
             <Header as='h1'>{this.props.currentDeck.topic}</Header>
-            <Header as='h2'>{this.props.currentCard.positionInDeck}/{this.props.currentDeck.cards.length}</Header>
+            <Header as='h2'>{this.props.currentCard.positionInDeck + 1}/{this.props.currentDeck.cards.length}</Header>
           </Grid.Column>
           <Grid.Column>
             <QuickSelectDropdown 
