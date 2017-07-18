@@ -41,7 +41,12 @@ const cardTall = {
   positionInDeck: 3 
 };
 
-const initialState = [cardMom, cardDog, cardTall];
+const cards = [cardMom, cardDog, cardTall];
+
+const initialState = {
+  topic: 'Basics',
+  cards
+};
 
 const currentDeck = (state = initialState, action) => {
   // actions -- changing the deck
