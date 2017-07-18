@@ -1,7 +1,7 @@
 import deck from './deck';
 import card from './card';
 import profileInfo from './reducer_profile';
-import activePage from './reducer_page';
+import activePage from './reducer_navBar';
 
 import { combineReducers } from 'redux';
 
