@@ -10,7 +10,7 @@ import {
 // we will import each of the 'page level' components here and have routes for each of them
 // e.g. import 'Profile' from ./Profile.js etc etc
 import Profile from './Profile';
-import Decks from './Decks';
+import DecksContainer from '../containers/DecksContainer';
 import PremiumContent from './PremiumContent';
 import Logout from './Logout';
 
@@ -35,9 +35,10 @@ class App extends Component {
             </Menu.Menu>
           </Menu>
 
+
           <Segment>
             <Route exact path="/" component={Profile}/>
-            <Route path="/decks" component={Decks}/>
+            <Route path="/decks" component={DecksContainer}/>
             <Route path="/premium-content" component={PremiumContent}/>
             <Route path="/logout" component={Logout}/>
           </Segment>
