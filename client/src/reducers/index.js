@@ -2,6 +2,7 @@ import currentDeck from './reducer_currentDeck';
 import currentCard from './reducer_currentCard';
 import profileInfo from './reducer_profile';
 import activePage from './reducer_navBar';
+import decksInfo from './reducer_allDecks';
 
 import { combineReducers } from 'redux';
 
@@ -12,9 +13,10 @@ import { combineReducers } from 'redux';
 // export default resultOfCombineReducers
 
 const appReducer = combineReducers({
-  currentDeck, 
+  currentDeck,
   currentCard,
   profileInfo,
+  decksInfo,
   activePage
 });
 

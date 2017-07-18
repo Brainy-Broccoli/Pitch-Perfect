@@ -5,7 +5,7 @@ import { Grid, Image } from 'semantic-ui-react';
 
 class Profile extends Component {
   render() {
-    console.log(this.props);
+    console.log('profile', this.props);
     return (
       <Grid>
         <Grid.Column width={6}>
