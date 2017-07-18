@@ -16,7 +16,7 @@ import Logout from './Logout';
 
 import { Menu, Segment } from 'semantic-ui-react';
 
-import { selectPage } from '../actions/action_selectPage';
+import { selectPage } from '../actions/actions_navBar';
 // import Decks
 // import Logout Page
 // likely additional routes will need to be defined within the decks page 
@@ -50,6 +50,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   // Whatever is returned will show up as props 
+  console.log(state);
   return {
     activePage: state.activePage
   };
