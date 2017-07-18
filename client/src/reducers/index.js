@@ -1,5 +1,5 @@
-import deck from './deck';
-import card from './card';
+import currentDeck from './reducer_currentDeck';
+import currentCard from './reducer_currentCard';
 import profileInfo from './reducer_profile';
 import activePage from './reducer_navBar';
 
@@ -12,8 +12,8 @@ import { combineReducers } from 'redux';
 // export default resultOfCombineReducers
 
 const appReducer = combineReducers({
-  deck, 
-  card,
+  currentDeck, 
+  currentCard,
   profileInfo,
   activePage
 });
