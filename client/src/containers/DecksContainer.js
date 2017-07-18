@@ -26,7 +26,7 @@ var DummyData = [
   {id:6, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
   {id:7, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
   {id:8, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'}
-]
+];
 
 const DecksContainer = () => {
   return (
