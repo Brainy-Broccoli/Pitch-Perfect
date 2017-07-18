@@ -12,12 +12,43 @@
 
 // export default reducerFunctionReference
 
-const deck = (state = [], action) => {
+// a deck will be an array of card objects
+
+const cardMom = {
+  character: '妈妈',
+  IPA: 'mama',
+  pinyin: 'mama',
+  translation: 'mom',
+  userAccuracy: 85,
+  positionInDeck: 1 
+};
+
+const cardDog = {
+  character: '狗',
+  IPA: 'gou',
+  pinyin: 'gou',
+  translation: 'dog',
+  userAccuracy: 49,
+  positionInDeck: 2 
+};
+
+const cardTall = {
+  character: '高',
+  IPA: 'gao',
+  pinyin: 'gao',
+  translation: 'tall',
+  userAccuracy: 131,
+  positionInDeck: 3 
+};
+
+const initialState = [cardMom, cardDog, cardTall];
+
+const currentDeck = (state = initialState, action) => {
   // actions -- changing the deck
   switch (action.type) {
     default:
-      return state; 
+      return state;
   }
 };
 
-export default deck;
+export default currentDeck;
