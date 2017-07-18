@@ -6,7 +6,6 @@ import { Grid, Image } from 'semantic-ui-react'
 class Deck extends React.Component {
   constructor (props) {
     super(props);
-    console.log(this.props);
   }
   render() {
     return (

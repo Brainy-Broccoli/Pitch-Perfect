@@ -38,18 +38,10 @@ class App extends Component {
 
           <Segment>
             <Route exact path="/" component={Profile}/>
-            <Route path="/decks" component={Decks}/>
+            <Route path="/decks" component={DecksContainer}/>
             <Route path="/premium-content" component={PremiumContent}/>
             <Route path="/logout" component={Logout}/>
           </Segment>
-
-
-          <hr/>
-
-          <Route exact path="/" component={Profile}/>
-          <Route path="/decks" component={DecksContainer}/>
-          <Route path="/premium-content" component={PremiumContent}/>
-          <Route path="/logout" component={Logout}/>
         </div>
       </Router>
     );

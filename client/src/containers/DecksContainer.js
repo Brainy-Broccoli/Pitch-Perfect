@@ -18,14 +18,14 @@ import Deck from '../components/Deck';
 
 
 var DummyData = [
-  {topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
-  {topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
-  {topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
-  {topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
-  {topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
-  {topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
-  {topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
-  {topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'}
+  {id:1, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
+  {id:2, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
+  {id:3, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
+  {id:4, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
+  {id:5, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
+  {id:6, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
+  {id:7, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'},
+  {id:8, topicName: 'Topic Name', image: 'https://static.pexels.com/photos/20974/pexels-photo.jpg'}
 ]
 
 const DecksContainer = () => {
@@ -34,7 +34,7 @@ const DecksContainer = () => {
       <Grid.Row>
         {
           DummyData.map((deck) => {
-            return <Deck topic={deck.topicName} image={deck.image}/>
+            return <Deck topic={deck.topicName} image={deck.image} key={deck.id}/>
           })
         }
       </Grid.Row>
