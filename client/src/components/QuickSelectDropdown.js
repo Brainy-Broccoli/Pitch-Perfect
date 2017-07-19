@@ -14,6 +14,7 @@ const QuickSelectDropdown = (props) => {
       selection
       options={options}
       placeholder='Pick a card'
+      onChange={(e, data) => props.onCardSelect(data.value)}
     />
   );
 };

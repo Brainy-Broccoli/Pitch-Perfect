@@ -26,6 +26,7 @@ class PracticePage extends Component {
             <QuickSelectDropdown 
               deck={this.props.currentDeck} 
               currentCard={this.props.currentCard}
+              onCardSelect={this.props.onCardSelect}
             />
           </Grid.Column>  
         </Grid.Row>
