@@ -13,7 +13,7 @@ const QuickSelectDropdown = (props) => {
     <Dropdown
       selection
       options={options}
-      placeholder='Pick a card'
+      placeholder={`${props.currentCard.character} | ${props.currentCard.translation}`}
       onChange={(e, data) => props.onCardSelect(data.value)}
     />
   );
