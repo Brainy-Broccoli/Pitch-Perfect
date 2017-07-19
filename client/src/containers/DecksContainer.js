@@ -15,21 +15,39 @@ import React, { Component }  from 'react';
 import { connect } from 'react-redux';
 import { Grid, Image } from 'semantic-ui-react';
 import Deck from '../components/Deck';
+import { selectDeck } from '../actions/actions_practicePage';
 
-const DecksContainer = (props) => {
-  var image = 'http://www.freeiconspng.com/uploads/grey-plus-icon-8.png';
-  return (
-    <Grid verticalAlign="middle" padded>
-      <Grid.Row>
-        {
-          props.decksInfo.decks.map((deck) => {
-            return <Deck topic={deck.topicName} image={deck.image} key={deck.id}/>
-          })
-        }
-        <Deck topic={'Create custom deck'} image={image} key={'customDeck'}/>
-      </Grid.Row>
-    </Grid>
-  );
+
+class DecksContainer extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    var image = 'http://www.freeiconspng.com/uploads/grey-plus-icon-8.png';
+    return (
+      <Grid verticalAlign="middle" padded>
+        <Grid.Row>
+          {
+            this.props.decksInfo.decks.map((deck) => {
+              return (
+                <Deck
+                  topic={deck.topicName}
+                  image={deck.image}
+                  key={deck.id}
+                />)
+            })
+          }
+          <Deck
+            topic={'Create custom deck'}
+            image={image}
+            key={'customDeck'}
+            onDeckSelect={this.props.onDeckSelect}
+          />
+        </Grid.Row>
+      </Grid>
+    );
+  }
 };
 
 const mapStateToProps = (state) => {
@@ -39,4 +57,17 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(DecksContainer);
+const mapDispatchToProps = dispatch => {
+  return {
+    onDeckSelect: (DeckInfo) => {
+      dispatch(selectDeck(DeckInfo));
+    }
+  };
+};
+
+const VisibleDeckPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DecksContainer);
+
+export default VisibleDeckPage;
