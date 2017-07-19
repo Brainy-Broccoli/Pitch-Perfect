@@ -37,7 +37,7 @@ class App extends Component {
             <Menu.Item name='Practice Page' as={Link} to='/practice-page' active={this.props.activePage === 'Practice Page'} 
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             <Menu.Menu position='right'>
-              <Menu.Item name='logout' as={Link} to='/logout' active={this.props.activePage === 'logout'} onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
+              <Menu.Item name='logout' as={Link} to='/logout' active={this.props.activePage === 'logout'} onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/>
             </Menu.Menu>
           </Menu>
 

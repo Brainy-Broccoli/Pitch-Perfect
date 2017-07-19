@@ -16,14 +16,17 @@ import { connect } from 'react-redux';
 import { Grid, Image } from 'semantic-ui-react';
 import Deck from '../components/Deck';
 
-const DecksContainer = (props) => {
+
+
+const DecksContainer = (props, { match }) => {
   var image = 'http://www.freeiconspng.com/uploads/grey-plus-icon-8.png';
+  console.log(match);
   return (
     <Grid verticalAlign="middle" padded>
       <Grid.Row>
         {
           props.decksInfo.decks.map((deck) => {
-            return <Deck topic={deck.topicName} image={deck.image} key={deck.id}/>
+            return <Deck topic={deck.topicName} image={deck.image} key={deck.id} />
           })
         }
         <Deck topic={'Create custom deck'} image={image} key={'customDeck'}/>
