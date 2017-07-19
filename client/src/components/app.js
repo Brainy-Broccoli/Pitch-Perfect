@@ -57,7 +57,6 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   // Whatever is returned will show up as props 
-  console.log(state);
   return {
     activePage: state.activePage
   };
