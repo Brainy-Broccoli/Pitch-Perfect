@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { Grid, Image } from 'semantic-ui-react';
 
+import RecentActivity from './RecentActivity';
+
 class Profile extends Component {
   render() {
     return (
@@ -29,21 +31,7 @@ class Profile extends Component {
           <hr/>
           <div>
             {this.props.profileInfo.recent.map((recentDeck, idx) => {
-              return (
-                <Grid key={idx}>
-                  <Grid.Column width={7}>
-                    <img src={recentDeck.image} style={{height: 200, width: 180, borderStyle: 'groove', borderWidth: 7, borderColor: '#e00000', borderRadius: 10}}/>
-                  </Grid.Column>
-                  <Grid.Column width={8}>
-                    <div style={{fontSize: 28}}><b>{recentDeck.deck}</b></div>
-                    <div style={{fontSize: 18, marginTop: 44}}>
-                      <div><b>Accuracy: </b>{recentDeck.accuracy}</div>
-                      <div><b>Progress: </b>{recentDeck.progress} / {recentDeck.total}</div>
-                      <div><b>Badge: </b><img src={recentDeck.badge} style={{height: 40, width: 40}}/></div>
-                    </div>
-                  </Grid.Column>
-                </Grid>
-              )
+              return (<RecentActivity key={idx} recent={recentDeck}/>)
             })}
           </div>
         </Grid.Column>
