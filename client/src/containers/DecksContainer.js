@@ -29,12 +29,15 @@ class DecksContainer extends Component {
       <Grid verticalAlign="middle" padded>
         <Grid.Row>
           {
-            this.props.decksInfo.decks.map((deck) => {
+            this.props.allDecks.map((deck, index) => {
+              console.log('index of decks', index);
               return (
                 <Deck
-                  topic={deck.topicName}
+                  topic={deck.topic}
                   image={deck.image}
-                  key={deck.id}
+                  id={index}
+                  key={index}
+                  onDeckSelect={this.props.onDeckSelect}
                 />)
             })
           }
@@ -53,14 +56,14 @@ class DecksContainer extends Component {
 const mapStateToProps = (state) => {
   // Whatever is returned will show up as props 
   return {
-    decksInfo: state.decksInfo
+    allDecks: state.practicePage.allDecks
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onDeckSelect: (DeckInfo) => {
-      dispatch(selectDeck(DeckInfo));
+    onDeckSelect: (deckIndex) => {
+      dispatch(selectDeck(deckIndex));
     }
   };
 };
