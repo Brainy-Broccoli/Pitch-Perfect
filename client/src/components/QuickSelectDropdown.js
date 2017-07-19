@@ -5,7 +5,6 @@ const QuickSelectDropdown = (props) => {
   const options = props.deck.cards.map((card, index) => {
     return {
       key: index,
-      id: index,
       text: `${card.character} | ${card.translation}`,
       value: index
     };
@@ -15,7 +14,7 @@ const QuickSelectDropdown = (props) => {
       selection
       options={options}
       placeholder={`${props.currentCard.character} | ${props.currentCard.translation}`}
-      onChange={(e, data) => {console.log('data value on the card', data.value) || props.onCardSelect(data.value)} }
+      onChange={(e, data) => props.onCardSelect(data.value)}
     />
   );
 };

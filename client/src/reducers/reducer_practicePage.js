@@ -73,13 +73,6 @@ const initialState = {
   allDecks
 };
 
-const newState = {
-  currentDeck: foodDeck,
-  currentCard: foodDeck.cards[0],
-  allDecks
-};
-
-
 const practicePage = (state = initialState, action) => {
   switch (action.type) {
     case 'SELECT_DECK':
