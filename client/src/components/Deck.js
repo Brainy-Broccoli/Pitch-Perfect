@@ -26,7 +26,8 @@ class Deck extends Component {
         </Link>
       </Grid.Column>
     );
-};
+  };
+}
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({ selectPage: selectPage }, dispatch);
