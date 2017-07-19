@@ -2,11 +2,12 @@ import React from 'react';
 import { Dropdown } from 'semantic-ui-react';
 
 const QuickSelectDropdown = (props) => {
-  const options = props.deck.cards.map(card => {
+  const options = props.deck.cards.map((card, index) => {
     return {
-      key: card.positionInDeck,
+      key: index,
+      id: index,
       text: `${card.character} | ${card.translation}`,
-      value: card.positionInDeck
+      value: index
     };
   });
   return (
@@ -14,7 +15,7 @@ const QuickSelectDropdown = (props) => {
       selection
       options={options}
       placeholder={`${props.currentCard.character} | ${props.currentCard.translation}`}
-      onChange={(e, data) => props.onCardSelect(data.value)}
+      onChange={(e, data) => {console.log('data value on the card', data.value) || props.onCardSelect(data.value)} }
     />
   );
 };

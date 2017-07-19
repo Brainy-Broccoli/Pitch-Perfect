@@ -4,8 +4,7 @@ const cardMom = {
   IPA: 'mama',
   pinyin: 'mama',
   translation: 'mom',
-  userAccuracy: 85,
-  positionInDeck: 0 
+  userAccuracy: 85 
 };
 
 const cardDog = {
@@ -13,8 +12,7 @@ const cardDog = {
   IPA: 'gou',
   pinyin: 'gou',
   translation: 'dog',
-  userAccuracy: 49,
-  positionInDeck: 1
+  userAccuracy: 49
 };
 
 const cardTall = {
@@ -22,8 +20,7 @@ const cardTall = {
   IPA: 'gao',
   pinyin: 'gao',
   translation: 'tall',
-  userAccuracy: 31,
-  positionInDeck: 2
+  userAccuracy: 31
 };
 
 // food deck
@@ -33,27 +30,24 @@ const cardApple = {
   IPA: 'pingguo',
   pinyin: 'pingguo',
   translation: 'apple',
-  userAccuracy: 55,
-  positionInDeck: 0
-}
+  userAccuracy: 55
+};
 
 const cardBeef = {
   character: '牛肉',
   IPA: 'Niúròu',
   pinyin: 'Niúròu',
   translation: 'beef',
-  userAccuracy: 67,
-  positionInDeck: 1
-}
+  userAccuracy: 67
+};
 
 const cardEggs = {
   character: '蛋',
   IPA: 'Dàn',
   pinyin: 'Dàn',
   translation: 'eggs',
-  userAccuracy: 73,
-  positionInDeck: 2
-}
+  userAccuracy: 73
+};
 
 const cards = [cardMom, cardDog, cardTall, cardEggs];
 const basicDeck = {
@@ -75,6 +69,7 @@ const allDecks = [foodDeck, basicDeck];
 const initialState = {
   currentDeck: basicDeck,
   currentCard: basicDeck.cards[0],
+  currentCardIndex: 0,
   allDecks
 };
 
@@ -88,28 +83,32 @@ const newState = {
 const practicePage = (state = initialState, action) => {
   switch (action.type) {
     case 'SELECT_DECK':
-      console.log('deck has been selected with', action.deckIndex);
       return {
         currentDeck: state.allDecks[action.deckIndex],
         currentCard: state.allDecks[action.deckIndex].cards[0],
+        currentCardIndex: 0,
         allDecks: state.allDecks
       };
-    case 'SELECT_CARD': 
+    case 'SELECT_CARD':
+      console.log('a card has been selected');
       return {
         currentDeck: state.currentDeck,
         currentCard: state.currentDeck.cards[action.cardPos],
+        currentCardIndex: action.cardPos,
         allDecks: state.allDecks
       };
     case 'SELECT_PREVIOUS_CARD':
       return {
         currentDeck: state.currentDeck,
-        currentCard: state.currentDeck.cards[state.currentCard.positionInDeck - 1] ? state.currentDeck.cards[state.currentCard.positionInDeck - 1] : state.currentCard,
+        currentCard: state.currentDeck.cards[state.currentCardIndex - 1] ? state.currentDeck.cards[state.currentCardIndex - 1] : state.currentCard,
+        currentCardIndex: state.currentCardIndex > 0 ? state.currentCardIndex - 1 : state.currentCardIndex,
         allDecks: state.allDecks
       };
     case 'SELECT_NEXT_CARD':
       return {
         currentDeck: state.currentDeck,
-        currentCard: state.currentDeck.cards[state.currentCard.positionInDeck + 1] ? state.currentDeck.cards[state.currentCard.positionInDeck + 1] : state.currentCard,
+        currentCard: state.currentDeck.cards[state.currentCardIndex + 1] ? state.currentDeck.cards[state.currentCardIndex + 1] : state.currentCard,
+        currentCardIndex: state.currentCardIndex < state.currentDeck.cards.length - 1 ? state.currentCardIndex + 1 : state.currentCardIndex,
         allDecks: state.allDecks
       };
     default:
