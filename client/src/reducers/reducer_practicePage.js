@@ -1,3 +1,4 @@
+// basics deck
 const cardMom = {
   character: '妈妈',
   IPA: 'mama',
@@ -24,6 +25,8 @@ const cardTall = {
   userAccuracy: 31,
   positionInDeck: 2
 };
+
+// food deck
 
 const cardApple = {
   character: '苹果',
@@ -52,46 +55,62 @@ const cardEggs = {
   positionInDeck: 2
 }
 
-const cards = [cardMom, cardDog, cardTall];
-const cardsFood = [cardApple, cardBeef, cardEggs];
-
-const newState = {
-  currentDeck: {
-    cardsFood,
-    topic: 'Food',
-  },
-  currentCard: cardsFood[0]
+const cards = [cardMom, cardDog, cardTall, cardEggs];
+const basicDeck = {
+  topic: 'Basics',
+  cards,
+  image: 'http://images.twinkl.co.uk/image/private/t_630/image_repo/17/92/T2-G-357-Basic-Chinese-Phrases-PowerPoint.jpg'
 };
+
+const cardsFood = [cardApple, cardBeef, cardEggs, cardMom];
+const foodDeck = {
+  topic: 'Food',
+  cards: cardsFood,
+  image: 'https://static.pexels.com/photos/46239/salmon-dish-food-meal-46239.jpeg'
+};
+
+const allDecks = [foodDeck, basicDeck];
+
 
 const initialState = {
-  currentDeck: {
-    cards,
-    topic: 'Basics',
-  },
-  currentCard: cards[0]
+  currentDeck: basicDeck,
+  currentCard: basicDeck.cards[0],
+  allDecks
 };
+
+const newState = {
+  currentDeck: foodDeck,
+  currentCard: foodDeck.cards[0],
+  allDecks
+};
+
 
 const practicePage = (state = initialState, action) => {
   switch (action.type) {
-    case 'SELECT_DECK': 
+    case 'SELECT_DECK':
+      console.log('deck has been selected with', action.deckIndex);
       return {
-        currentDeck: action.selectedDeck,
-        currentCard: action.selectedDeck[0]
-      }
+        currentDeck: state.allDecks[action.deckIndex],
+        currentCard: state.allDecks[action.deckIndex].cards[0],
+        allDecks: state.allDecks
+      };
     case 'SELECT_CARD': 
       return {
         currentDeck: state.currentDeck,
-        currentCard: state.currentDeck.cards[action.cardPos]
+        currentCard: state.currentDeck.cards[action.cardPos],
+        allDecks: state.allDecks
       };
     case 'SELECT_PREVIOUS_CARD':
       return {
         currentDeck: state.currentDeck,
-        currentCard: state.currentDeck.cards[state.currentCard.positionInDeck - 1] ? state.currentDeck.cards[state.currentCard.positionInDeck - 1] : state.currentCard
+        currentCard: state.currentDeck.cards[state.currentCard.positionInDeck - 1] ? state.currentDeck.cards[state.currentCard.positionInDeck - 1] : state.currentCard,
+        allDecks: state.allDecks
       };
     case 'SELECT_NEXT_CARD':
       return {
         currentDeck: state.currentDeck,
-        currentCard: state.currentDeck.cards[state.currentCard.positionInDeck + 1] ? state.currentDeck.cards[state.currentCard.positionInDeck + 1] : state.currentCard
+        currentCard: state.currentDeck.cards[state.currentCard.positionInDeck + 1] ? state.currentDeck.cards[state.currentCard.positionInDeck + 1] : state.currentCard,
+        allDecks: state.allDecks
       };
     default:
       return state;

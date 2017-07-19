@@ -1,4 +1,4 @@
-import { SELECT_CARD, SELECT_PREVIOUS_CARD, SELECT_NEXT_CARD } from './actionTypes';
+import { SELECT_CARD, SELECT_PREVIOUS_CARD, SELECT_NEXT_CARD, SELECT_DECK } from './actionTypes';
 
 export const selectCard = (cardPos) => {
   return {
@@ -7,10 +7,10 @@ export const selectCard = (cardPos) => {
   };
 };
 
-export const selectDeck = (deck) => {
+export const selectDeck = (deckIndex) => {
   return {
     type: SELECT_DECK,
-    deck
+    deckIndex
   };
 };
 

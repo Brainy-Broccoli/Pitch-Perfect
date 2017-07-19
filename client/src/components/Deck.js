@@ -20,13 +20,13 @@ class Deck extends Component {
             </div>
             <div>
               <Image src={this.props.image} style={{height: 200, width: 400}}
-                onClick={() => this.props.selectPage('Practice Page')} />
+                onClick={() => this.props.selectPage('Practice Page') && this.props.onDeckSelect(this.props.id)} />
             </div>
           </Card>
         </Link>
       </Grid.Column>
     );
-  };
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -36,3 +36,6 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(null, mapDispatchToProps)(Deck);
 
 // export default Deck;
+
+// put this back into onClick prop
+// && this.props.onDeckSelect(this.props.key)
