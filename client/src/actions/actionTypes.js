@@ -11,3 +11,6 @@ export const PAGE_SELECTED = 'PAGE_SELECTED';
 
 // Used for the dropdown on the practice page 
 export const SELECT_CARD = 'SELECT_CARD';
+
+
+export const SELECT_DECK = 'SELECT_DECK';

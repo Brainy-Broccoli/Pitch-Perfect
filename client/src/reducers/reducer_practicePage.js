@@ -11,9 +11,9 @@ const cardDog = {
   character: '狗',
   IPA: 'gou',
   pinyin: 'gou',
-  translation: 'dog', 
+  translation: 'dog',
   userAccuracy: 49,
-  positionInDeck: 1 
+  positionInDeck: 1
 };
 
 const cardTall = {
@@ -22,10 +22,46 @@ const cardTall = {
   pinyin: 'gao',
   translation: 'tall',
   userAccuracy: 31,
-  positionInDeck: 2 
+  positionInDeck: 2
 };
 
+const cardApple = {
+  character: '苹果',
+  IPA: 'pingguo',
+  pinyin: 'pingguo',
+  translation: 'apple',
+  userAccuracy: 55,
+  positionInDeck: 0
+}
+
+const cardBeef = {
+  character: '牛肉',
+  IPA: 'Niúròu',
+  pinyin: 'Niúròu',
+  translation: 'beef',
+  userAccuracy: 67,
+  positionInDeck: 1
+}
+
+const cardEggs = {
+  character: '蛋',
+  IPA: 'Dàn',
+  pinyin: 'Dàn',
+  translation: 'eggs',
+  userAccuracy: 73,
+  positionInDeck: 2
+}
+
 const cards = [cardMom, cardDog, cardTall];
+const cardsFood = [cardApple, cardBeef, cardEggs];
+
+const newState = {
+  currentDeck: {
+    cardsFood,
+    topic: 'Food',
+  },
+  currentCard: cardsFood[0]
+};
 
 const initialState = {
   currentDeck: {
@@ -37,6 +73,11 @@ const initialState = {
 
 const practicePage = (state = initialState, action) => {
   switch (action.type) {
+    case 'SELECT_DECK': 
+      return {
+        currentDeck: action.selectedDeck,
+        currentCard: action.selectedDeck[0]
+      }
     case 'SELECT_CARD': 
       return {
         currentDeck: state.currentDeck,

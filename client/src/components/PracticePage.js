@@ -9,7 +9,7 @@ class PracticePage extends Component {
     super(props);
   }
 
-  render() {  
+  render() {
     return (
       <Grid textAlign='center' columns={3} divided>
         <Grid.Row>
