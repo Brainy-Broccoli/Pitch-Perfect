@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Header, Divider } from 'semantic-ui-react';
+import { Grid, Header, Divider, Button, Icon } from 'semantic-ui-react';
 import QuickSelectDropdown from './QuickSelectDropdown';
 
 
@@ -19,8 +19,20 @@ class PracticePage extends Component {
             <Header as='h2'>{this.props.currentCard.translation}</Header>
           </Grid.Column>
           <Grid.Column>
+            <Button 
+              content='Prev Card' 
+              icon='arrow left' 
+              labelPosition='left'
+              onClick={this.props.onPreviousCardSelect}
+            />
             <Header as='h1'>{this.props.currentDeck.topic}</Header>
             <Header as='h2'>{this.props.currentCard.positionInDeck + 1}/{this.props.currentDeck.cards.length}</Header>
+            <Button 
+              content='Next Card' 
+              icon='arrow right' 
+              labelPosition='right'
+              onClick={this.props.onNextCardSelect}
+            />
           </Grid.Column>
           <Grid.Column>
             <QuickSelectDropdown 

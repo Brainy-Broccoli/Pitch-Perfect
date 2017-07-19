@@ -82,7 +82,19 @@ const practicePage = (state = initialState, action) => {
       return {
         currentDeck: state.currentDeck,
         currentCard: state.currentDeck.cards[action.cardPos]
-      }
+      };
+    case 'SELECT_PREVIOUS_CARD':
+      console.log('the previous card index', state.currentCard.positionInDeck - 1);
+      return {
+        currentDeck: state.currentDeck,
+        currentCard: state.currentDeck.cards[state.currentCard.positionInDeck - 1] ? state.currentDeck.cards[state.currentCard.cardPos - 1] : state.currentCard
+      };
+    case 'SELECT_NEXT_CARD':
+      console.log('the next card', state.currentDeck.cards[state.currentCard.positionInDeck + 1]);
+      return {
+        currentDeck: state.currentDeck,
+        currentCard: state.currentDeck.cards[state.currentCard.positionInDeck + 1] ? state.currentDeck.cards[state.currentCard.cardPos + 1] : state.currentCard
+      };
     default:
       return state;
   }
