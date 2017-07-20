@@ -17,7 +17,6 @@ class PracticePage extends Component {
             />
             <Button basic style={{pointerEvents: `none`}}>{this.props.currentCard.positionInDeck + 1}/{this.props.currentDeck.cards.length}</Button>
             <Button 
-              content='Next Card'   
               icon='arrow right' 
               onClick={this.props.onNextCardSelect}
             />
