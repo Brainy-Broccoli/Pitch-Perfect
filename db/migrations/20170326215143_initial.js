@@ -6,9 +6,16 @@ exports.up = function (knex, Promise) {
       table.string('first', 100).nullable();
       table.string('last', 100).nullable();
       table.string('display', 100).nullable();
-      table.string('email', 100).nullable().unique();
+      table.string('email', 150).nullable().unique();
       table.string('phone', 100).nullable();
       table.timestamps(true, true);
+    }),
+    knex.schema.createTableIfNotExists('users', function (table) {
+      table.increments('id').unsigned().primary();
+      table.string('user_name', 100).nullable();
+      table.integer('user_id').references('profiles.id').onDelete('CASCADE');
+      table.string('photo', 150).nullable();
+      table.string('gender', 20).nullable();
     }),
     knex.schema.createTableIfNotExists('auths', function(table) {
       table.increments('id').unsigned().primary();
@@ -21,14 +28,16 @@ exports.up = function (knex, Promise) {
     knex.schema.createTableIfNotExists('decks', function(table) {
       table.increments('id').unsigned().primary();
       table.string('topic', 50).nullable();
-      table.string('image', 150).nullable();
+      table.string('image', 500).nullable();
+      table.string('badge', 500).nullable();
     }),
     knex.schema.createTableIfNotExists('cards', function(table) {
       table.increments('id').unsigned().primary();
-      table.string('pinyin', 30).nullable();
-      table.string('IPA', 30).nullable();
-      table.string('male_voice', 150).nullable();
-      table.string('female_voice', 150).nullable();
+      table.string('pinyin', 50).nullable();
+      table.string('IPA', 50).nullable();
+      table.string('male_voice', 500).nullable();
+      table.string('female_voice', 500).nullable();
+      table.integer('tone');
     }),
     knex.schema.createTableIfNotExists('decks_cards', function(table) {
       table.increments('id').unsigned().primary();
@@ -41,6 +50,7 @@ exports.up = function (knex, Promise) {
       table.integer('user_id').references('users.id').onDelete('CASCADE');
       table.integer('deck_progress');
       table.integer('accuracy');
+      table.boolean('has_badge');
     }),
     knex.schema.createTableIfNotExists('users_cards', function(table) {
       table.increments('id').unsigned().primary();
