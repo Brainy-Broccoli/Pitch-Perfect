@@ -1,38 +1,26 @@
 import React, { Component } from 'react';
-import { Grid, Header, Divider, Button, Icon } from 'semantic-ui-react';
+import { Grid, Header, Divider, Button, Icon, Label } from 'semantic-ui-react';
 import QuickSelectDropdown from './QuickSelectDropdown';
-
-
+import AudioGraph from './AudioGraph.js';
 
 class PracticePage extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
-      <Grid textAlign='center' columns={3} divided>
+      <Grid textAlign='center' columns={2} divided="vertically">
         <Grid.Row>
-          <Grid.Column> 
-            <Header as='h1'>{this.props.currentCard.character}</Header>
-            <Header as='h2'>IPA/Pinyin: {this.props.currentCard.IPA}/{this.props.currentCard.pinyin}</Header>
-            <Header as='h2'>{this.props.currentCard.translation}</Header>
-          </Grid.Column>
           <Grid.Column>
+            <Header as='h1'>{this.props.currentDeck.topic}</Header>
+            <Button.Group size='large'>
             <Button 
-              content='Prev Card' 
               icon='arrow left' 
-              labelPosition='left'
               onClick={this.props.onPreviousCardSelect}
             />
-            <Header as='h1'>{this.props.currentDeck.topic}</Header>
-            <Header as='h2'>{this.props.currentCard.positionInDeck + 1}/{this.props.currentDeck.cards.length}</Header>
+            <Button basic style={{pointerEvents: `none`}}>{this.props.currentCard.positionInDeck + 1}/{this.props.currentDeck.cards.length}</Button>
             <Button 
-              content='Next Card' 
               icon='arrow right' 
-              labelPosition='right'
               onClick={this.props.onNextCardSelect}
             />
+          </Button.Group>
           </Grid.Column>
           <Grid.Column>
             <QuickSelectDropdown 
@@ -41,6 +29,16 @@ class PracticePage extends Component {
               onCardSelect={this.props.onCardSelect}
             />
           </Grid.Column>  
+        </Grid.Row>
+        <Grid.Row columns={2}>
+          <Grid.Column width={5}> 
+            <Header style={{fontSize: `10em`}}>{this.props.currentCard.character}</Header>
+            <Header as='h3'>IPA/Pinyin: {this.props.currentCard.IPA}/{this.props.currentCard.pinyin}</Header>
+            <Header as='h3'>{this.props.currentCard.translation}</Header>
+          </Grid.Column>
+          <Grid.Column width={11}>
+            <AudioGraph />
+          </Grid.Column>
         </Grid.Row>
       </Grid>
     );
