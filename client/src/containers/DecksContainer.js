@@ -45,7 +45,7 @@ class DecksContainer extends Component {
             topic={'Create custom deck'}
             image={image}
             key={'customDeck'}
-            onDeckSelect={this.props.onDeckSelect}
+            //onDeckSelect={this.props.onDeckSelect}
           />
         </Grid.Row>
       </Grid>

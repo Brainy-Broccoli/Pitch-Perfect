@@ -28,7 +28,7 @@ class PracticePage extends Component {
             <Header as='h1'>{this.props.currentDeck.topic}</Header>
             <Header as='h2'>{this.props.currentCardIndex + 1}/{this.props.currentDeck.cards.length}</Header>
             <Button 
-              content='Next Card' 
+              content='Next Card'   
               icon='arrow right' 
               labelPosition='right'
               onClick={this.props.onNextCardSelect}
