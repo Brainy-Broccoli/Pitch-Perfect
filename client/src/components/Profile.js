@@ -30,8 +30,14 @@ class Profile extends Component {
           </div>
           <hr/>
           <div>
-            {this.props.profileInfo.recent.map((recentDeck, idx) => {
-              return (<RecentActivity key={idx} recent={recentDeck}/>)
+            {this.props.recentDecks.map((recentDeck, idx) => {
+              return (
+                <RecentActivity 
+                  key={idx} 
+                  recentDeck={recentDeck} 
+                  topic={recentDeck.topic}
+                />
+              );
             })}
           </div>
         </Grid.Column>
@@ -44,7 +50,8 @@ class Profile extends Component {
 const mapStateToProps = (state) => {
   // Whatever is returned will show up as props 
   return {
-    profileInfo: state.profileInfo
+    profileInfo: state.profileInfo,
+    recentDecks: state.practicePage.recentUserDecksInfo
   };
 };
 

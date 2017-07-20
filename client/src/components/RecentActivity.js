@@ -6,6 +6,7 @@ import { Grid, Image } from 'semantic-ui-react';
 
 import { bindActionCreators } from 'redux';
 import { selectPage } from '../actions/actions_navBar';
+import { selectRecentActivityDeck } from '../actions/actions_practicePage';
 
 class RecentActivity extends Component {
   render() {
@@ -13,26 +14,32 @@ class RecentActivity extends Component {
       <Grid>
         <Grid.Column width={7}>
           <Link to={`/practice-page`}>
-            <Image src={this.props.recent.image} style={styles.image}
-              onClick={() => this.props.selectPage('Practice Page')}/>
+            <Image 
+              src={this.props.recentDeck.image} 
+              style={styles.image}
+              onClick={() => this.props.selectPage('Practice Page') && this.props.selectRecentActivityDeck(this.props.topic)} // add selectRecentDeck call here too
+            />
           </Link>
         </Grid.Column>
         <Grid.Column width={8}>
-          <div style={{fontSize: 28}}><b>{this.props.recent.deck}</b></div>
+          <div style={{fontSize: 28}}><b>{this.props.recentDeck.topic}</b></div>
           <div style={{fontSize: 18, marginTop: 44}}>
-            <div><b>Accuracy: </b>{this.props.recent.accuracy}</div>
-            <div><b>Progress: </b>{this.props.recent.progress} / {this.props.recent.total}</div>
-            <div><b>Badge: </b><Image src={this.props.recent.badge} style={{height: 40, width: 40}}/></div>
+            <div><b>Accuracy: </b>{this.props.recentDeck.accuracy}</div>
+            <div><b>Progress: </b>{this.props.recentDeck.progress} / {this.props.recentDeck.total}</div>
+            <div><b>Badge: </b><Image src={this.props.recentDeck.badge} style={{height: 40, width: 40}}/></div>
           </div>
         </Grid.Column>
       </Grid>
-    )
+    );
   }
 }
 
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ selectPage: selectPage }, dispatch);
+  return bindActionCreators({ 
+    selectPage,
+    selectRecentActivityDeck
+  }, dispatch);
 };
 
 export default connect(null, mapDispatchToProps)(RecentActivity);

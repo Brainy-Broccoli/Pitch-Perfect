@@ -1,4 +1,4 @@
-// basics deck
+// basic deck's cards
 const cardMom = {
   character: '妈妈',
   IPA: 'mama',
@@ -23,8 +23,7 @@ const cardTall = {
   userAccuracy: 31
 };
 
-// food deck
-
+// food deck's cards
 const cardApple = {
   character: '苹果',
   IPA: 'pingguo',
@@ -48,7 +47,7 @@ const cardEggs = {
   translation: 'eggs',
   userAccuracy: 73
 };
-
+// basics card array
 const cards = [cardMom, cardDog, cardTall, cardEggs];
 const basicDeck = {
   topic: 'Basics',
@@ -56,6 +55,7 @@ const basicDeck = {
   image: 'http://images.twinkl.co.uk/image/private/t_630/image_repo/17/92/T2-G-357-Basic-Chinese-Phrases-PowerPoint.jpg'
 };
 
+//food card array
 const cardsFood = [cardApple, cardBeef, cardEggs, cardMom];
 const foodDeck = {
   topic: 'Food',
@@ -65,12 +65,39 @@ const foodDeck = {
 
 const allDecks = [foodDeck, basicDeck];
 
+const recentUserDecksInfo = [
+  {
+    topic: 'Food',
+    image: 'http://worldartsme.com/images/chinese-restaurant-clipart-1.jpg',
+    badge: 'https://proprofs-cdn.s3.amazonaws.com/images/games/user_images/misc/5211927825.png',
+    progress: 6,
+    total: 13,
+    accuracy: 89 + '%'
+  },
+  {
+    topic: 'Travel',
+    image: 'https://iabuk.net/sites/default/files/styles/thumbnail/public/shutterstock_58918264.jpg?itok=sYn7AJu0',
+    badge: 'http://www.freeiconspng.com/uploads/travel-3-icon--colorflow-iconset--tribalmarkings-24.png',
+    progress: 8,
+    total: 19,
+    accuracy: 32 + '%'
+  },
+  {
+    topic: 'Weather',
+    image: 'https://icons.wxug.com/i/c/v4/partlycloudy.svg',
+    badge: 'http://icons.iconarchive.com/icons/bokehlicia/pacifica/256/weather-icon.png',
+    progress: 7,
+    total: 18,
+    accuracy: 55 + '%'
+  }
+];
 
 const initialState = {
   currentDeck: basicDeck,
   currentCard: basicDeck.cards[0],
   currentCardIndex: 0,
-  allDecks
+  allDecks,
+  recentUserDecksInfo
 };
 
 const practicePage = (state = initialState, action) => {
@@ -80,7 +107,24 @@ const practicePage = (state = initialState, action) => {
         currentDeck: state.allDecks[action.deckIndex],
         currentCard: state.allDecks[action.deckIndex].cards[0],
         currentCardIndex: 0,
-        allDecks: state.allDecks
+        allDecks: state.allDecks,
+        recentUserDecksInfo: state.recentUserDecksInfo
+      };
+    case 'SELECT_RECENT_ACTIVITY_DECK':
+      console.log('a recent activity deck has been selected with topic', action.topic);
+      const selectedTopic = action.topic;
+      let newDeck;
+      state.allDecks.forEach(deck => {
+        if (deck.topic === selectedTopic) {
+          newDeck = deck;
+        }
+      });
+      return {
+        currentDeck: newDeck || state.currentDeck,
+        currentCard: newDeck ? newDeck.cards[0] : state.currentCard,
+        currentCardIndex: 0,
+        allDecks: state.allDecks,
+        recentUserDecksInfo: state.recentUserDecksInfo
       };
     case 'SELECT_CARD':
       console.log('a card has been selected');
@@ -88,21 +132,24 @@ const practicePage = (state = initialState, action) => {
         currentDeck: state.currentDeck,
         currentCard: state.currentDeck.cards[action.cardPos],
         currentCardIndex: action.cardPos,
-        allDecks: state.allDecks
+        allDecks: state.allDecks,
+        recentUserDecksInfo: state.recentUserDecksInfo
       };
     case 'SELECT_PREVIOUS_CARD':
       return {
         currentDeck: state.currentDeck,
         currentCard: state.currentDeck.cards[state.currentCardIndex - 1] ? state.currentDeck.cards[state.currentCardIndex - 1] : state.currentCard,
         currentCardIndex: state.currentCardIndex > 0 ? state.currentCardIndex - 1 : state.currentCardIndex,
-        allDecks: state.allDecks
+        allDecks: state.allDecks,
+        recentUserDecksInfo: state.recentUserDecksInfo
       };
     case 'SELECT_NEXT_CARD':
       return {
         currentDeck: state.currentDeck,
         currentCard: state.currentDeck.cards[state.currentCardIndex + 1] ? state.currentDeck.cards[state.currentCardIndex + 1] : state.currentCard,
         currentCardIndex: state.currentCardIndex < state.currentDeck.cards.length - 1 ? state.currentCardIndex + 1 : state.currentCardIndex,
-        allDecks: state.allDecks
+        allDecks: state.allDecks,
+        recentUserDecksInfo: state.recentUserDecksInfo
       };
     default:
       return state;
