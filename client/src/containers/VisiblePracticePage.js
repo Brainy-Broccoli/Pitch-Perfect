@@ -8,7 +8,8 @@ const mapStateToProps = (state) => {
   console.log('state tree', state);
   return {
     currentCard: state.practicePage.currentCard,
-    currentDeck: state.practicePage.currentDeck
+    currentDeck: state.practicePage.currentDeck,
+    currentCardIndex: state.practicePage.currentCardIndex
   };
 };
 
