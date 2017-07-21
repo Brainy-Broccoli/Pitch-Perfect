@@ -30,12 +30,12 @@ class AudioGraph extends React.Component {
     return (
       <Grid>
         <Grid.Row columns={2}>
-          <Grid.Column textAlign='center' width={2}>
+          <Grid.Column textAlign='right' width={2}>
               { this.state.recording
-                ? <Button circular icon='stop' color='red' onClick={this.stopRecording} />
-                : <Button circular icon='unmute' color='red' onClick={this.record} />
+                ? <Button circular icon='stop' color='red' size='big' onClick={this.stopRecording} />
+                : <Button circular icon='unmute' color='red' size='big' onClick={this.record} />
               }
-              <Button circular icon='settings' />
+              <Button circular basic icon='volume up' size='big' style={{marginTop: `0.5em`}} />
           </Grid.Column>
           <Grid.Column  textAlign='left' width={14}>
             <canvas width={600} height={400} ref="canvas" style={{
@@ -100,7 +100,9 @@ class AudioGraph extends React.Component {
     const detectPitch = new pf.AMDF();
     const pitch = detectPitch(this.buffer);
     this.recordedPitchData.push({f: pitch, t: dt});
-    const maxTime = (this.props.maxTimeInSeconds || 6) * 1000;
+    const maxTime = (this.props.maxTime || 750);
+
+    const MAX_FREQ = 500;
 
     const canvas = this.refs.canvas;
     const gqCtx = canvas.getContext('2d');
@@ -117,9 +119,10 @@ class AudioGraph extends React.Component {
     gqCtx.fillRect(0, 0, WIDTH, HEIGHT);
     gqCtx.lineWidth = this.props.strokeWidth || 3;
 
+    // Calculate where to draw cursor (circle at end of line)
     const lastPitch = this.recordedPitchData[this.recordedPitchData.length - 1];
     const cursorX = Math.ceil(lastPitch.t / (maxTime / WIDTH));
-    const cursorY = Math.ceil(lastPitch.f ?HEIGHT-Math.ceil(lastPitch.f) : HEIGHT);
+    const cursorY = Math.ceil(lastPitch.f ? HEIGHT-Math.ceil(lastPitch.f * (HEIGHT/MAX_FREQ)) : HEIGHT);
     
     /*  This enables cursor to move along x axis as time passes
     gqCtx.strokeStyle = 'rgb(0, 0, 255)';
@@ -128,20 +131,25 @@ class AudioGraph extends React.Component {
     gqCtx.lineTo(cursor,HEIGHT);
     gqCtx.stroke();
     */
-    gqCtx.strokeStyle = 'rgb(255, 0, 0)';
 
+    gqCtx.strokeStyle = 'rgb(255, 0, 0)';
     gqCtx.beginPath();
     const renderedData = {};
     this.recordedPitchData.forEach( pitchAtTime => {
       let px = Math.ceil(pitchAtTime.t / (maxTime / WIDTH));
       if (!renderedData[px]) {
         console.log(pitchAtTime.f)
-        gqCtx.lineTo(px, (pitchAtTime.f ? HEIGHT - Math.ceil(pitchAtTime.f) : HEIGHT));
+        gqCtx.lineTo(px, (pitchAtTime.f ? HEIGHT - Math.ceil(pitchAtTime.f * (HEIGHT/MAX_FREQ)) : HEIGHT));
         renderedData[px] = true; 
       }
     });
-    gqCtx.arc(cursorX, cursorY, 5, 0, 2*Math.PI);
     gqCtx.stroke();
+
+    gqCtx.strokeStyle = 'rgb(255, 0, 0)';
+    gqCtx.fillStyle = this.props.backgroundColor || 'white';
+    gqCtx.beginPath();
+    gqCtx.arc(cursorX, cursorY, 5, 0, 2*Math.PI);
+    gqCtx.fill();
 
     this.timerID = requestAnimationFrame(this.draw)
   }
