@@ -33,6 +33,8 @@ exports.up = function (knex, Promise) {
     }),
     knex.schema.createTableIfNotExists('cards', function(table) {
       table.increments('id').unsigned().primary();
+      table.string('translation', 100).nullable();
+      table.string('character', 100).nullable();
       table.string('pinyin', 50).nullable();
       table.string('IPA', 50).nullable();
       table.string('male_voice', 500).nullable();
