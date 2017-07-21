@@ -15,7 +15,7 @@ class Deck extends Component {
       <Grid.Column width={5}>
         <Link to={`/practice-page`}>
           <Card>
-            <div>
+            <div style={{textAlign: 'center'}}>
               <strong>{this.props.topic}</strong>
             </div>
             <div>

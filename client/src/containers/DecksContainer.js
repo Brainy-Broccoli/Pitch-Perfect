@@ -17,38 +17,55 @@ import { Grid, Image } from 'semantic-ui-react';
 import Deck from '../components/Deck';
 import { selectDeck } from '../actions/actions_practicePage';
 
+import { Progress } from 'semantic-ui-react'
 
 class DecksContainer extends Component {
   constructor(props) {
     super(props);
+    this.image = 'http://www.freeiconspng.com/uploads/grey-plus-icon-8.png';
+    this.count = 0;
+    this.total = 0;
+    this.props.allDecks.forEach((deck) => {
+      deck.cards.forEach((card) => {
+        this.total++;
+        if (card.userAccuracy >= 50) {
+          this.count++;
+        }
+      })
+    });
   }
 
   render() {
-    var image = 'http://www.freeiconspng.com/uploads/grey-plus-icon-8.png';
     return (
-      <Grid verticalAlign="middle" padded>
-        <Grid.Row>
-          {
-            this.props.allDecks.map((deck, index) => {
-              console.log('index of decks', index);
-              return (
-                <Deck
-                  topic={deck.topic}
-                  image={deck.image}
-                  id={index}
-                  key={index}
-                  onDeckSelect={this.props.onDeckSelect}
-                />)
-            })
-          }
-          <Deck
-            topic={'Create custom deck'}
-            image={image}
-            key={'customDeck'}
-            onDeckSelect={this.props.onDeckSelect}
-          />
-        </Grid.Row>
-      </Grid>
+      <div>
+        <div style={{textAlign: 'center', margin: 0}}>
+          Mentorship Progress: {this.count / this.total * 100}%
+        </div>
+        <Progress active value={this.count} total={this.total} style={{margin: 0, height: 13}} color='teal' size='small'/>
+        <Grid verticalAlign="middle" padded>
+          <Grid.Row>
+            {
+              this.props.allDecks.map((deck, index) => {
+                console.log('index of decks', index);
+                return (
+                  <Deck
+                    topic={deck.topic}
+                    image={deck.image}
+                    id={index}
+                    key={index}
+                    onDeckSelect={this.props.onDeckSelect}
+                  />)
+              })
+            }
+            <Deck
+              topic={'Create custom deck'}
+              image={this.image}
+              key={'customDeck'}
+              onDeckSelect={this.props.onDeckSelect}
+            />
+          </Grid.Row>
+        </Grid>
+      </div>
     );
   }
 };
