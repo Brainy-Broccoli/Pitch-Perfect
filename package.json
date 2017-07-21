@@ -32,6 +32,7 @@
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
     "pg": "^6.1.5",
+    "pitchfinder": "^2.0.4",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.5",
