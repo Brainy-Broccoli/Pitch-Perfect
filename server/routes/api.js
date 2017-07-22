@@ -15,6 +15,7 @@ router.route('/')
 router.route('/profileInfo')
   .get((req, res) => {
     const userID = req.user.id;
+    console.log(userID);
     const name = `${req.user.first} ${req.user.last}`;
     const badges = [];
     const photo = req.user.photo;
