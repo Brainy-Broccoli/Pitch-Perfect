@@ -95,7 +95,6 @@ router.route('/profileInfo')
     //res.json the state tree
 
 
-
     // grab the 
     //inside the decks table
     // all Decks that the user is associated with
