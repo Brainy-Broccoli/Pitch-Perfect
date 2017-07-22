@@ -14,15 +14,103 @@ router.route('/')
 
 router.route('/profileInfo')
   .get((req, res) => {
-    const userInfo = req.user;
-    console.log('user info', userInfo);
+    const userID = req.user.id;
+    const name = `${req.user.first} ${req.user.last}`;
+    const badges = [];
+    const photo = req.user.photo;
+    const profilePageData = {
+      name,
+      badges,
+      photo
+    };
 
-    knex.select().table('profiles')
-      .then(rows => {
-        console.log(rows);
-        res.status(200).json(rows);  
-      })
-      .catch(err => res.status(500).send(err));
+    const allDecks = [];
+    //take id, go into users_decks table
+    //build up array of objects (that will ultimately become the fleshed out deck objects) and grab the user specific info
+    /*
+      [
+        {
+          id: 1
+          progress, accuracy, has badge
+        }
+      ]
+    */
+    //then iterate through the collection of objects, plucking the id for each one
+    //at this point, create the empty array for card objects
+    //using the id, find all the card objects associated with each deck, taking the meta information and adding it to the card obj
+    // similar structure to above
+    /*
+      [
+        {
+          id: 1
+          cards: [
+            {
+              id: 1
+              highscore: 
+            }
+          ]
+          progress, accuracy, has badge
+        }
+      ]
+    */
+    //then iterate through each of the objects inside the cards array, looking it up in the cards table to get the static
+    //information for each one like the character, translation, and ipa
+    /*
+      [
+        {
+          id: 1
+          cards: [
+            {
+              id: 1
+              character:
+              translation:
+              ...
+              highscore: 
+            }
+          ]
+          progress, 
+          accuracy, 
+          has_badge,
+          topic
+        }
+      ]
+    */
+    // then create the object that will reference the allDecks array and create all the keys seen in the practicePage reducer's initial state
+    const practicePageState = {
+      currentDeck: null,
+      currentCard: null,
+      currentCardIndex: 0,
+      allDecks: null,
+      recentUserDecksInfo: null
+    };
+    //add on the currentDeck -- (iterate through and find the basic Deck), set that to the current
+    //currentCard will be currentDeck will be currentDeck.cards[0]
+    //currentCardIndex will be 0
+    //allDecks will be set to the massive array created up top
+    //recentUserDecksInfo will be created by taking the first 2 things in the allDecks array minus the cards array
+
+    // then create a massive object (call it state tree)
+    const stateTree = {};
+    //add in both the practicePageState and the profileInfo as keys on it
+    //res.json the state tree
+
+
+
+    // grab the 
+    //inside the decks table
+    // all Decks that the user is associated with
+    //inside the users_decks table
+      // the accuracy and deck progress added onto each deck object
+      // then take a look at the has_badge to add to the badges array
+    // all the cards for each deck 
+    // highscore information for each card added to each card
+    // recent Decks (determined by timestamp) -- but for now will be the first 3 decks in the all decks array
+
+
+
+    console.log('user info', profilePageData); 
+    res.status(200).send('great success');
+    
   });
 
 module.exports = router;
