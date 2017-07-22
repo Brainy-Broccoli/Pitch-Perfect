@@ -23,6 +23,11 @@ import { selectPage } from '../actions/actions_navBar';
 // likely additional routes will need to be defined within the decks page 
 class App extends Component {
 
+  componentDidMount() {
+  // send out fetch request inside the component did mount
+  // parse out the 
+  }
+
   render() {
     return (
       <Router>
