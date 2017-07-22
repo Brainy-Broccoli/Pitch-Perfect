@@ -16,6 +16,7 @@ exports.up = function (knex, Promise) {
       table.integer('user_id').references('profiles.id').onDelete('CASCADE');
       table.string('photo', 150).nullable();
       table.string('gender', 20).nullable();
+      table.boolean('is_mentor');
     }),
     knex.schema.createTableIfNotExists('auths', function(table) {
       table.increments('id').unsigned().primary();  

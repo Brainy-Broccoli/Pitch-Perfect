@@ -9,6 +9,9 @@ import App from './components/App';
 // let store = compose(autoRehydrate())(createStore)(appReducer);
 // persistStore(store);
 
+// fetch request here
+
+
 let store = createStore(appReducer);
 
 
