@@ -26,6 +26,46 @@ router.route('/profileInfo')
     };
 
     const allDecks = [];
+
+    knex.from('users_decks')
+      .innerJoin('profiles', 'users_decks.user_id', '=', 'profiles.id')
+      .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
+      .where({user_id: userID})  
+      .then( data => data.map( deck => ({
+        id: deck.id,
+        progress: deck.deck_progress,
+        accuracy: deck.accuracy,
+        topic: deck.topic,
+        image: deck.image,
+        badge: deck.badge,
+        has_badge: deck.has_badge
+      })))
+      .then( decks => Promise.all(
+        decks.map( deck => 
+          knex.from('decks_cards')
+            .innerJoin('decks', 'decks_cards.deck_id', '=', 'decks.id')
+            .innerJoin('cards', 'decks_cards.card_id', '=', 'cards.id')
+            .where({deck_id: deck.id})
+            .then( cards => {
+              const destructuredCards = cards.map( card => ({
+                id: card.card_id,
+                character: card.character,
+                pinyin: card.pinyin,
+                IPA: card.IPA,
+                translation: card.translation,
+                male_voice: card.male_voice,
+                female_voice: card.female_voice,
+                tone: card.tone
+              }));
+              deck.cards = destructuredCards;
+              return deck;
+            })
+        ))
+        .then( decksWithCards => {
+          console.log(decksWithCards.map(deck=>`${deck.id}: ${JSON.stringify(deck.cards)}`));
+          res.status(200).send('gj');
+        }))
+      .catch(err => res.status(500).send('Something broke: ' + err));
     //take id, go into users_decks table
     //build up array of objects (that will ultimately become the fleshed out deck objects) and grab the user specific info
     /*
@@ -105,11 +145,6 @@ router.route('/profileInfo')
     // all the cards for each deck 
     // highscore information for each card added to each card
     // recent Decks (determined by timestamp) -- but for now will be the first 3 decks in the all decks array
-
-
-
-    console.log('user info', profilePageData); 
-    res.status(200).send('great success');
     
   });
 
