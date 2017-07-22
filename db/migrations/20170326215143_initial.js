@@ -8,15 +8,17 @@ exports.up = function (knex, Promise) {
       table.string('display', 100).nullable();
       table.string('email', 150).nullable().unique();
       table.string('phone', 100).nullable();
-      table.timestamps(true, true);
-    }),
-    knex.schema.createTableIfNotExists('users', function (table) {
-      table.increments('id').unsigned().primary();
-      table.string('user_name', 100).nullable();
-      table.integer('user_id').references('profiles.id').onDelete('CASCADE');
       table.string('photo', 150).nullable();
       table.string('gender', 20).nullable();
+      table.timestamps(true, true);
     }),
+    // knex.schema.createTableIfNotExists('users', function (table) {
+    //   table.increments('id').unsigned().primary();
+    //   table.string('user_name', 100).nullable();
+    //   table.integer('user_id').references('profiles.id').onDelete('CASCADE');
+    //   table.string('photo', 150).nullable();
+    //   table.string('gender', 20).nullable();
+    // }),
     knex.schema.createTableIfNotExists('auths', function(table) {
       table.increments('id').unsigned().primary();
       table.string('type', 8).notNullable();
@@ -33,6 +35,8 @@ exports.up = function (knex, Promise) {
     }),
     knex.schema.createTableIfNotExists('cards', function(table) {
       table.increments('id').unsigned().primary();
+      table.string('translation', 100).nullable();
+      table.string('character', 100).nullable();
       table.string('pinyin', 50).nullable();
       table.string('IPA', 50).nullable();
       table.string('male_voice', 500).nullable();
@@ -47,14 +51,14 @@ exports.up = function (knex, Promise) {
     knex.schema.createTableIfNotExists('users_decks', function(table) {
       table.increments('id').unsigned().primary();
       table.integer('deck_id').references('decks.id').onDelete('CASCADE');
-      table.integer('user_id').references('users.id').onDelete('CASCADE');
+      table.integer('user_id').references('profiles.id').onDelete('CASCADE');
       table.integer('deck_progress');
       table.integer('accuracy');
       table.boolean('has_badge');
     }),
     knex.schema.createTableIfNotExists('users_cards', function(table) {
       table.increments('id').unsigned().primary();
-      table.integer('user_id').references('users.id').onDelete('CASCADE');
+      table.integer('user_id').references('profiles.id').onDelete('CASCADE');
       table.integer('card_id').references('cards.id').onDelete('CASCADE');
       table.integer('high_score');
     }),
