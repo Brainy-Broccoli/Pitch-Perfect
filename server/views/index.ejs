@@ -1,6 +1,9 @@
 <% include head.ejs%>
 
     <div id='root'></div>
+    <script>
+      window.userId = '<%- user.id %>';
+    </script>
     <script src="/dist/bundle.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"></link>
 

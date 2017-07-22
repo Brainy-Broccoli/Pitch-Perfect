@@ -29,6 +29,7 @@ class App extends Component {
   }
 
   render() {
+    console.log('USER ID WORKS BRAAAAH', window.userId);
     return (
       <Router>
         <div>
