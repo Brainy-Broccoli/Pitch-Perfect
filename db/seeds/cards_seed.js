@@ -9,7 +9,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'mama',
         IPA: 'mama',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/mother-ma-2.wav',
         tone: 1
       });
     }).then(function () {
@@ -19,7 +19,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'gou',
         IPA: 'gou',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/dog-gou.wav',
         tone: 3
       });
     }).then(function () {
@@ -29,7 +29,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'gao',
         IPA: 'gao',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/tall-gao.wav',
         tone: 1
       });
     }).then(function () {
@@ -39,7 +39,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'pingguo',
         IPA: 'pingguo',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/apple-pingguo.wav',
         tone: 2
       });
     }).then(function () {
@@ -49,7 +49,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'Niúròu',
         IPA: 'Niúròu',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/beef-niurou.wav',
         tone: 2
       });
     }).then(function () {
@@ -59,7 +59,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'Dàn',
         IPA: 'Dàn',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/eggs-dan.wav',
         tone: 2
       });
     }).then(function () {
@@ -69,7 +69,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'mén',
         IPA: 'mén',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/door-men.wav',
         tone: 2
       });
     }).then(function () {
@@ -79,7 +79,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'wǒ',
         IPA: 'wǒ',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/I_me-wo.wav',
         tone: 3
       });
     }).then(function () {
@@ -89,7 +89,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'mù',
         IPA: 'mù',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/wood-mu.wav',
         tone: 4
       });
     }).then(function () {
@@ -99,7 +99,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'tīng',
         IPA: 'tīng',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/to_listen-ting.wav',
         tone: 1
       });
     }).then(function () {
@@ -109,7 +109,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'nán',
         IPA: 'nán',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/male-nan.wav',
         tone: 2
       });
     }).then(function () {
@@ -119,7 +119,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'kàn',
         IPA: 'kàn',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/to_see-kan.wav',
         tone: 4
       });
     }).then(function () {
@@ -129,7 +129,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'duō',
         IPA: 'duō',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/many-duo.wav',
         tone: 1
       });
     }).then(function () {
@@ -139,7 +139,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'bái',
         IPA: 'bái',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/white-bai.wav',
         tone: 2
       });
     }).then(function () {
@@ -149,7 +149,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'hǎo',
         IPA: 'hǎo',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/good-hao.wav',
         tone: 3
       });
     }).then(function () {
@@ -159,7 +159,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'yào',
         IPA: 'yào',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/to_want-yao.wav',
         tone: 4
       });
     }).then(function () {
@@ -169,7 +169,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'xué',
         IPA: 'xué',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/to_study-xue.wav',
         tone: 2
       });
     }).then(function () {
@@ -179,7 +179,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'xiǎng',
         IPA: 'xiǎng',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/to_miss-xiang.wav',
         tone: 3
       });
     }).then(function () {
@@ -189,7 +189,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'liù',
         IPA: 'liù',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/six-liu.wav',
         tone: 4
       });
     }).then(function () {
@@ -199,7 +199,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'guāi',
         IPA: 'guāi',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/well_behaved-guai.wav',
         tone: 1
       });
     }).then(function () {
@@ -209,7 +209,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'líng',
         IPA: 'líng',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/zero-ling.wav',
         tone: 2
       });
     }).then(function () {
@@ -219,7 +219,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'xiǎo',
         IPA: 'xiǎo',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/small-xiao.wav',
         tone: 3
       });
     }).then(function () {
@@ -229,7 +229,7 @@ exports.seed = function(knex, Promise) {
         pinyin: 'kuài',
         IPA: 'kuài',
         // male_voice: '',
-        // female_voice: '',
+        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/quick-kuai.wav',
         tone: 4
       });
     })
