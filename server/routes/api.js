@@ -15,7 +15,6 @@ router.route('/')
 router.route('/profileInfo')
   .get((req, res) => {
     const userID = req.user.id;
-    console.log(userID);
     const name = `${req.user.first} ${req.user.last}`;
     const badges = [];
     const photo = req.user.photo;
@@ -42,7 +41,8 @@ router.route('/profileInfo')
       })))
       .then( decks => Promise.all(
         decks.map( deck => 
-          knex.from('decks_cards')
+          knex.from('users_cards')
+            .innerJoin('decks_cards', 'decks_cards.card_id', '=', 'users_cards.card_id')
             .innerJoin('decks', 'decks_cards.deck_id', '=', 'decks.id')
             .innerJoin('cards', 'decks_cards.card_id', '=', 'cards.id')
             .where({deck_id: deck.id})
@@ -55,15 +55,16 @@ router.route('/profileInfo')
                 translation: card.translation,
                 male_voice: card.male_voice,
                 female_voice: card.female_voice,
-                tone: card.tone
+                tone: card.tone,
+                high_score: card.high_score
               }));
               deck.cards = destructuredCards;
               return deck;
             })
         ))
         .then( decksWithCards => {
-          console.log(decksWithCards.map(deck=>`${deck.id}: ${JSON.stringify(deck.cards)}`));
-          res.status(200).send('gj');
+          //console.log(decksWithCards.map(deck=>`${deck.id}: ${JSON.stringify(deck.cards)}`));
+          res.json(decksWithCards);
         }))
       .catch(err => res.status(500).send('Something broke: ' + err));
     //take id, go into users_decks table
