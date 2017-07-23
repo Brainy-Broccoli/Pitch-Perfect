@@ -18,18 +18,30 @@ import VisiblePracticePage from '../containers/VisiblePracticePage';
 import { Menu, Segment } from 'semantic-ui-react';
 
 import { selectPage } from '../actions/actions_navBar';
+import { loadProfile } from '../actions/actions_profilePage.js';
+import { loadPracticePage } from '../actions/actions_practicePage.js';
 // import Decks
 // import Logout Page
 // likely additional routes will need to be defined within the decks page 
 class App extends Component {
 
   componentDidMount() {
-  // send out fetch request inside the component did mount
-  // parse out the 
+    fetch('/api/profileInfo', { credentials: 'include' })
+    .then(res => res.json())
+    .then( data => {
+      console.log(data);
+      const name = data.display;
+      const badgeUrls = data.decks.filter( deck => deck.has_badge ).map( deck => deck.badge);
+      const photo = data.photo || 'https://www.cbdeolali.org.in/drupal/sites/default/files/Section%20Head/Alternative-Profile-pic_5.jpg';
+      const isMentor = true;  // FIX ME OR DIE
+      const profileState = { name, badgeUrls, photo, isMentor };
+
+      this.props.loadProfile(profileState)
+
+    });
   }
 
   render() {
-    console.log('USER ID WORKS BRAAAAH', window.userId);
     return (
       <Router>
         <div>
@@ -68,9 +80,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ selectPage: selectPage }, dispatch);
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({ selectPage, loadProfile, loadPracticePage }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
 

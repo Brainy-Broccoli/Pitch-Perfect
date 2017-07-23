@@ -15,7 +15,7 @@ class Profile extends Component {
             <h2>{this.props.profileInfo.name}</h2>
             <div style={{textAlign: 'center'}}>
               <h3 style={{margin: 0}}> Badges Earned</h3>
-              {this.props.profileInfo.badges.map((badge, index) => {
+              {this.props.profileInfo.badgeUrls.map((badge, index) => {
                 return (<img key={index} style={{display: 'inline-block', height: 40, width: 40}} src={badge} />);
               })}
             </div>
@@ -26,7 +26,10 @@ class Profile extends Component {
         <Grid.Column width={10}>
           <div style={{textAlign: 'center'}}>
             <h2 style={{display: 'inline-block'}}> Recent Activity </h2>
-            {this.props.profileInfo.mentor.eligible ? <img style={{float: 'right', height: 40, width: 40}} src={this.props.profileInfo.mentor.icon}/> : null}
+            {this.props.profileInfo.isMentor 
+                ? <img style={{float: 'right', height: 40, width: 40}} src="https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/mentor.jpg"/> 
+                : ""
+            }
           </div>
           <hr/>
           <div>

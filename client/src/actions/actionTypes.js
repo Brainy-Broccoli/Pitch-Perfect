@@ -21,3 +21,7 @@ export const SELECT_NEXT_CARD = 'SELECT_NEXT_CARD';
 // used for when a user clicks on a recent deck image
 export const SELECT_RECENT_ACTIVITY_DECK = 'SELECT_RECENT_ACTIVITY_DECK';
 
+
+export const LOAD_PROFILE = 'LOAD_PROFILE';
+
+export const LOAD_PRACTICE_PAGE = 'LOAD_PRACTICE_PAGE';
