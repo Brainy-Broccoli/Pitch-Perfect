@@ -30,6 +30,10 @@ class AudioGraph extends React.Component {
     this.finishedPlaying = this.finishedPlaying.bind(this);
   }
 
+  componentWillUnmount() {
+    this.audioCtx.close();
+  }
+
   render() {
     var row;
     console.log('Yermek', this.props.currentCard.female_voice);
