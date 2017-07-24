@@ -26,6 +26,10 @@ class AudioGraph extends React.Component {
 
   }
 
+  componentWillUnmount() {
+    this.audioCtx.close();
+  }
+
   render() {
     return (
       <Grid>
