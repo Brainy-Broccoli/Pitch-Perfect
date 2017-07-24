@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { selectCard, selectPreviousCard, selectNextCard } from '../actions/actions_practicePage';
 // import the presentational component to connect it
 import PracticePage from '../components/PracticePage';
+import AudioGraph from '../components/AudioGraph';
 
 const mapStateToProps = (state) => {
   console.log('state tree', state);
@@ -32,6 +33,6 @@ const mapDispatchToProps = dispatch => {
 const VisiblePracticePage = connect(
   mapStateToProps, 
   mapDispatchToProps
-)(PracticePage);
+)(PracticePage, AudioGraph);
 
 export default VisiblePracticePage;
