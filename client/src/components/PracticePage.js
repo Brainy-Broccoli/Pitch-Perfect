@@ -5,6 +5,7 @@ import AudioGraph from './AudioGraph.js';
 
 class PracticePage extends Component {
   render() {
+    console.log('Yermek - 2', this.props)
     return (
       <Grid textAlign='center' columns={2} divided="vertically">
         <Grid.Row>
@@ -37,7 +38,7 @@ class PracticePage extends Component {
             <Header as='h3'>{this.props.currentCard.translation}</Header>
           </Grid.Column>
           <Grid.Column width={11}>
-            <AudioGraph />
+            <AudioGraph currentCard={this.props.currentCard}/>
           </Grid.Column>
         </Grid.Row>
       </Grid>

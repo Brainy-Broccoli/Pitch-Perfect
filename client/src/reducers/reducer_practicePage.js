@@ -4,7 +4,7 @@ const cardMom = {
   IPA: 'mama',
   pinyin: 'mama',
   translation: 'mom',
-  userAccuracy: 85 
+  userAccuracy: 85 ,        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/mother-ma-2.wav'
 };
 
 const cardDog = {
@@ -12,7 +12,8 @@ const cardDog = {
   IPA: 'gou',
   pinyin: 'gou',
   translation: 'dog',
-  userAccuracy: 49
+  userAccuracy: 49,
+  female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/dog-gou.wav'
 };
 
 const cardTall = {
@@ -20,7 +21,8 @@ const cardTall = {
   IPA: 'gao',
   pinyin: 'gao',
   translation: 'tall',
-  userAccuracy: 31
+  userAccuracy: 31,
+  female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/tall-gao.wav'
 };
 
 // food deck's cards
@@ -29,7 +31,8 @@ const cardApple = {
   IPA: 'pingguo',
   pinyin: 'pingguo',
   translation: 'apple',
-  userAccuracy: 55
+  userAccuracy: 55,
+  female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/apple-pingguo.wav'
 };
 
 const cardBeef = {
@@ -37,7 +40,8 @@ const cardBeef = {
   IPA: 'Niúròu',
   pinyin: 'Niúròu',
   translation: 'beef',
-  userAccuracy: 67
+  userAccuracy: 67,
+  female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/beef-niurou.wav'
 };
 
 const cardEggs = {
@@ -45,7 +49,8 @@ const cardEggs = {
   IPA: 'Dàn',
   pinyin: 'Dàn',
   translation: 'eggs',
-  userAccuracy: 73
+  userAccuracy: 73,
+  female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/eggs-dan.wav'
 };
 // basics card array
 const cards = [cardMom, cardDog, cardTall, cardEggs];
