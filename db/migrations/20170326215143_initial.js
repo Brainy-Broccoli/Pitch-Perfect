@@ -67,13 +67,13 @@ exports.up = function (knex, Promise) {
 
 exports.down = function (knex, Promise) {
   return Promise.all([
-    knex.schema.dropTableIfExists('auths'),
-    knex.schema.dropTableIfExists('profiles'),
-    knex.schema.dropTableIfExists('decks'),
-    knex.schema.dropTableIfExists('cards'),
     knex.schema.dropTableIfExists('decks_cards'),
     knex.schema.dropTableIfExists('users_decks'),
-    knex.schema.dropTableIfExists('users_cards')
+    knex.schema.dropTableIfExists('users_cards'),
+    knex.schema.dropTableIfExists('auths'),
+    knex.schema.dropTableIfExists('decks'),
+    knex.schema.dropTableIfExists('cards'),
+    knex.schema.dropTableIfExists('profiles'),
   ]);
 };
 

@@ -27,18 +27,34 @@ class App extends Component {
 
   componentDidMount() {
     fetch('/api/profileInfo', { credentials: 'include' })
-    .then(res => res.json())
-    .then( data => {
-      console.log(data);
-      const name = data.display;
-      const badgeUrls = data.decks.filter( deck => deck.has_badge ).map( deck => deck.badge);
-      const photo = data.photo || 'https://www.cbdeolali.org.in/drupal/sites/default/files/Section%20Head/Alternative-Profile-pic_5.jpg';
-      const isMentor = true;  // FIX ME OR DIE
-      const profileState = { name, badgeUrls, photo, isMentor };
+      .then(res => res.json())
+      .then( data => {
+        console.log('data', data);
+        const name = data.display;
+        const badgeUrls = data.decks.filter( deck => deck.has_badge ).map( deck => deck.badge);
+        const photo = data.photo || 'https://www.cbdeolali.org.in/drupal/sites/default/files/Section%20Head/Alternative-Profile-pic_5.jpg';
+        const isMentor = true; // FIX ME OR DIE
+        const profileState = { name, badgeUrls, photo, isMentor };
 
-      this.props.loadProfile(profileState)
+        this.props.loadProfile(profileState);
 
-    });
+        // create the object resembling initial state in the practice page reducer
+        //currentDeck
+        //currentCard
+        //currentCardIndex
+        //allDecks
+        //recentUserDecksInfo -- which is simply going to be the deck - cards
+
+        const practicePageState = {
+          currentDeck: data.decks[0],
+          currentCardIndex: 0,
+          currentCard: data.decks[0].cards[0],
+          allDecks: data.decks,
+          recentUserDecksInfo: data.decks.slice(0, 2) // TODO: make this based off timestamp on decks
+        };
+
+        this.props.loadPracticePage(practicePageState);
+      });
   }
 
   render() {
