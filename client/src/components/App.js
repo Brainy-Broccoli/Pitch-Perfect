@@ -33,17 +33,10 @@ class App extends Component {
         const name = data.display;
         const badgeUrls = data.decks.filter( deck => deck.has_badge ).map( deck => deck.badge);
         const photo = data.photo || 'https://www.cbdeolali.org.in/drupal/sites/default/files/Section%20Head/Alternative-Profile-pic_5.jpg';
-        const isMentor = true; // FIX ME OR DIE
+        const isMentor = true; // TODO: FIX ME OR DIE -- need to determine final mentor criteria
         const profileState = { name, badgeUrls, photo, isMentor };
 
         this.props.loadProfile(profileState);
-
-        // create the object resembling initial state in the practice page reducer
-        //currentDeck
-        //currentCard
-        //currentCardIndex
-        //allDecks
-        //recentUserDecksInfo -- which is simply going to be the deck - cards
 
         const practicePageState = {
           currentDeck: data.decks[0],

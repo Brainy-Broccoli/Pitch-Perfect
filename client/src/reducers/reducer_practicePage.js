@@ -111,7 +111,6 @@ const initialState = {
 const practicePage = (state = initialState, action) => {
   switch (action.type) {
     case 'LOAD_PRACTICE_PAGE':
-      console.log('inside practice reducer -- loading practice page');
       return action.practicePageState;
     case 'SELECT_DECK':
       return {
