@@ -64,7 +64,11 @@ router.route('/profileInfo')
         ))
         .then( decksWithCards => {
           //console.log(decksWithCards.map(deck=>`${deck.id}: ${JSON.stringify(deck.cards)}`));
-          res.json(decksWithCards);
+          res.json({ 
+            display: req.user.display,
+            photo: req.user.photo,
+            decks: decksWithCards
+          });
         }))
       .catch(err => res.status(500).send('Something broke: ' + err));
     //take id, go into users_decks table
