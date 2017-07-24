@@ -1,6 +1,7 @@
 import React from 'react';
 import * as pf from 'pitchfinder';
 import { Grid, Button } from 'semantic-ui-react';
+var Sound = require('react-sound').default;
 
 class AudioGraph extends React.Component {
 
@@ -9,6 +10,7 @@ class AudioGraph extends React.Component {
 
     this.state = {
       recording: false,
+      sound: false
     };
 
     this.record = this.record.bind(this);
@@ -24,6 +26,8 @@ class AudioGraph extends React.Component {
     this.startTime = null;
     this.recordedPitchData = [];
 
+    this.onSoundClick = this.onSoundClick.bind(this);
+    this.finishedPlaying = this.finishedPlaying.bind(this);
   }
 
   componentWillUnmount() {
@@ -31,6 +35,15 @@ class AudioGraph extends React.Component {
   }
 
   render() {
+    var row;
+    console.log('Yermek', this.props.currentCard.female_voice);
+    if (this.state.sound === true) {
+      row = <Sound
+              url={this.props.currentCard.female_voice}
+              playStatus={Sound.status.PLAYING}
+              onFinishedPlaying={this.finishedPlaying}
+            />
+    }
     return (
       <Grid>
         <Grid.Row columns={2}>
@@ -39,7 +52,8 @@ class AudioGraph extends React.Component {
                 ? <Button circular icon='stop' color='red' size='big' onClick={this.stopRecording} />
                 : <Button circular icon='unmute' color='red' size='big' onClick={this.record} />
               }
-              <Button circular basic icon='volume up' size='big' style={{marginTop: `0.5em`}} />
+              <Button circular basic icon='volume up' size='big' style={{marginTop: `0.5em`}} onClick={this.onSoundClick} />
+              {row}
           </Grid.Column>
           <Grid.Column  textAlign='left' width={14}>
             <canvas width={600} height={400} ref="canvas" style={{
@@ -50,6 +64,18 @@ class AudioGraph extends React.Component {
         </Grid.Row>
       </Grid>
     );
+  }
+
+  onSoundClick() {
+    this.setState({
+      sound: true
+    })
+  }
+
+  finishedPlaying() {
+    this.setState({
+      sound:false
+    })
   }
 
   record() {
@@ -67,7 +93,7 @@ class AudioGraph extends React.Component {
 
           this.analyser = this.audioCtx.createAnalyser();
           this.analyser.fftSize = 1024;
-          this.buffer = new Float32Array(this.analyser.fftSize); 
+          this.buffer = new Float32Array(this.analyser.fftSize);
 
           recordingNode.connect(this.analyser);
 
@@ -100,7 +126,7 @@ class AudioGraph extends React.Component {
   draw() {
 
     this.analyser.getFloatTimeDomainData(this.buffer);
-    const dt = performance.now() - this.startTime; 
+    const dt = performance.now() - this.startTime;
     const detectPitch = new pf.AMDF();
     const pitch = detectPitch(this.buffer);
     this.recordedPitchData.push({f: pitch, t: dt});
@@ -111,14 +137,14 @@ class AudioGraph extends React.Component {
     const canvas = this.refs.canvas;
     const gqCtx = canvas.getContext('2d');
 
-    if (dt >= maxTime) { 
+    if (dt >= maxTime) {
       this.stopRecording();
       return;
     }
 
     const WIDTH = canvas.width;
     const HEIGHT = canvas.height;
-  
+
     gqCtx.fillStyle = this.props.backgroundColor || 'white';
     gqCtx.fillRect(0, 0, WIDTH, HEIGHT);
     gqCtx.lineWidth = this.props.strokeWidth || 3;
@@ -127,7 +153,7 @@ class AudioGraph extends React.Component {
     const lastPitch = this.recordedPitchData[this.recordedPitchData.length - 1];
     const cursorX = Math.ceil(lastPitch.t / (maxTime / WIDTH));
     const cursorY = Math.ceil(lastPitch.f ? HEIGHT-Math.ceil(lastPitch.f * (HEIGHT/MAX_FREQ)) : HEIGHT);
-    
+
     /*  This enables cursor to move along x axis as time passes
     gqCtx.strokeStyle = 'rgb(0, 0, 255)';
     gqCtx.beginPath();
@@ -144,7 +170,7 @@ class AudioGraph extends React.Component {
       if (!renderedData[px]) {
         console.log(pitchAtTime.f)
         gqCtx.lineTo(px, (pitchAtTime.f ? HEIGHT - Math.ceil(pitchAtTime.f * (HEIGHT/MAX_FREQ)) : HEIGHT));
-        renderedData[px] = true; 
+        renderedData[px] = true;
       }
     });
     gqCtx.stroke();
@@ -159,4 +185,4 @@ class AudioGraph extends React.Component {
   }
 }
 
-export default AudioGraph; 
+export default AudioGraph;
