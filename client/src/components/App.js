@@ -26,7 +26,7 @@ import { loadPracticePage } from '../actions/actions_practicePage.js';
 class App extends Component {
 
   componentDidMount() {
-    fetch('/api/profileInfo', { credentials: 'include' })
+    fetch('/api/profile', { credentials: 'include' })
       .then(res => res.json())
       .then( data => {
         console.log('data', data);

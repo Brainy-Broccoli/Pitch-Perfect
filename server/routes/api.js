@@ -1,19 +1,11 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
+const middleware = require('../middleware');
 const knex = require('../../db').knex;
 
-router.route('/')
-  .get((req, res) => {
-    res.status(200).send('Hello World!');
-  })
-  .post((req, res) => {
-    console.log('in the correct route');
-    res.status(201).send({ data: 'Posted!' });
-  });
-
-router.route('/profileInfo')
-  .get((req, res) => {
+router.route('/profile')
+  .get(middleware.auth.verify, (req, res) => {
     const userID = req.user.id;
     const name = `${req.user.first} ${req.user.last}`;
     const badges = [];
@@ -63,7 +55,6 @@ router.route('/profileInfo')
             })
         ))
         .then( decksWithCards => {
-          //console.log(decksWithCards.map(deck=>`${deck.id}: ${JSON.stringify(deck.cards)}`));
           res.json({ 
             display: req.user.display,
             photo: req.user.photo,
@@ -71,86 +62,18 @@ router.route('/profileInfo')
           });
         }))
       .catch(err => res.status(500).send('Something broke: ' + err));
-    //take id, go into users_decks table
-    //build up array of objects (that will ultimately become the fleshed out deck objects) and grab the user specific info
-    /*
-      [
-        {
-          id: 1
-          progress, accuracy, has badge
-        }
-      ]
-    */
-    //then iterate through the collection of objects, plucking the id for each one
-    //at this point, create the empty array for card objects
-    //using the id, find all the card objects associated with each deck, taking the meta information and adding it to the card obj
-    // similar structure to above
-    /*
-      [
-        {
-          id: 1
-          cards: [
-            {
-              id: 1
-              highscore: 
-            }
-          ]
-          progress, accuracy, has badge
-        }
-      ]
-    */
-    //then iterate through each of the objects inside the cards array, looking it up in the cards table to get the static
-    //information for each one like the character, translation, and ipa
-    /*
-      [
-        {
-          id: 1
-          cards: [
-            {
-              id: 1
-              character:
-              translation:
-              ...
-              highscore: 
-            }
-          ]
-          progress, 
-          accuracy, 
-          has_badge,
-          topic
-        }
-      ]
-    */
-    // then create the object that will reference the allDecks array and create all the keys seen in the practicePage reducer's initial state
-    const practicePageState = {
-      currentDeck: null,
-      currentCard: null,
-      currentCardIndex: 0,
-      allDecks: null,
-      recentUserDecksInfo: null
-    };
-    //add on the currentDeck -- (iterate through and find the basic Deck), set that to the current
-    //currentCard will be currentDeck will be currentDeck.cards[0]
-    //currentCardIndex will be 0
-    //allDecks will be set to the massive array created up top
-    //recentUserDecksInfo will be created by taking the first 2 things in the allDecks array minus the cards array
-
-    // then create a massive object (call it state tree)
-    const stateTree = {};
-    //add in both the practicePageState and the profileInfo as keys on it
-    //res.json the state tree
-
-
-    // grab the 
-    //inside the decks table
-    // all Decks that the user is associated with
-    //inside the users_decks table
-      // the accuracy and deck progress added onto each deck object
-      // then take a look at the has_badge to add to the badges array
-    // all the cards for each deck 
-    // highscore information for each card added to each card
-    // recent Decks (determined by timestamp) -- but for now will be the first 3 decks in the all decks array
-    
   });
+
+router.route('/card/:id')
+  .post(middleware.auth.verify, (req, res) => {
+    knex.from('users_cards')
+      .innerJoin('cards','users_cards.card_id', '=', 'cards.id')
+      .where({ card_id: req.params.id, user_id: req.user.id })
+      .then( resp => {
+      console.log(req.body)
+      console.log(resp)
+      res.send('lol')
+      }).catch( err=> console.error(err));
+  })
 
 module.exports = router;
