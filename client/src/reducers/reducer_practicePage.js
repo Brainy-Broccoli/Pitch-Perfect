@@ -4,7 +4,8 @@ const cardMom = {
   IPA: 'mama',
   pinyin: 'mama',
   translation: 'mom',
-  userAccuracy: 85 ,        female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/mother-ma-2.wav'
+  userAccuracy: 85,        
+  female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/mother-ma-2.wav'
 };
 
 const cardDog = {
@@ -109,6 +110,8 @@ const initialState = {
 // TODO: remove the conditionals from the card selection cases -- perform the check for currentCardIndex on the client side. as of now, same input (action.type) produces different outputs. 
 const practicePage = (state = initialState, action) => {
   switch (action.type) {
+    case 'LOAD_PRACTICE_PAGE':
+      return action.practicePageState;
     case 'SELECT_DECK':
       return {
         currentDeck: state.allDecks[action.deckIndex],
