@@ -60,7 +60,7 @@ exports.up = function (knex, Promise) {
       table.increments('id').unsigned().primary();
       table.integer('user_id').references('profiles.id').onDelete('CASCADE');
       table.integer('card_id').references('cards.id').onDelete('CASCADE');
-      table.integer('high_score');
+      table.integer('high_score').nullable();
     }),
   ]);
 };

@@ -47,6 +47,7 @@ router.route('/profileInfo')
             .innerJoin('cards', 'decks_cards.card_id', '=', 'cards.id')
             .where({deck_id: deck.id})
             .then( cards => {
+              console.log(cards.length)
               const destructuredCards = cards.map( card => ({
                 id: card.card_id,
                 character: card.character,
@@ -59,6 +60,7 @@ router.route('/profileInfo')
                 high_score: card.high_score
               }));
               deck.cards = destructuredCards;
+              deck.total = destructuredCards.length;
               return deck;
             })
         ))

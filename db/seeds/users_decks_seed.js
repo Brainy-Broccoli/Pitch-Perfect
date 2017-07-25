@@ -5,12 +5,43 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('users_decks').insert([
-        {user_id: 1, deck_id: 1, deck_progress: 80, accuracy: 95, has_badge:true}
+        {user_id: 1, deck_id: 1, deck_progress: 80, accuracy: 95, has_badge: true}
       ]);
     }).then(function () {
       // Inserts seed entries
       return knex('users_decks').insert([
-        {user_id: 1, deck_id: 2, deck_progress: 55, accuracy: 55, has_badge:false}
+        {user_id: 1, deck_id: 2, deck_progress: 55, accuracy: 55, has_badge: false}
       ]);
     })
+    // .then(function () {
+    //   // Inserts seed entries
+    //   return knex('users_decks').insert([
+    //     {user_id: 2, deck_id: 1, deck_progress: 80, accuracy: 95, has_badge: true}
+    //   ]);
+    // }).then(function () {
+    //   // Inserts seed entries
+    //   return knex('users_decks').insert([
+    //     {user_id: 2, deck_id: 2, deck_progress: 55, accuracy: 55, has_badge: false}
+    //   ]);
+    // }).then(function () {
+    //   // Inserts seed entries
+    //   return knex('users_decks').insert([
+    //     {user_id: 3, deck_id: 1, deck_progress: 80, accuracy: 95, has_badge: true}
+    //   ]);
+    // }).then(function () {
+    //   // Inserts seed entries
+    //   return knex('users_decks').insert([
+    //     {user_id: 3, deck_id: 2, deck_progress: 55, accuracy: 55, has_badge: false}
+    //   ]);
+    // }).then(function () {
+    //   // Inserts seed entries
+    //   return knex('users_decks').insert([
+    //     {user_id: 4, deck_id: 1, deck_progress: 80, accuracy: 95, has_badge: true}
+    //   ]);
+    // }).then(function () {
+    //   // Inserts seed entries
+    //   return knex('users_decks').insert([
+    //     {user_id: 4, deck_id: 2, deck_progress: 55, accuracy: 55, has_badge: false}
+    //   ]);
+    // })
 };

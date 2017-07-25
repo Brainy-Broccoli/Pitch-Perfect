@@ -6,6 +6,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const config = require('config')['passport'];
 const models = require('../../db/models');
+const knex = require('../../db').knex;
 
 passport.serializeUser((profile, done) => {
   done(null, profile.id);
@@ -169,6 +170,48 @@ const getOrCreateOAuthProfile = (type, oauthProfile, done) => {
       return models.Profile.forge(profileInfo).save();
     })
     .tap(profile => {
+      console.log('profile after signup', profile);
+      // grab the profile id and for every deck, add an entry into the join table for users_decks
+      // first need to grab this array of decks from the decks table --  no bookshelf model for this
+      // so i'll be using knex
+      return knex.select('id').from('decks')
+        .then(deckRows => {
+          const dIDs = deckRows.map(row => row.id);
+          console.log('deck ids', dIDs);
+          const insertionPromises = [];
+          for (let i = 0; i < dIDs.length; i++) {
+            //perform an insertion
+            insertionPromises.push(knex('users_decks').insert({
+              'deck_id': dIDs[i], 
+              'user_id': profile.id,
+              'deck_progress': 0,
+              'accuracy': null,
+              'has_badge': false
+            }));
+          }
+          console.log('insertionPromises length after associating users with decks', insertionPromises.length);
+          //now associate them with all the cards
+          knex.select('id').from('cards')
+            .then(cardRows => {
+              console.log('onto associating users with cards');
+              const cIDs = cardRows.map(row => row.id);
+              for (let i = 0; i < cIDs.length; i++) {
+                insertionPromises.push(knex('users_cards').insert({
+                  'user_id': profile.id,
+                  'card_id': cIDs[i],
+                  'high_score': null
+                }));
+              }
+              console.log('added all cards to promise array, now length', insertionPromises.length);
+              Promise.all(insertionPromises);
+            })
+            .catch(err => console.log('failure to retrieve cardIDs', err));
+        })
+        .catch(err => console.log(err));
+      // return profile; ultimately will need to return a profile instance for this continue working
+    })
+    .tap(profile => {
+      console.log('made it into the second tap statement');
       return models.Auth.forge({
         type,
         profile_id: profile.get('id'),

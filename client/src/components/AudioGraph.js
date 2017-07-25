@@ -36,7 +36,6 @@ class AudioGraph extends React.Component {
 
   render() {
     var row;
-    console.log('Yermek', this.props.currentCard.female_voice);
     if (this.state.sound === true) {
       row = <Sound
               url={this.props.currentCard.female_voice}
@@ -168,7 +167,7 @@ class AudioGraph extends React.Component {
     this.recordedPitchData.forEach( pitchAtTime => {
       let px = Math.ceil(pitchAtTime.t / (maxTime / WIDTH));
       if (!renderedData[px]) {
-        console.log(pitchAtTime.f)
+        //console.log(pitchAtTime.f)
         gqCtx.lineTo(px, (pitchAtTime.f ? HEIGHT - Math.ceil(pitchAtTime.f * (HEIGHT/MAX_FREQ)) : HEIGHT));
         renderedData[px] = true;
       }
