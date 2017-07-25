@@ -25,9 +25,11 @@ class AudioGraph extends React.Component {
     this.timerID = null;
     this.startTime = null;
     this.recordedPitchData = [];
+    this.recordedAudioData = [];
 
     this.onSoundClick = this.onSoundClick.bind(this);
     this.finishedPlaying = this.finishedPlaying.bind(this);
+    this.storage = [];
   }
 
   componentWillUnmount() {
@@ -53,6 +55,7 @@ class AudioGraph extends React.Component {
               }
               <Button circular basic icon='volume up' size='big' style={{marginTop: `0.5em`}} onClick={this.onSoundClick} />
               {row}
+              <audio controls/>
           </Grid.Column>
           <Grid.Column  textAlign='left' width={14}>
             <canvas width={600} height={400} ref="canvas" style={{
@@ -84,16 +87,27 @@ class AudioGraph extends React.Component {
           this.stream = stream;
           this.recordedPitchData = [];
           this.setState({
-            recording: true,
-            recordedAudioData: [],
+            recording: true
           });
 
           const recordingNode = this.audioCtx.createMediaStreamSource(stream);
+          this.mediaRecorder = new MediaRecorder(stream);
+          this.mediaRecorder.start();
+          this.mediaRecorder.ondataavailable = (e) => {
+            console.log('this.recordedAudioData 22222', this.recordedAudioData, e)
+            console.log('this', this);
+            this.recordedAudioData.push(e.data);
+          }
+          this.mediaRecorder.onstop = (e) => {
 
+            var blob = new Blob(this.recordedAudioData, {'type': 'audio/ogg; codecs=opus'});
+            console.log('BLOOOOBBBBB', blob);
+            document.querySelector("audio").src = URL.createObjectURL(blob);
+            this.recordedAudioData = [];
+          }
           this.analyser = this.audioCtx.createAnalyser();
           this.analyser.fftSize = 1024;
           this.buffer = new Float32Array(this.analyser.fftSize);
-
           recordingNode.connect(this.analyser);
 
           //UNCOMMENT THIS LINE TO FORWARD AUDIO TO OUTPUT
@@ -113,18 +127,26 @@ class AudioGraph extends React.Component {
 
   stopRecording() {
     if(this.state.recording) {
-      console.log('Stop:');
+      // console.log('Stop:');
+      // console.log('after', this.storage);
+      this.mediaRecorder.stop();
+      console.log('this.recordedAudioData', this.recordedAudioData)
+      // this.audioCtx.decodeAudioData(this.buffer, function(buffer) {
+      //   console.log('audio buffer', buffer);
+      // })
       this.stream.getTracks().forEach(track => {track.stop()});
       this.setState({
         recording: false
-      }); 
-      cancelAnimationFrame(this.timerID); 
+      });
+      cancelAnimationFrame(this.timerID);
     }
   }
 
   draw() {
 
     this.analyser.getFloatTimeDomainData(this.buffer);
+    this.storage.push(this.buffer);
+    // console.log(this.storage);
     const dt = performance.now() - this.startTime;
     const detectPitch = new pf.AMDF();
     const pitch = detectPitch(this.buffer);
@@ -167,7 +189,6 @@ class AudioGraph extends React.Component {
     this.recordedPitchData.forEach( pitchAtTime => {
       let px = Math.ceil(pitchAtTime.t / (maxTime / WIDTH));
       if (!renderedData[px]) {
-        //console.log(pitchAtTime.f)
         gqCtx.lineTo(px, (pitchAtTime.f ? HEIGHT - Math.ceil(pitchAtTime.f * (HEIGHT/MAX_FREQ)) : HEIGHT));
         renderedData[px] = true;
       }
@@ -180,7 +201,7 @@ class AudioGraph extends React.Component {
     gqCtx.arc(cursorX, cursorY, 5, 0, 2*Math.PI);
     gqCtx.fill();
 
-    this.timerID = requestAnimationFrame(this.draw)
+    this.timerID = requestAnimationFrame(this.draw);
   }
 }
 

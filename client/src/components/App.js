@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { 
+import {
   BrowserRouter as Router,
   Route,
   Link
@@ -22,7 +22,7 @@ import { loadProfile } from '../actions/actions_profilePage.js';
 import { loadPracticePage } from '../actions/actions_practicePage.js';
 // import Decks
 // import Logout Page
-// likely additional routes will need to be defined within the decks page 
+// likely additional routes will need to be defined within the decks page
 class App extends Component {
 
   componentDidMount() {
