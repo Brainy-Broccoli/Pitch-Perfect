@@ -10,6 +10,7 @@ import { selectRecentActivityDeck } from '../actions/actions_practicePage';
 
 class RecentActivity extends Component {
   render() {
+    console.log(this.props.recentDeck.total)
     return (
       <Grid>
         <Grid.Column width={7}>

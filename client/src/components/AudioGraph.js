@@ -189,7 +189,6 @@ class AudioGraph extends React.Component {
     this.recordedPitchData.forEach( pitchAtTime => {
       let px = Math.ceil(pitchAtTime.t / (maxTime / WIDTH));
       if (!renderedData[px]) {
-        // console.log(pitchAtTime.f)
         gqCtx.lineTo(px, (pitchAtTime.f ? HEIGHT - Math.ceil(pitchAtTime.f * (HEIGHT/MAX_FREQ)) : HEIGHT));
         renderedData[px] = true;
       }
@@ -202,7 +201,7 @@ class AudioGraph extends React.Component {
     gqCtx.arc(cursorX, cursorY, 5, 0, 2*Math.PI);
     gqCtx.fill();
 
-    this.timerID = requestAnimationFrame(this.draw)
+    this.timerID = requestAnimationFrame(this.draw);
   }
 }
 

@@ -29,7 +29,7 @@ class App extends Component {
     fetch('/api/profile', { credentials: 'include' })
       .then(res => res.json())
       .then( data => {
-        console.log('data', data);
+        console.log('data has been fetched', data);
         const name = data.display;
         const badgeUrls = data.decks.filter( deck => deck.has_badge ).map( deck => deck.badge);
         const photo = data.photo || 'https://www.cbdeolali.org.in/drupal/sites/default/files/Section%20Head/Alternative-Profile-pic_5.jpg';
@@ -43,9 +43,9 @@ class App extends Component {
           currentCardIndex: 0,
           currentCard: data.decks[0].cards[0],
           allDecks: data.decks,
-          recentUserDecksInfo: data.decks.slice(0, 2) // TODO: make this based off timestamp on decks
+          recentUserDecksInfo: data.decks.slice(0, 3) // TODO: make this based off timestamp on decks
         };
-
+        console.log('recentUserDecksInfo', data.decks.slice(0, 3));
         this.props.loadPracticePage(practicePageState);
       });
   }
