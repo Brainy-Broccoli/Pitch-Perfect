@@ -1,7 +1,7 @@
 const express = require('express');
 const middleware = require('../middleware');
-
 const router = express.Router();
+const knex = require('../../db').knex;
 
 router.route('/')
   .get(middleware.auth.verify, (req, res) => {
