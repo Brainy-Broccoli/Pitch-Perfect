@@ -156,7 +156,25 @@ router.route('/profileInfo')
   });
 router.route('/recentDecks')
   .get((req, res) => {
-    res.status(200).send('grabbing recentDecks info');
+    const userID = req.user.id;
+    // having some real trouble here trying to get the deck info for all decks for the user in the users_recent_decks table
+    // take user ID and get all all decksIDs from the from the users_recent_decks table
+    // then select the progress and accuracy from the users_decks table where userID = req.user.id and deck_id in (deckIDs gotten above)
+    // then select * from decks where id in (deckID's gotten from above)
+    // then using a for loop you should be able to iterate through both those arrays and produce an array of objects with all the
+    // properties you'd need ∏
+    knex.from('users_recent_decks')
+      .innerJoin('profiles', 'profiles.id', 'users_recent_decks.user_id')
+      .innerJoin('decks', 'decks.id', 'users_recent_decks.deck_id')
+      .select('deck_id', 'topic', 'image', 'badge')
+      .then(joinTable => {
+        console.log('the join table', joinTable);
+        res.json(joinTable);
+      })
+      .catch(err => {
+        console.log('error occurred retrieving decks for user', userID, 'err:', err);
+        res.sendStatus(500);
+      });
   })
   .post((req, res) => {
     const userID = req.user.id;
@@ -223,15 +241,8 @@ router.route('/recentDecks')
         console.log('something went wrong', err);
         res.sendStatus(500);
       });
-    // then take the id of the deck you just found and then insert into the users_recentDecks page
-    // then perform a query for the number of entries you have under that user id
-    // if more than 3, delete the one with the oldest timestamp
-    // else nothing bro
-    // then send back the status of this whole operation -- 201 or 500
     //on the client side, once the status code has been received (hopefully 201)
     // send a get request for recentDecks and then update the state accordingly -- the end
-
-    
   }); 
 
 module.exports = router;
