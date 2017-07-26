@@ -154,5 +154,84 @@ router.route('/profileInfo')
     // recent Decks (determined by timestamp) -- but for now will be the first 3 decks in the all decks array
     
   });
+router.route('/recentDecks')
+  .get((req, res) => {
+    res.status(200).send('grabbing recentDecks info');
+  })
+  .post((req, res) => {
+    const userID = req.user.id;
+    const { topic, timestamp } = req.body;
+    let deckID;
+    // find the id of the deck associated with that topic
+    knex.select('id').from('decks').where({topic})
+      .then(deckRow => {
+        deckID = deckRow[0].id;
+        // check to see if that deck is already there -- if so we'll just update the timestamp
+        return knex.select().from('users_recent_decks').where({deck_id: deckID});
+      })
+      .then(existingDeckInfo => {
+        console.log('existingDeckInfo', existingDeckInfo);
+        console.log('deckID inside existingDeckInfo block', deckID);
+        // if that deck isn't already there, then make an insertion
+        if (!existingDeckInfo.length) {
+          console.log('deck not found -- inserting into users_recent_decks');
+          knex('users_recent_decks').insert({user_id: userID, deck_id: deckID, time_stamp: timestamp})
+            .then(insertionInfo => {
+              // now we need to take a look at how many rows are there -- if > 3, we need to delete the oldest
+              return knex.select().from('users_recent_decks').where({user_id: userID});
+            })
+            .then(recentDecksForUser => {
+              if (recentDecksForUser.length > 3) {
+                // time to delete the oldest one
+                console.log('more than 3 recent decks -- deleting');
+                // sort the recentDeck rows by the timestamp
+                recentDecksForUser.sort((a, b) => a - b);
+                //then grab the timestamp of the first row - the lowest time stamp = least recently inserted
+                const oldestTimeStamp = recentDecksForUser[0].time_stamp;
+                knex('users_recent_decks').where({'time_stamp': oldestTimeStamp}).del()
+                  .then(deletionInfo => {
+                    res.sendStatus(201);
+                  })
+                  .catch(err => {
+                    console.log('failure to delete oldest timestamp');
+                    res.sendStatus(500);
+                  });
+              } else {
+                console.log('recent decks number less than 3 -- nothing to delete');
+                // nothing to do, simply send back a successful response
+                res.sendStatus(201);
+              } 
+            })
+            .catch(err => {
+              console.log(err);
+              res.sendStatus(500);
+            });
+        } else {
+          // the deck was already there -- just update the timestamp
+          knex('users_recent_decks').where({deck_id: deckID}).update({time_stamp: timestamp})
+            .then(successfulUpdateResult => {
+              console.log('successful update');
+              res.sendStatus(201);
+            })
+            .catch(err => {
+              console.log('error updating deck timestamp');
+              res.sendStatus(500);
+            });
+        }
+      })
+      .catch(err => {
+        console.log('something went wrong', err);
+        res.sendStatus(500);
+      });
+    // then take the id of the deck you just found and then insert into the users_recentDecks page
+    // then perform a query for the number of entries you have under that user id
+    // if more than 3, delete the one with the oldest timestamp
+    // else nothing bro
+    // then send back the status of this whole operation -- 201 or 500
+    //on the client side, once the status code has been received (hopefully 201)
+    // send a get request for recentDecks and then update the state accordingly -- the end
+
+    
+  }); 
 
 module.exports = router;
