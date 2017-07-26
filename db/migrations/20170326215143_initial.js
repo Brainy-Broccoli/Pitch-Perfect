@@ -53,7 +53,7 @@ exports.up = function (knex, Promise) {
       table.integer('deck_id').references('decks.id').onDelete('CASCADE');
       table.integer('user_id').references('profiles.id').onDelete('CASCADE');
       table.integer('deck_progress');
-      table.integer('accuracy');
+      table.float('accuracy');
       table.boolean('has_badge');
     }),
     knex.schema.createTableIfNotExists('users_cards', function(table) {
