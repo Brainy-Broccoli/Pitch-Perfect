@@ -5,7 +5,6 @@ import AudioGraph from './AudioGraph.js';
 
 class PracticePage extends Component {
   render() {
-    console.log('Yermek - 2', this.props)
     return (
       <Grid textAlign='center' columns={2} divided="vertically">
         <Grid.Row>

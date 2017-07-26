@@ -12,7 +12,6 @@ const initialState = {
 const profileInfo = (state = initialState, action) => {
   switch (action.type) {
   case LOAD_PROFILE:
-      console.log(action.profileState)
     return action.profileState;
   default:
     return state;
