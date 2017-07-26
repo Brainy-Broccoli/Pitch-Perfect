@@ -14,6 +14,7 @@ import DecksContainer from '../containers/DecksContainer';
 import PremiumContent from './PremiumContent';
 import Logout from './Logout';
 import VisiblePracticePage from '../containers/VisiblePracticePage';
+import CreateCustomDeck from './CreateCustomDeck';
 
 import { Menu, Segment } from 'semantic-ui-react';
 
@@ -75,6 +76,7 @@ class App extends Component {
             <Route path="/premium-content" component={PremiumContent}/>
             <Route path="/practice-page" component={VisiblePracticePage}/>
             <Route path="/logout" component={Logout}/>
+            <Route path="/create-custom-deck" component={CreateCustomDeck}/>
           </Segment>
         </div>
       </Router>

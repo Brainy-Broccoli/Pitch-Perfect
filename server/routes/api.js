@@ -12,6 +12,21 @@ router.route('/')
     res.status(201).send({ data: 'Posted!' });
   });
 
+router.route('/cards')
+  .get((req, res) => {
+    const userID = req.user.id;
+
+    knex.from('users_cards')
+      .innerJoin('cards', 'users_cards.card_id', '=', 'cards.id')
+      .where({user_id: userID})
+      .then( data => {
+        res.json({
+          allCards: data
+        })
+      })
+      .catch(err => res.status(500).send('All Cards not retrieved' + err))
+  })
+
 router.route('/profileInfo')
   .get((req, res) => {
     const userID = req.user.id;
@@ -152,7 +167,6 @@ router.route('/profileInfo')
     // all the cards for each deck 
     // highscore information for each card added to each card
     // recent Decks (determined by timestamp) -- but for now will be the first 3 decks in the all decks array
-    
   });
 router.route('/recentDecks')
   .get((req, res) => {

@@ -15,6 +15,7 @@ import React, { Component }  from 'react';
 import { connect } from 'react-redux';
 import { Grid, Image } from 'semantic-ui-react';
 import Deck from '../components/Deck';
+import CustomDeck from '../components/CustomDeck';
 import { selectDeck } from '../actions/actions_practicePage';
 
 import { Progress } from 'semantic-ui-react'
@@ -57,11 +58,10 @@ class DecksContainer extends Component {
                   />)
               })
             }
-            <Deck
+            <CustomDeck
               topic={'Create custom deck'}
               image={this.image}
               key={'customDeck'}
-              onDeckSelect={this.props.onDeckSelect}
             />
           </Grid.Row>
         </Grid>
