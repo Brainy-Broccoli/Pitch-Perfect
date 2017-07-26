@@ -11,7 +11,7 @@
 // use connect with the above 2 functions and the presentational component you imported
 
 // export the result of the above
-import React, { Component }  from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Grid, Image } from 'semantic-ui-react';
 import Deck from '../components/Deck';

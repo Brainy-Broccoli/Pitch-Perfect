@@ -6,7 +6,7 @@ import { Grid, Image } from 'semantic-ui-react';
 
 import { bindActionCreators } from 'redux';
 import { selectPage } from '../actions/actions_navBar';
-import { selectRecentActivityDeck } from '../actions/actions_practicePage';
+import { selectRecentActivityDeck, receiveUpdatedRecentDecks } from '../actions/actions_practicePage';
 
 class RecentActivity extends Component {
   constructor(props) {
@@ -52,6 +52,7 @@ class RecentActivity extends Component {
             .then(res => res.json())
             .then(recentDeckInfo => {
               console.log('here is the new recent decks', recentDeckInfo);
+              this.props.receiveUpdatedRecentDecks(recentDeckInfo);
             })
             .catch(err => console.error('get request for recent decks failed', err));
         })
@@ -91,7 +92,8 @@ class RecentActivity extends Component {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({ 
     selectPage,
-    selectRecentActivityDeck
+    selectRecentActivityDeck,
+    receiveUpdatedRecentDecks
   }, dispatch);
 };
 

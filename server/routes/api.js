@@ -170,25 +170,80 @@ router.route('/profileInfo')
   });
 router.route('/recentDecks')
   .get((req, res) => {
-    const userID = req.user.id;
+    /* THE OLD WAY OF TRYING TO DO IT */
+    // knex.from('users_recent_decks')
+    //   .innerJoin('profiles', 'profiles.id', 'users_recent_decks.user_id')
+    //   .innerJoin('decks', 'decks.id', 'users_recent_decks.deck_id')
+    //   .select('deck_id', 'topic', 'image', 'badge')
+    //   .then(joinTable => {
+    //     console.log('the join table', joinTable);
+    //     res.json(joinTable);
+    //   })
+    //   .catch(err => {
+    //     console.log('error occurred retrieving decks for user', userID, 'err:', err);
+    //     res.sendStatus(500);
+    //   });
+
     // having some real trouble here trying to get the deck info for all decks for the user in the users_recent_decks table
     // take user ID and get all all decksIDs from the from the users_recent_decks table
     // then select the progress and accuracy from the users_decks table where userID = req.user.id and deck_id in (deckIDs gotten above)
     // then select * from decks where id in (deckID's gotten from above)
     // then using a for loop you should be able to iterate through both those arrays and produce an array of objects with all the
-    // properties you'd need ∏
-    knex.from('users_recent_decks')
-      .innerJoin('profiles', 'profiles.id', 'users_recent_decks.user_id')
-      .innerJoin('decks', 'decks.id', 'users_recent_decks.deck_id')
-      .select('deck_id', 'topic', 'image', 'badge')
-      .then(joinTable => {
-        console.log('the join table', joinTable);
-        res.json(joinTable);
+    // properties you'd need 
+
+    /* THE NEW WAY OUTLINED ABOVE */
+    const userID = req.user.id;
+    const recentDecks = [];
+    let recentDeckIDs, userSpecificDeckInfo, timestampInfo;
+    knex.select('deck_id', 'time_stamp').from('users_recent_decks').where({'user_id': userID})
+      .then(deckIDRows => {
+        console.log('deckIDRows', deckIDRows);
+        recentDeckIDs = deckIDRows.map(deckIDRow => deckIDRow.deck_id);
+        deckIDRows.sort((a, b) => a.deck_id - b.deck_id);
+        timestampInfo = deckIDRows;
+        console.log('recent Deck IDs', recentDeckIDs);
+        return knex.select('deck_id', 'deck_progress', 'accuracy').from('users_decks')
+          .where({user_id: userID})
+          .andWhere('deck_id', 'in', recentDeckIDs);
+      })
+      .then(userSpecificRows => {
+        //now need to sort it by id so I can use one for loop to iterate through all 
+        userSpecificRows.sort((a, b) => a.deck_id - b.deck_id);
+        userSpecificDeckInfo = userSpecificRows;
+        console.log('user specific rows', userSpecificRows);
+
+        // now time to get the info that is general for each of those decks
+        return knex.select().from('decks').where('id', 'in', recentDeckIDs);
+      })
+      .then(deckMetaInfoRows => {
+        deckMetaInfoRows.sort((a, b) => a.id - b.id);
+        console.log('deck meta info', deckMetaInfoRows);
+
+        //now to combine the user specific information with the meta info to create the exact objects we'll need
+        for (let i = 0; i < deckMetaInfoRows.length; i++) {
+          //create the deck object with the combination of info and then push it into the recentDecks array
+          //make sure to have key names be exactly as they are referenced in the components that make use of this data
+          //additionally, will be adding on the actual id as it appears in the db so that the on-click for recent activity won't send a topic
+          recentDecks.push({
+            progress: userSpecificDeckInfo[i].deck_progress,
+            accuracy: userSpecificDeckInfo[i].accuracy,
+            topic: deckMetaInfoRows[i].topic,
+            image: deckMetaInfoRows[i].image,
+            badge: deckMetaInfoRows[i].badge,
+            timestamp: timestampInfo[i].time_stamp,
+            dbID: deckMetaInfoRows[i].id
+          });
+        }
+        recentDecks.sort((a, b) => b.timestamp - a.timestamp);
+        console.log('all recent deck objects', recentDecks);
+        res.json(recentDecks);
       })
       .catch(err => {
-        console.log('error occurred retrieving decks for user', userID, 'err:', err);
+        console.log('err', err);
         res.sendStatus(500);
       });
+
+
   })
   .post((req, res) => {
     const userID = req.user.id;

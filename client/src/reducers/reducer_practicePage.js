@@ -111,6 +111,9 @@ const initialState = {
 const practicePage = (state = initialState, action) => {
   //console.log('state in practice page', state);
   switch (action.type) {
+    case 'RECEIVE_UPDATED_RECENT_DECKS':
+      console.log('receiving new deck information');
+      return Object.assign({}, state, action.payload);
     case 'LOAD_PRACTICE_PAGE':
       return action.practicePageState;
     case 'SELECT_DECK':
