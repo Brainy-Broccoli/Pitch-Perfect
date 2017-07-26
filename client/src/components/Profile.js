@@ -10,7 +10,7 @@ class Profile extends Component {
     return (
       <Grid>
         <Grid.Column width={6}>
-          <Image style={{height: 241, width: 400}} src={this.props.profileInfo.photo}/>
+          <Image style={{width: 400}} src={this.props.profileInfo.photo}/>
           <div style={{textAlign: 'center', marginTop: 15}}>
             <h2>{this.props.profileInfo.name}</h2>
             <div style={{textAlign: 'center'}}>

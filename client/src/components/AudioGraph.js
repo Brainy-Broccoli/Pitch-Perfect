@@ -30,6 +30,13 @@ class AudioGraph extends React.Component {
     this.onSoundClick = this.onSoundClick.bind(this);
     this.finishedPlaying = this.finishedPlaying.bind(this);
     this.storage = [];
+
+    this.source = null;
+    this.readyToPlay = false;
+    this.source = this.audioCtx.createBufferSource();
+    this.recordingBuffer = null;
+
+    this.playUserVoice = this.playUserVoice.bind(this);
   }
 
   componentWillUnmount() {
@@ -37,14 +44,6 @@ class AudioGraph extends React.Component {
   }
 
   render() {
-    var row;
-    if (this.state.sound === true) {
-      row = <Sound
-              url={this.props.currentCard.female_voice}
-              playStatus={Sound.status.PLAYING}
-              onFinishedPlaying={this.finishedPlaying}
-            />
-    }
     return (
       <Grid>
         <Grid.Row columns={2}>
@@ -53,9 +52,16 @@ class AudioGraph extends React.Component {
                 ? <Button circular icon='stop' color='red' size='big' onClick={this.stopRecording} />
                 : <Button circular icon='unmute' color='red' size='big' onClick={this.record} />
               }
+              <Button circular basic icon='repeat' size='big' style={{marginTop: `0.5em`}} onClick={this.playUserVoice} />
               <Button circular basic icon='volume up' size='big' style={{marginTop: `0.5em`}} onClick={this.onSoundClick} />
-              {row}
-              <audio controls/>
+              {
+                this.state.sound
+                  ? <Sound
+                      url={this.props.currentCard.female_voice}
+                      playStatus={Sound.status.PLAYING}
+                      onFinishedPlaying={this.finishedPlaying}/>
+                  : null
+              }
           </Grid.Column>
           <Grid.Column  textAlign='left' width={14}>
             <canvas width={600} height={400} ref="canvas" style={{
@@ -66,6 +72,15 @@ class AudioGraph extends React.Component {
         </Grid.Row>
       </Grid>
     );
+  }
+
+  playUserVoice() {
+    if (this.readyToPlay) {
+      this.source = this.audioCtx.createBufferSource();
+      this.source.buffer = this.recordingBuffer;
+      this.source.connect(this.audioCtx.destination);
+      this.source.start(0);
+    }
   }
 
   onSoundClick() {
@@ -94,15 +109,25 @@ class AudioGraph extends React.Component {
           this.mediaRecorder = new MediaRecorder(stream);
           this.mediaRecorder.start();
           this.mediaRecorder.ondataavailable = (e) => {
-            console.log('this.recordedAudioData 22222', this.recordedAudioData, e)
-            console.log('this', this);
             this.recordedAudioData.push(e.data);
           }
           this.mediaRecorder.onstop = (e) => {
 
             var blob = new Blob(this.recordedAudioData, {'type': 'audio/ogg; codecs=opus'});
-            console.log('BLOOOOBBBBB', blob);
-            document.querySelector("audio").src = URL.createObjectURL(blob);
+
+            let fileReader = new FileReader();
+            fileReader.readAsArrayBuffer(blob);
+
+
+            fileReader.onloadend = () => {
+              const arrayBuffer = fileReader.result;
+
+              this.audioCtx.decodeAudioData(arrayBuffer, (buffer) => {
+                this.recordingBuffer = buffer;
+                this.readyToPlay = true;
+              })
+            }
+
             this.recordedAudioData = [];
           }
           this.analyser = this.audioCtx.createAnalyser();
