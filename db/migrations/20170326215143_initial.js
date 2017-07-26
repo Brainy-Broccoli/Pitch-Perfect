@@ -62,6 +62,12 @@ exports.up = function (knex, Promise) {
       table.integer('card_id').references('cards.id').onDelete('CASCADE');
       table.integer('high_score').nullable();
     }),
+    knex.schema.createTableIfNotExists('users_recent_decks', function(table) {
+      table.increments('id').unsigned().primary();
+      table.integer('user_id').references('profiles.id').onDelete('CASCADE');
+      table.integer('deck_id').references('cards.id').onDelete('CASCADE');
+      table.bigInteger('time_stamp');
+    }),
   ]);
 };
 
@@ -70,6 +76,7 @@ exports.down = function (knex, Promise) {
     knex.schema.dropTableIfExists('decks_cards'),
     knex.schema.dropTableIfExists('users_decks'),
     knex.schema.dropTableIfExists('users_cards'),
+    knex.schema.dropTableIfExists('users_recent_decks'),
     knex.schema.dropTableIfExists('auths'),
     knex.schema.dropTableIfExists('decks'),
     knex.schema.dropTableIfExists('cards'),

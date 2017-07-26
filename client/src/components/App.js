@@ -46,7 +46,7 @@ class App extends Component {
           allDecks: data.decks,
           recentUserDecksInfo: data.decks.slice(0, 3) // TODO: make this based off timestamp on decks
         };
-        console.log('recentUserDecksInfo', data.decks.slice(0, 3));
+        //console.log('recentUserDecksInfo', data.decks.slice(0, 3));
         this.props.loadPracticePage(practicePageState);
       });
   }
