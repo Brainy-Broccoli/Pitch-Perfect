@@ -1,10 +1,10 @@
-// const loadCards = (state = [], action) => {
+// const addDeck = (state = [], action) => {
 //   switch (action.type) {
-//   case 'CARDS_LOADED':
-//     return action.allCards;
+//   case 'ADD_DECK':
+//     return action.newDeck;
 //   default:
 //     return state;
 //   }
 // };
 
-// export default loadCards;
+// export default addDeck;

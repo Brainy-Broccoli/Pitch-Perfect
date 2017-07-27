@@ -1,16 +1,8 @@
 import React from 'react';
-import { Segment } from 'semantic-ui-react';
+import { Segment, Menu, Dropdown } from 'semantic-ui-react';
 
 const AllCardsTableList = (props) => {
-  return (
-    <Segment.Group>
-      <Segment>Top</Segment>
-      <Segment>Middle</Segment>
-      <Segment>Middle</Segment>
-      <Segment>Middle</Segment>
-      <Segment>Bottom</Segment>
-    </Segment.Group>
-  );
+  return (<Menu.Item style={{textAlign: 'center'}}> {props.card} </Menu.Item>);
 };
 
 export default AllCardsTableList;

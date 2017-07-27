@@ -1,8 +1,8 @@
-// import { PAGE_SELECTED } from './actionTypes';
+import { PAGE_SELECTED } from './actionTypes';
 
-// export const loadCards = (allCards) => {
-//   return {
-//     type: 'CARDS_LOADED',
-//     allCards
-//   };
-// };
+export const addDeck = (newDeck) => {
+  return {
+    type: 'ADD_DECK',
+    newDeck
+  };
+};
