@@ -27,6 +27,7 @@ import { loadPracticePage } from '../actions/actions_practicePage.js';
 class App extends Component {
 
   componentDidMount() {
+    let practicePageState;
     fetch('/api/profileInfo', { credentials: 'include' })
       .then(res => res.json())
       .then( data => {
@@ -39,16 +40,21 @@ class App extends Component {
 
         this.props.loadProfile(profileState);
 
-        const practicePageState = {
+        practicePageState = {
           currentDeck: data.decks[0],
           currentCardIndex: 0,
           currentCard: data.decks[0].cards[0],
           allDecks: data.decks,
-          recentUserDecksInfo: data.decks.slice(0, 3) // TODO: make this based off timestamp on decks
         };
-        console.log('recentUserDecksInfo', data.decks.slice(0, 3));
+        // finally, need to get the recent deck information
+        return fetch('/api/recentDecks', {credentials: 'include'});
+      })
+      .then(res => res.json())
+      .then(recentDecks => {
+        practicePageState.recentUserDecksInfo = recentDecks;
         this.props.loadPracticePage(practicePageState);
-      });
+      })
+      .catch(err => console.log('error retrieving all information', err));
   }
 
   render() {

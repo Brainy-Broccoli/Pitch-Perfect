@@ -109,8 +109,11 @@ const initialState = {
 // TODO: refactor to use Object.assign() or the object spread operator
 // TODO: remove the conditionals from the card selection cases -- perform the check for currentCardIndex on the client side. as of now, same input (action.type) produces different outputs. 
 const practicePage = (state = initialState, action) => {
-  console.log('state in practice page', state);
+  //console.log('state in practice page', state);
   switch (action.type) {
+    case 'RECEIVE_UPDATED_RECENT_DECKS':
+      console.log('receiving new deck information');
+      return Object.assign({}, state, action.payload);
     case 'LOAD_PRACTICE_PAGE':
       return action.practicePageState;
     case 'SELECT_DECK':
