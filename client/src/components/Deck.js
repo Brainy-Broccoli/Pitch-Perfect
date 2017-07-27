@@ -13,10 +13,10 @@ class Deck extends Component {
   }
   handleDeckClick() {
     this.props.selectPage('Practice Page');
-    this.props.onDeckSelect(this.props.id);
+    this.props.onDeckSelect(this.props.index);
     const endpoint = '/api/recentDecks';
     const postBody = {
-      topic: this.props.topic,
+      deckDbID: this.props.dbID,
       timestamp: Date.now()
     };
 

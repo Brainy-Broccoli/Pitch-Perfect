@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
 import { Grid, Image } from 'semantic-ui-react';
 
 import { bindActionCreators } from 'redux';
@@ -15,12 +15,12 @@ class RecentActivity extends Component {
 
   handleRecentDeckClick() {
     this.props.selectPage('Practice Page');
-    this.props.selectRecentActivityDeck(this.props.topic);
-
+    this.props.selectRecentActivityDeck(this.props.dbID);
+    console.log('deck has been selected with dbID', this.props.dbID);
     // also send a post request to the api endpoint to update recent deck activity
     const endpoint = '/api/recentDecks';
     const postBody = {
-      topic: this.props.topic,
+      deckDbID: this.props.dbID,
       timestamp: Date.now()
     };
 
