@@ -194,7 +194,7 @@ router.route('/recentDecks')
     /* THE NEW WAY OUTLINED ABOVE */
     const userID = req.user.id;
     const recentDecks = [];
-    let recentDeckIDs, userSpecificDeckInfo, timestampInfo;
+    let recentDeckIDs, userSpecificDeckInfo, timestampInfo, deckMetaInfoRows;
     knex.select('deck_id', 'time_stamp').from('users_recent_decks').where({'user_id': userID})
       .then(deckIDRows => {
         console.log('deckIDRows', deckIDRows);
@@ -215,10 +215,35 @@ router.route('/recentDecks')
         // now time to get the info that is general for each of those decks
         return knex.select().from('decks').where('id', 'in', recentDeckIDs);
       })
-      .then(deckMetaInfoRows => {
-        deckMetaInfoRows.sort((a, b) => a.id - b.id);
-        console.log('deck meta info', deckMetaInfoRows);
-
+      .then(deckMetaInfo => {
+        deckMetaInfo.sort((a, b) => a.id - b.id);
+        console.log('deck meta info', deckMetaInfo);
+        deckMetaInfoRows = deckMetaInfo;
+        //need to grab the total number of cards for each deck
+        //return another knex statement for selection, then do the for loop in the subsequent then
+        return knex.select().from('decks_cards').whereIn('deck_id', recentDeckIDs);
+      })
+      .then(cardsInRecentDecks => {
+        const cardCounts = {}; // id: count
+        //count the total number of cards for every deck id in recent deck IDS
+        recentDeckIDs.forEach(deckID => {
+          for (let i = 0; i < cardsInRecentDecks.length; i++) {
+            if (cardsInRecentDecks[i].deck_id === deckID) {
+              if (cardCounts[deckID]) {
+                cardCounts[deckID]++;
+              } else {
+                cardCounts[deckID] = 1;
+              }
+            }
+          }
+        });
+        //now push all those key value pairs into an array and sort by id so the below for loop works correctly
+        const cardCountsTuples = [];
+        for (let deckID in cardCounts) {
+          cardCountsTuples.push([deckID, cardCounts[deckID]]);
+        }
+        cardCountsTuples.sort((a, b) => a[0] - b[0]);
+        console.log('card counts tuples (deck, # cards)', cardCountsTuples);
         //now to combine the user specific information with the meta info to create the exact objects we'll need
         for (let i = 0; i < deckMetaInfoRows.length; i++) {
           //create the deck object with the combination of info and then push it into the recentDecks array
@@ -231,6 +256,7 @@ router.route('/recentDecks')
             image: deckMetaInfoRows[i].image,
             badge: deckMetaInfoRows[i].badge,
             timestamp: timestampInfo[i].time_stamp,
+            total: cardCountsTuples[i][1],
             dbID: deckMetaInfoRows[i].id
           });
         }
