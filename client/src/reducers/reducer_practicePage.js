@@ -165,6 +165,9 @@ const practicePage = (state = initialState, action) => {
         allDecks: state.allDecks,
         recentUserDecksInfo: state.recentUserDecksInfo
       };
+    case 'ADD_DECK':
+      state.allDecks.push(action.newDeck);
+      return state;
     default:
       return state;
   }
