@@ -27,10 +27,10 @@ export const selectNextCard = () => {
   };
 };
 
-export const selectRecentActivityDeck = (topic) => {
+export const selectRecentActivityDeck = (dbID) => {
   return {
     type: SELECT_RECENT_ACTIVITY_DECK,
-    topic
+    dbID
   };
 };
 

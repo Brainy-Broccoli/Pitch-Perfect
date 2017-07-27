@@ -31,7 +31,7 @@ class App extends Component {
     fetch('/api/profileInfo', { credentials: 'include' })
       .then(res => res.json())
       .then( data => {
-        console.log('data has been fetched', data);
+        console.log('all decks data has been fetched', data);
         const name = data.display;
         const badgeUrls = data.decks.filter( deck => deck.has_badge ).map( deck => deck.badge);
         const photo = data.photo || 'https://www.cbdeolali.org.in/drupal/sites/default/files/Section%20Head/Alternative-Profile-pic_5.jpg';
@@ -51,6 +51,7 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(recentDecks => {
+        console.log('recent deck information has been fetched', recentDecks);
         practicePageState.recentUserDecksInfo = recentDecks;
         this.props.loadPracticePage(practicePageState);
       })

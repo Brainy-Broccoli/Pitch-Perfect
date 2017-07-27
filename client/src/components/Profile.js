@@ -39,6 +39,7 @@ class Profile extends Component {
                   key={idx} 
                   recentDeck={recentDeck} 
                   topic={recentDeck.topic}
+                  dbID={recentDeck.dbID}
                 />
               );
             })}

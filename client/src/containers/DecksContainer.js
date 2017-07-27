@@ -52,7 +52,8 @@ class DecksContainer extends Component {
                   <Deck
                     topic={deck.topic}
                     image={deck.image}
-                    id={index}
+                    dbID={deck.id}
+                    index={index}
                     key={index}
                     onDeckSelect={this.props.onDeckSelect}
                   />)

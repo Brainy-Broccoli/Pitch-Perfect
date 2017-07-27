@@ -273,22 +273,15 @@ router.route('/recentDecks')
   })
   .post((req, res) => {
     const userID = req.user.id;
-    const { topic, timestamp } = req.body;
-    let deckID;
-    // find the id of the deck associated with that topic
-    knex.select('id').from('decks').where({topic})
-      .then(deckRow => {
-        deckID = deckRow[0].id;
-        // check to see if that deck is already there -- if so we'll just update the timestamp
-        return knex.select().from('users_recent_decks').where({deck_id: deckID});
-      })
+    const { deckDbID, timestamp } = req.body;
+    knex.select().from('users_recent_decks').where({deck_id: deckDbID})
       .then(existingDeckInfo => {
         console.log('existingDeckInfo', existingDeckInfo);
-        console.log('deckID inside existingDeckInfo block', deckID);
+        console.log('deckDbID inside existingDeckInfo block', deckDbID);
         // if that deck isn't already there, then make an insertion
         if (!existingDeckInfo.length) {
           console.log('deck not found -- inserting into users_recent_decks');
-          knex('users_recent_decks').insert({user_id: userID, deck_id: deckID, time_stamp: timestamp})
+          knex('users_recent_decks').insert({user_id: userID, deck_id: deckDbID, time_stamp: timestamp})
             .then(insertionInfo => {
               // now we need to take a look at how many rows are there -- if > 3, we need to delete the oldest
               return knex.select().from('users_recent_decks').where({user_id: userID});
@@ -321,7 +314,7 @@ router.route('/recentDecks')
             });
         } else {
           // the deck was already there -- just update the timestamp
-          knex('users_recent_decks').where({deck_id: deckID}).update({time_stamp: timestamp})
+          knex('users_recent_decks').where({deck_id: deckDbID}).update({time_stamp: timestamp})
             .then(successfulUpdateResult => {
               console.log('successful update');
               res.sendStatus(201);
