@@ -54,7 +54,6 @@ class Deck extends Component {
         })
         .catch( err => console.error('Something broke: ', err));
     };
-    //Usage is like post('/api/thing', {a: 1, b:2}).then( res => /*DO JSON THING*/)
     console.log('sending post request to update recent decks');
     postJSON('/api/recentDecks', postBody);
   }
