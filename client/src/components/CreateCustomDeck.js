@@ -17,8 +17,7 @@ class CreateCustomDeck extends Component {
       created: false,
       topic: '',
       image: '',
-      badge: '',
-      success: false
+      badge: ''
     }
   }
 
@@ -98,7 +97,6 @@ class CreateCustomDeck extends Component {
         data.total = customDeck.length;
         console.log('Client received new deck', data);
         this.props.addDeck(data);
-        // this.setState({ success: true });
       })
 
 
@@ -128,8 +126,8 @@ class CreateCustomDeck extends Component {
   render() {
     console.log('it works', this.state.allCards)
     return (
-      <Grid verticalAlign='middle' padded>
-        <Grid.Row style={{height: '100%'}}>
+      <Grid padded>
+        <Grid.Row style={{minHeight: 200}}>
           <Grid.Column width={10}>
             <Dropdown onChange={(e, data) => this.selectCards(data.value)} placeholder='Select Cards' 
               fluid multiple search selection options={this.state.allCards.map((card) => {
