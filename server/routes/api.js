@@ -27,6 +27,74 @@ router.route('/cards')
       .catch(err => res.status(500).send('All Cards not retrieved' + err))
   })
 
+router.route('/create-custom-deck')
+  .post((req, res) => {
+    knex('decks').insert({
+      topic: req.body.topic,
+      image: req.body.image,
+      badge: req.body.badge,
+      default: false
+    })
+    .returning('id')
+    .then(function(id) {
+      console.log('first id', id);
+      knex('users_decks').insert({
+        user_id:req.user.id,
+        deck_id:id[0],
+        has_badge: false
+      })
+      .returning('deck_id')
+      .then(function(deckId) {
+        console.log('second id', deckId);
+        Promise.all(req.body.cards.map((card) => {
+          return knex('decks_cards').insert({
+            deck_id:deckId[0],
+            card_id:card.card_id
+          })
+        }))
+        return deckId;
+      })
+        // .returning('deck_id')
+        .then(function(deckId) {
+          console.log('third id', deckId);
+          // knex.from('decks')
+          //   .where({id: deckId[0]})
+          //   .then(data => {
+          //     console.log('SERVER DATA', data);
+          //     res.json(data)
+          //   })
+          knex.from('users_decks')
+            // .innerJoin('profiles', 'users_decks.user_id', '=', 'profiles.id')
+            .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
+            .where({deck_id: deckId[0]})
+            .then( data => {
+              console.log('FINAL DATA', data);
+              return data.map( deck => ({
+                id: deck.id,
+                progress: deck.deck_progress,
+                accuracy: deck.accuracy,
+                topic: deck.topic,
+                image: deck.image,
+                badge: deck.badge,
+                has_badge: deck.has_badge
+              }))
+            })
+            .then(deck => {
+              res.json(deck);
+            })
+        })
+      })
+    })
+  // })
+    // .catch(err => res.status(500).send('New Deck not retrieved' + err));
+
+  // .catch(err => res.status(500).send('Deck was not updated' + err));
+
+
+
+
+
+
 router.route('/profileInfo')
   .get((req, res) => {
     const userID = req.user.id;

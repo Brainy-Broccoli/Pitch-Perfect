@@ -168,6 +168,7 @@ const practicePage = (state = initialState, action) => {
       };
     case 'ADD_DECK':
       state.allDecks.push(action.newDeck);
+      console.log('state.allDecks', state.allDecks)
       return state;
     default:
       return state;

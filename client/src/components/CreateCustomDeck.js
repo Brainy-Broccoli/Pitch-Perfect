@@ -17,7 +17,8 @@ class CreateCustomDeck extends Component {
       created: false,
       topic: '',
       image: '',
-      badge: ''
+      badge: '',
+      success: false
     }
   }
 
@@ -52,6 +53,7 @@ class CreateCustomDeck extends Component {
   }
 
   createDeck() {
+
     let customDeck = this.state.allCards.filter((card) => {
       for (let i = 0; i < this.state.newDeck.length; i++) {
         let currentCard = this.state.newDeck[i];
@@ -63,22 +65,43 @@ class CreateCustomDeck extends Component {
     console.log('all Decks from store retrieved', this.props.allDecks);
     console.log('array of custom cards', customDeck);
 
-    let deckID = this.props.allDecks.length;
+    // let deckID = this.props.allDecks.length;
     let createdDeck = {
-      id: deckID + 1,
+      // id: deckID + 1,
       progress: null,
       accuracy: null,
       topic: this.state.topic || 'Custom Deck',
       image: this.state.image || 'http://saveabandonedbabies.org/wp-content/uploads/2015/08/default.png',
       badge: this.state.badge || 'https://previews.123rf.com/images/viktorijareut/viktorijareut1508/viktorijareut150800476/44097508-Vector-illustration-of-golden-trophy-cup-for-first-place-with-laurel-wreath-Trophy-icon-Sport-award--Stock-Vector.jpg',
       has_badge: false,
-      cards: customDeck,
-      total: customDeck.length
+      cards: customDeck
+      // total: customDeck.length
     }
 
     // let decks = this.props.allDecks;
     // decks.push(createdDeck);
-    this.props.addDeck(createdDeck);
+    // this.props.addDeck(createdDeck);
+
+
+    fetch('/api/create-custom-deck', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify(createdDeck)
+    })
+      .then(res => res.json())
+      .then( data => {
+        data.cards = customDeck;
+        data.total = customDeck.length;
+        console.log('Client received new deck', data);
+        this.props.addDeck(data);
+        // this.setState({ success: true });
+      })
+
+
   }
 
   handleTopic(event) {
@@ -141,9 +164,11 @@ class CreateCustomDeck extends Component {
                 <Input placeholder='Deck Badge (optional)' value={this.state.badge} onChange={this.handleBadge.bind(this)} style={{marginTop: 5}}/>
               </Grid.Column>
               <Grid.Column width={3} style={{marginLeft: 'auto', marginRight: 'auto'}}>
-                <Button onClick={() => this.createDeck()}> 
-                  Create Deck! 
-                </Button>
+                <Link to={`/decks`}>
+                  <Button onClick={() => this.createDeck()}>
+                    Create Deck!
+                  </Button>
+                </Link>
               </Grid.Column>
             </Grid.Row>
           : null
