@@ -27,6 +27,26 @@ router.route('/cards')
       .catch(err => res.status(500).send('All Cards not retrieved' + err))
   })
 
+router.route('/create-card')
+  .post((req, res) => {
+    knex('cards').insert({
+      translation: req.body.translation,
+      character: req.body.character,
+      pinyin: req.body.pinyin,
+      IPA: req.body.IPA,
+      female_voice: req.body.female_voice
+      tone: req.body.tone
+    })
+    .returning('id')
+    .then(function(id) {
+      console.log('first id', id);
+      knex('users_cards').insert({
+        user_id:req.user.id,
+        deck_id:id[0]
+      })
+    })
+  })
+
 router.route('/create-custom-deck')
   .post((req, res) => {
     knex('decks').insert({
