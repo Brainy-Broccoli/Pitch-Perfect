@@ -12,6 +12,7 @@ import {
 import Profile from './Profile';
 import DecksContainer from '../containers/DecksContainer';
 import PremiumContent from './PremiumContent';
+import CreateCard from './CreateCard';
 import Logout from './Logout';
 import VisiblePracticePage from '../containers/VisiblePracticePage';
 import CreateCustomDeck from './CreateCustomDeck';
@@ -71,6 +72,8 @@ class App extends Component {
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             <Menu.Item name='Practice Page' as={Link} to='/practice-page' active={this.props.activePage === 'Practice Page'} 
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
+            <Menu.Item name='Create Card' as={Link} to='/create-card' active={this.props.activePage === 'Create Card'} 
+              onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             <Menu.Menu position='right'>
               <Menu.Item name='logout' as={Link} to='/logout' active={this.props.activePage === 'logout'} onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/>
             </Menu.Menu>
@@ -84,6 +87,7 @@ class App extends Component {
             <Route path="/practice-page" component={VisiblePracticePage}/>
             <Route path="/logout" component={Logout}/>
             <Route path="/create-custom-deck" component={CreateCustomDeck}/>
+            <Route path="/create-card" component={CreateCard}/>
           </Segment>
         </div>
       </Router>
