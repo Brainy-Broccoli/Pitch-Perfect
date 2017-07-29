@@ -62,6 +62,7 @@ class DecksContainer extends Component {
   }
   
   render() {
+    // this.fetchData()
     let count = 0;
     let total = 0;
     this.props.allDecks.forEach((deck) => {
@@ -90,7 +91,7 @@ class DecksContainer extends Component {
                     dbID={deck.id}
                     index={index}
                     key={index}
-                    onDeckSelect={this.props.selectDeck(index)}
+                    onDeckSelect={() => this.props.selectDeck(index)}
                   />)
               })
             }
