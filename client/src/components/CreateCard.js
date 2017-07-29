@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Dimmer, Loader, Grid, Image, Input, Button } from 'semantic-ui-react';
+import { Dimmer, Loader, Grid, Image, Input, Button, Transition, Popup } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 
 class CreateCard extends Component {
@@ -13,7 +13,8 @@ class CreateCard extends Component {
       pinyin: '',
       recording: false,
       recordedSound: null,
-      loading:false
+      loading:false,
+      visible:false
     };
 
     this.record = this.record.bind(this);
@@ -66,7 +67,7 @@ class CreateCard extends Component {
       tone: this.state.tone,
       pinyin: this.state.pinyin,
       IPA: this.state.pinyin,
-      female_voice: this.state.recordedSound
+      female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/mother-ma-2.wav'
     }
     this.setState({ loading: true });
     fetch('/api/create-card', {
@@ -78,10 +79,19 @@ class CreateCard extends Component {
       method: 'POST',
       body: JSON.stringify(options)
     })
-    .then(res => res.json())
+    // .then(res => res.json())
     .then((data) => {
-      console.log('RECEIVED DATA FOR NEW CARD', data);
-      this.setState({ loading: false });
+      console.log(data);
+      this.readyToPlay = false;
+      this.setState({
+        loading: false,
+        visible: !this.state.visible,
+        englishWord: '',
+        tone: '',
+        chineseChar: '',
+        pinyin: '',
+        recordedSound: null
+       });
     })
   }
 
@@ -199,6 +209,12 @@ class CreateCard extends Component {
                   </Button>
                 : null
               }
+              <div >
+                <br />
+                <Transition visible={this.state.visible} animation='scale' duration={500}>
+                  <p style={{textAlign: 'center', color: 'green'}}>Card is created</p>
+                </Transition>
+              </div>
             </Grid.Column>
           </Grid.Row>
         </Grid>

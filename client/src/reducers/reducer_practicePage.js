@@ -100,7 +100,7 @@ const recentUserDecksInfo = [
 
 const initialState = {
   currentDeck: basicDeck,
-  currentCard: basicDeck.cards[0],
+  // currentCard: basicDeck.cards[0],
   currentCardIndex: 0,
   allDecks,
   recentUserDecksInfo

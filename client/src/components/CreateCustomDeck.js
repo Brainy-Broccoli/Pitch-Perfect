@@ -130,8 +130,9 @@ class CreateCustomDeck extends Component {
         <Grid.Row style={{minHeight: 200}}>
           <Grid.Column width={10}>
             <Dropdown onChange={(e, data) => this.selectCards(data.value)} placeholder='Select Cards' 
-              fluid multiple search selection options={this.state.allCards.map((card) => {
+              fluid multiple search selection options={this.state.allCards.map((card, index) => {
                 return { 
+                  key: index,
                   text: card.translation, 
                   value: card.translation 
                 }

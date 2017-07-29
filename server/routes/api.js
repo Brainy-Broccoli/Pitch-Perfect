@@ -30,22 +30,25 @@ router.route('/cards')
 router.route('/create-card')
   .post((req, res) => {
     console.log('REQUEST BODY',req.body);
-    // knex('cards').insert({
-    //   translation: req.body.translation,
-    //   character: req.body.character,
-    //   pinyin: req.body.pinyin,
-    //   IPA: req.body.IPA,
-    //   female_voice: req.body.female_voice,
-    //   tone: req.body.tone
-    // })
-    // .returning('id')
-    // .then(function(id) {
-    //   console.log('first id', id);
-    //   knex('users_cards').insert({
-    //     user_id:req.user.id,
-    //     deck_id:id[0]
-    //   })
-    // })
+    knex('cards').insert({
+      translation: req.body.translation,
+      character: req.body.character,
+      pinyin: req.body.pinyin,
+      IPA: req.body.IPA,
+      female_voice: req.body.female_voice,
+      tone: req.body.tone
+    })
+    .returning('id')
+    .then(function(id) {
+      console.log('first id', id);
+      knex('users_cards').insert({
+        user_id:req.user.id,
+        card_id:id[0]
+      })
+      .then(
+        res.status(201).send('Got it')
+      )
+    })
   })
 
 router.route('/create-custom-deck')
@@ -111,7 +114,21 @@ router.route('/create-custom-deck')
 
   // .catch(err => res.status(500).send('Deck was not updated' + err));
 
-
+// router.route('/decks')
+//   .get((req, res) => {
+//     knex.from('users_decks')
+//       .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
+//       .where({user_id: req.user.id})
+//       .then( data => ({
+//         id: deck.deck_id,
+//         progress: deck.deck_progress,
+//         accuracy: deck.accuracy,
+//         topic: deck.topic,
+//         image: deck.image,
+//         badge: deck.badge,
+//         has_badge: deck.has_badge
+//       }))
+//   })
 
 
 
@@ -135,7 +152,7 @@ router.route('/profileInfo')
       .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
       .where({user_id: userID})  
       .then( data => data.map( deck => ({
-        id: deck.id,
+        id: deck.deck_id,
         progress: deck.deck_progress,
         accuracy: deck.accuracy,
         topic: deck.topic,
