@@ -13,8 +13,8 @@ class CreateCard extends Component {
       pinyin: '',
       recording: false,
       recordedSound: null,
-      loading:false,
-      visible:false
+      // loading:false,
+      visible: false
     };
 
     this.record = this.record.bind(this);
@@ -69,7 +69,7 @@ class CreateCard extends Component {
       IPA: this.state.pinyin,
       female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/mother-ma-2.wav'
     }
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
     fetch('/api/create-card', {
       headers: {
         'Accept': 'application/json',
@@ -84,8 +84,8 @@ class CreateCard extends Component {
       console.log(data);
       this.readyToPlay = false;
       this.setState({
-        loading: false,
-        visible: !this.state.visible,
+        // loading: false,
+        visible: true,
         englishWord: '',
         tone: '',
         chineseChar: '',
@@ -112,7 +112,8 @@ class CreateCard extends Component {
           this.stream = stream;
           this.recordedPitchData = [];
           this.setState({
-            recording: true
+            recording: true,
+            visible: false
           });
 
           const recordingNode = this.audioCtx.createMediaStreamSource(stream);
@@ -124,7 +125,6 @@ class CreateCard extends Component {
           this.mediaRecorder.onstop = (e) => {
 
             var blob = new Blob(this.recordedAudioData, {'type': 'audio/ogg; codecs=opus'});
-
 
             this.setState({
               recordedSound: blob
@@ -177,9 +177,7 @@ class CreateCard extends Component {
   render() {
     return (
       <div>
-        <Dimmer active={this.state.loading}>
-          <Loader />
-        </Dimmer>
+        
         <Grid padded stretched={true}>
           <Grid.Row >
             <Grid.Column width={8}>
