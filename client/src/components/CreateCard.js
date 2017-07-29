@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Grid, Image, Input, Button } from 'semantic-ui-react';
+import { Dimmer, Loader, Grid, Image, Input, Button } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 
 class CreateCard extends Component {
@@ -12,7 +12,8 @@ class CreateCard extends Component {
       chineseChar: '',
       pinyin: '',
       recording: false,
-      recordedSound: null
+      recordedSound: null,
+      loading:false
     };
 
     this.record = this.record.bind(this);
@@ -67,10 +68,11 @@ class CreateCard extends Component {
       IPA: this.state.pinyin,
       female_voice: this.state.recordedSound
     }
+    this.setState({ loading: true });
     fetch('/api/create-card', {
       headers: {
         'Accept': 'application/json',
-        'Content-Type:': 'application/json'
+        'Content-Type': 'application/json'
       },
       credentials: 'include',
       method: 'POST',
@@ -79,6 +81,7 @@ class CreateCard extends Component {
     .then(res => res.json())
     .then((data) => {
       console.log('RECEIVED DATA FOR NEW CARD', data);
+      this.setState({ loading: false });
     })
   }
 
@@ -111,6 +114,7 @@ class CreateCard extends Component {
           this.mediaRecorder.onstop = (e) => {
 
             var blob = new Blob(this.recordedAudioData, {'type': 'audio/ogg; codecs=opus'});
+
 
             this.setState({
               recordedSound: blob
@@ -162,38 +166,43 @@ class CreateCard extends Component {
 
   render() {
     return (
-      <Grid padded stretched={true}>
-        <Grid.Row >
-          <Grid.Column width={8}>
-            <Input placeholder='English Word (20 Characters)' value={this.state.englishWord} onChange={(event) => this.handleEnglishWord(event)}/>
-            <Input placeholder='Tone (Number)' value={this.state.tone} onChange={(event) => this.handleTone(event)} style={{marginTop: 5}}/>
-          </Grid.Column>
-          <Grid.Column width={8}>
-            <Input placeholder='Chinese Character (20 Characters)' value={this.state.chineseChar} onChange={(event) => this.handleChineseChar(event)} />
-            <Input placeholder='Pinyin (20 Characters)' value={this.state.pinyin} onChange={(event) => this.handlePinYin(event)} style={{marginTop: 5}}/>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column>
-            { this.state.recording
-              ? <Button circular icon='stop' color='red' size='big' onClick={this.stopRecording} />
-              : <Button circular icon='unmute' color='red' size='big' onClick={this.record} />
-            }
-            <Button circular basic icon='repeat' size='big' style={{marginTop: `0.5em`}} onClick={this.playUserVoice} />
-            {
-              this.state.recordedSound 
-                && this.state.englishWord 
-                && this.state.tone 
-                && this.state.chineseChar
-                && this.state.pinyin ? 
-                <Button onClick={() => this.createNewCard()} style={{marginTop: `2em`}}>
-                  Create Card!
-                </Button>
-              : null
-            }
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <div>
+        <Dimmer active={this.state.loading}>
+          <Loader />
+        </Dimmer>
+        <Grid padded stretched={true}>
+          <Grid.Row >
+            <Grid.Column width={8}>
+              <Input placeholder='English Word (20 Characters)' value={this.state.englishWord} onChange={(event) => this.handleEnglishWord(event)}/>
+              <Input placeholder='Tone (Number)' value={this.state.tone} onChange={(event) => this.handleTone(event)} style={{marginTop: 5}}/>
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Input placeholder='Chinese Character (20 Characters)' value={this.state.chineseChar} onChange={(event) => this.handleChineseChar(event)} />
+              <Input placeholder='Pinyin (20 Characters)' value={this.state.pinyin} onChange={(event) => this.handlePinYin(event)} style={{marginTop: 5}}/>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              { this.state.recording
+                ? <Button circular icon='stop' color='red' size='big' onClick={this.stopRecording} />
+                : <Button circular icon='unmute' color='red' size='big' onClick={this.record} />
+              }
+              <Button circular basic icon='repeat' size='big' style={{marginTop: `0.5em`}} onClick={this.playUserVoice} />
+              {
+                this.state.recordedSound 
+                  && this.state.englishWord 
+                  && this.state.tone 
+                  && this.state.chineseChar
+                  && this.state.pinyin ? 
+                  <Button onClick={() => this.createNewCard()} style={{marginTop: `2em`}}>
+                    Create Card!
+                  </Button>
+                : null
+              }
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </div>
     )
   }
 };

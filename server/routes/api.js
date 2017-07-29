@@ -29,22 +29,23 @@ router.route('/cards')
 
 router.route('/create-card')
   .post((req, res) => {
-    knex('cards').insert({
-      translation: req.body.translation,
-      character: req.body.character,
-      pinyin: req.body.pinyin,
-      IPA: req.body.IPA,
-      female_voice: req.body.female_voice
-      tone: req.body.tone
-    })
-    .returning('id')
-    .then(function(id) {
-      console.log('first id', id);
-      knex('users_cards').insert({
-        user_id:req.user.id,
-        deck_id:id[0]
-      })
-    })
+    console.log('REQUEST BODY',req.body);
+    // knex('cards').insert({
+    //   translation: req.body.translation,
+    //   character: req.body.character,
+    //   pinyin: req.body.pinyin,
+    //   IPA: req.body.IPA,
+    //   female_voice: req.body.female_voice,
+    //   tone: req.body.tone
+    // })
+    // .returning('id')
+    // .then(function(id) {
+    //   console.log('first id', id);
+    //   knex('users_cards').insert({
+    //     user_id:req.user.id,
+    //     deck_id:id[0]
+    //   })
+    // })
   })
 
 router.route('/create-custom-deck')
