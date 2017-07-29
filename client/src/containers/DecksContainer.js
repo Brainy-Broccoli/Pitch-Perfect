@@ -29,6 +29,22 @@ class DecksContainer extends Component {
     this.image = 'http://www.freeiconspng.com/uploads/grey-plus-icon-8.png';
   }
 
+  // componentDidMount() {
+  //   let practicePageState;
+  //   fetch('/api/decks', { credentials: 'include' })
+  //     .then(res => res.json())
+  //     .then( data => {
+  //       console.log('Decks from the server', data);
+  //       practicePageState = {
+  //         currentDeck: data[0],
+  //         currentCardIndex: 0,
+  //         allDecks: data,
+  //       };
+  //       this.props.loadPracticePage(practicePageState);
+  //     })
+  //     .catch(err => console.log('error retrieving all information', err));
+  // }
+
   componentDidMount() {
     let practicePageState;
     fetch('/api/profileInfo', { credentials: 'include' })
@@ -60,7 +76,8 @@ class DecksContainer extends Component {
       })
       .catch(err => console.log('error retrieving all information', err));
   }
-  
+
+
   render() {
     // this.fetchData()
     let count = 0;
@@ -81,6 +98,7 @@ class DecksContainer extends Component {
         <Progress active value={count} total={total} style={{margin: 0, height: 13}} color='teal' size='small'/>
         <Grid verticalAlign="middle" padded>
           <Grid.Row>
+            {console.log('this.props.allDecks',this.props.allDecks)}
             {
               this.props.allDecks.map((deck, index) => {
                 console.log('index of decks', index);
