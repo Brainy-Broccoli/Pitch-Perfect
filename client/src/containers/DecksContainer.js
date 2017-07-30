@@ -17,6 +17,9 @@ import { Grid, Image } from 'semantic-ui-react';
 import Deck from '../components/Deck';
 import CustomDeck from '../components/CustomDeck';
 import { selectDeck } from '../actions/actions_practicePage';
+import { loadProfile } from '../actions/actions_profilePage.js';
+import { loadPracticePage } from '../actions/actions_practicePage.js';
+import { bindActionCreators } from 'redux';
 
 import { Progress } from 'semantic-ui-react'
 
@@ -24,27 +27,78 @@ class DecksContainer extends Component {
   constructor(props) {
     super(props);
     this.image = 'http://www.freeiconspng.com/uploads/grey-plus-icon-8.png';
-    this.count = 0;
-    this.total = 0;
+  }
+
+  // componentDidMount() {
+  //   let practicePageState;
+  //   fetch('/api/decks', { credentials: 'include' })
+  //     .then(res => res.json())
+  //     .then( data => {
+  //       console.log('Decks from the server', data);
+  //       practicePageState = {
+  //         currentDeck: data[0],
+  //         currentCardIndex: 0,
+  //         allDecks: data,
+  //       };
+  //       this.props.loadPracticePage(practicePageState);
+  //     })
+  //     .catch(err => console.log('error retrieving all information', err));
+  // }
+
+  componentDidMount() {
+    let practicePageState;
+    fetch('/api/profileInfo', { credentials: 'include' })
+      .then(res => res.json())
+      .then( data => {
+        console.log('all decks data has been fetched', data);
+        const name = data.display;
+        const badgeUrls = data.decks.filter( deck => deck.has_badge ).map( deck => deck.badge);
+        const photo = data.photo || 'https://www.cbdeolali.org.in/drupal/sites/default/files/Section%20Head/Alternative-Profile-pic_5.jpg';
+        const isMentor = true; // TODO: FIX ME OR DIE -- need to determine final mentor criteria
+        const profileState = { name, badgeUrls, photo, isMentor };
+
+        this.props.loadProfile(profileState);
+
+        practicePageState = {
+          currentDeck: data.decks[0],
+          currentCardIndex: 0,
+          currentCard: data.decks[0].cards[0],
+          allDecks: data.decks,
+        };
+        // finally, need to get the recent deck information
+        return fetch('/api/recentDecks', {credentials: 'include'});
+      })
+      .then(res => res.json())
+      .then(recentDecks => {
+        console.log('recent deck information has been fetched', recentDecks);
+        practicePageState.recentUserDecksInfo = recentDecks;
+        this.props.loadPracticePage(practicePageState);
+      })
+      .catch(err => console.log('error retrieving all information', err));
+  }
+
+
+  render() {
+    // this.fetchData()
+    let count = 0;
+    let total = 0;
     this.props.allDecks.forEach((deck) => {
       deck.cards.forEach((card) => {
-        this.total++;
+        total++;
         if (card.userAccuracy >= 50) {
-          this.count++;
+          count++;
         }
       })
     });
-  }
-
-  render() {
     return (
       <div>
         <div style={{textAlign: 'center', margin: 0}}>
-          Mentorship Progress: {this.count / this.total * 100}%
+          Mentorship Progress: {count / total * 100}%
         </div>
-        <Progress active value={this.count} total={this.total} style={{margin: 0, height: 13}} color='teal' size='small'/>
+        <Progress active value={count} total={total} style={{margin: 0, height: 13}} color='teal' size='small'/>
         <Grid verticalAlign="middle" padded>
           <Grid.Row>
+            {console.log('this.props.allDecks',this.props.allDecks)}
             {
               this.props.allDecks.map((deck, index) => {
                 console.log('index of decks', index);
@@ -55,7 +109,7 @@ class DecksContainer extends Component {
                     dbID={deck.id}
                     index={index}
                     key={index}
-                    onDeckSelect={this.props.onDeckSelect}
+                    onDeckSelect={() => this.props.selectDeck(index)}
                   />)
               })
             }
@@ -79,16 +133,15 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-    onDeckSelect: (deckIndex) => {
-      dispatch(selectDeck(deckIndex));
-    }
-  };
+  return bindActionCreators({ selectDeck, loadPracticePage, loadProfile }, dispatch);
+  // return {
+  //   onDeckSelect: (deckIndex) => {
+  //     dispatch(selectDeck(deckIndex));
+  //   }
+  // };
 };
 
-const VisibleDeckPage = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DecksContainer);
+export default connect(mapStateToProps,mapDispatchToProps)(DecksContainer);
 
-export default VisibleDeckPage;
+// export default VisibleDeckPage;
+

@@ -23,6 +23,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use('/', routes.auth);
 app.use('/api', routes.api);
 app.use('/decks', routes.auth);
+app.use('/create-card', routes.auth);
 app.use('/create-custom-deck', routes.auth);
 app.use('/premium-content', routes.auth);
 app.use('/practice-page', routes.auth);

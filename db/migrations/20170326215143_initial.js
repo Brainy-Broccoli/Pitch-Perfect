@@ -20,7 +20,7 @@ exports.up = function (knex, Promise) {
     //   table.string('gender', 20).nullable();
     // }),
     knex.schema.createTableIfNotExists('auths', function(table) {
-      table.increments('id').unsigned().primary();  
+      table.increments('id').unsigned().primary();
       table.string('type', 8).notNullable();
       table.string('oauth_id', 30).nullable();
       table.string('password', 100).nullable();
@@ -32,6 +32,7 @@ exports.up = function (knex, Promise) {
       table.string('topic', 50).nullable();
       table.string('image', 500).nullable();
       table.string('badge', 500).nullable();
+      table.boolean('default');
     }),
     knex.schema.createTableIfNotExists('cards', function(table) {
       table.increments('id').unsigned().primary();

@@ -100,7 +100,7 @@ const recentUserDecksInfo = [
 
 const initialState = {
   currentDeck: basicDeck,
-  currentCard: basicDeck.cards[0],
+  // currentCard: basicDeck.cards[0],
   currentCardIndex: 0,
   allDecks,
   recentUserDecksInfo
@@ -168,6 +168,7 @@ const practicePage = (state = initialState, action) => {
       };
     case 'ADD_DECK':
       state.allDecks.push(action.newDeck);
+      console.log('state.allDecks', state.allDecks)
       return state;
     default:
       return state;
