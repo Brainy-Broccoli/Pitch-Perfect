@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import { Dimmer, Loader, Grid, Image, Input, Button, Transition, Popup } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 
+import AWS from '../../../s3/index.js';
+
+
 class CreateCard extends Component {
   constructor(props) {
     super(props);
@@ -61,37 +64,45 @@ class CreateCard extends Component {
   }
 
   createNewCard() {
-    let options = {
-      translation: this.state.englishWord,
-      character: this.state.chineseChar,
-      tone: this.state.tone,
-      pinyin: this.state.pinyin,
-      IPA: this.state.pinyin,
-      female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/mother-ma-2.wav'
-    }
-    // this.setState({ loading: true });
-    fetch('/api/create-card', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      method: 'POST',
-      body: JSON.stringify(options)
-    })
-    // .then(res => res.json())
-    .then((data) => {
-      console.log(data);
-      this.readyToPlay = false;
-      this.setState({
-        // loading: false,
-        visible: true,
-        englishWord: '',
-        tone: '',
-        chineseChar: '',
-        pinyin: '',
-        recordedSound: null
-       });
+    AWS.S3.upload(AWS.createParams(this.state.englishWord + '.ogg', this.state.recordedSound), (err, data) => {
+      if (err) {
+        console.log('error occurred uploading', err);
+      } else {
+        console.log('data returned from upload', data);
+        console.log(data.Location);
+        let options = {
+          translation: this.state.englishWord,
+          character: this.state.chineseChar,
+          tone: this.state.tone,
+          pinyin: this.state.pinyin,
+          IPA: this.state.pinyin,
+          female_voice: data.Location
+        }
+        // this.setState({ loading: true });
+        fetch('/api/create-card', {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          method: 'POST',
+          body: JSON.stringify(options)
+        })
+        // .then(res => res.json())
+        .then((data) => {
+          console.log(data);
+          this.readyToPlay = false;
+          this.setState({
+            // loading: false,
+            visible: true,
+            englishWord: '',
+            tone: '',
+            chineseChar: '',
+            pinyin: '',
+            recordedSound: null
+           });
+        })
+      }
     })
   }
 
@@ -175,9 +186,10 @@ class CreateCard extends Component {
   }
 
   render() {
+    console.log('AWS', AWS);
+
     return (
       <div>
-        
         <Grid padded stretched={true}>
           <Grid.Row >
             <Grid.Column width={8}>

@@ -4147,7 +4147,7 @@ select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
 
-semantic-ui-react@^0.71.3:
+semantic-ui-react@^0.71.1:
   version "0.71.3"
   resolved "https://registry.yarnpkg.com/semantic-ui-react/-/semantic-ui-react-0.71.3.tgz#3313ade18ad11db88efcf2cade42ce7fa5ed9fd6"
   dependencies:

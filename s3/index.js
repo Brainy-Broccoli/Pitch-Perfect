@@ -1,9 +1,10 @@
+const AWSKey = require('../config/development.json')['AWS'];
 // first create the S3 instance and configure it 
 const AWS = require('aws-sdk');
-const fs = require('fs');
+// const fs = require('fs');
 const S3 = new AWS.S3({
-  accessKeyId: '',
-  secretAccessKey: '',
+  accessKeyId: AWSKey.accessKey,
+  secretAccessKey: AWSKey.secretKey,
   region: 'us-west-1',
   maxRetries: 10,
   apiVersion: 'latest'
