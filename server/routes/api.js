@@ -65,7 +65,8 @@ router.route('/create-custom-deck')
       knex('users_decks').insert({
         user_id:req.user.id,
         deck_id:id[0],
-        has_badge: false
+        has_badge: false,
+        deck_progress: 0
       })
       .returning('deck_id')
       .then(function(deckId) {

@@ -67,7 +67,7 @@ class CreateCustomDeck extends Component {
     // let deckID = this.props.allDecks.length;
     let createdDeck = {
       // id: deckID + 1,
-      progress: null,
+      progress: 0,
       accuracy: null,
       topic: this.state.topic || 'Custom Deck',
       image: this.state.image || 'http://saveabandonedbabies.org/wp-content/uploads/2015/08/default.png',
