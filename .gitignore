@@ -1,6 +1,6 @@
 # Project specific
 config/
-s3/
+
 
 # OS X
 .DS_Store
