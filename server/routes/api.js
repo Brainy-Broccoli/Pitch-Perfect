@@ -92,7 +92,6 @@ router.route('/card/:id')
               .then( average => Object.assign(deckCompletion, { average: average[0].avg }))
             )
         ))).then( deckCompletions => Promise.all(deckCompletions.map( deck => 
-          console.log(deck.average)||
           knex.from('users_decks')
             .where({
               user_id: userID,
@@ -101,7 +100,11 @@ router.route('/card/:id')
             .update({
               deck_progress: deck.completeCount,
               accuracy: deck.average
-            })
+            }).then( () => 
+              knex.from('users_decks')
+                .where({user_id: userID})
+                .then( decks => Promise.all(decks.map( deck => knex.from('users_cards'))))
+            )
         )))
       .then(()=>res.send('ok')).catch( err=> console.error(err) || res.status(500).send(err));
   })
