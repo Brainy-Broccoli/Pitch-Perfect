@@ -222,7 +222,7 @@ class CreateCard extends Component {
               <div >
                 <br />
                 <Transition visible={this.state.visible} animation='scale' duration={500}>
-                  <p style={{textAlign: 'center', color: 'green'}}>Card is created</p>
+                  <p style={{textAlign: 'center', color: 'green'}}>Card was created!</p>
                 </Transition>
               </div>
             </Grid.Column>

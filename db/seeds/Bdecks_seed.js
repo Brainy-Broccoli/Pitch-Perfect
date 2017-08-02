@@ -5,16 +5,23 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('decks').insert({
-        topic: 'Food',
-        image: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Food+Topic.jpeg',
-        badge: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Food+Badge.png',
+        topic: 'Basic',
+        image: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Basic+Topic.jpg',
+        badge: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Basic+Badge.png',
         default: true
       });
     }).then(function () {
       return knex('decks').insert({
-        topic: 'Basic',
-        image: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Basic+Topic.jpg',
-        badge: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Basic+Badge.png',
+        topic: 'Verbs',
+        image: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/verbs.png',
+        badge: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Verb.png',
+        default: true
+      });
+    }).then(function () {
+      return knex('decks').insert({
+        topic: 'Food',
+        image: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Food+Topic.jpeg',
+        badge: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Food+Badge.png',
         default: true
       });
     }).then(function () {
