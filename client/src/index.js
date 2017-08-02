@@ -17,7 +17,7 @@ let store = createStore(appReducer);
 
 render(
   <Provider store={store}>
-    <App style={{background: 'green'}}/>
+    <App />
   </Provider>,
   document.getElementById('root')
 );
