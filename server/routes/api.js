@@ -4,10 +4,7 @@ const router = express.Router();
 const middleware = require('../middleware');
 const knex = require('../../db').knex;
 
-<<<<<<< HEAD
-router.route('/profile')
-  .get(middleware.auth.verify, (req, res) => {
-=======
+
 router.route('/')
   .get((req, res) => {
     res.status(200).send('Hello World!');
@@ -141,7 +138,6 @@ router.route('/create-custom-deck')
 
 router.route('/profileInfo')
   .get((req, res) => {
->>>>>>> 3aa461ba7d40523572e0d86654cc0a976e43c4d6
     const userID = req.user.id;
     knex.from('users_decks')
       .innerJoin('profiles', 'users_decks.user_id', '=', 'profiles.id')

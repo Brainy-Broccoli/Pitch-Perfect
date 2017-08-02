@@ -28,12 +28,8 @@ import { loadPracticePage } from '../actions/actions_practicePage.js';
 class App extends Component {
 
   componentDidMount() {
-<<<<<<< HEAD
-    fetch('/api/profile', { credentials: 'include' })
-=======
     let practicePageState;
     fetch('/api/profileInfo', { credentials: 'include' })
->>>>>>> 3aa461ba7d40523572e0d86654cc0a976e43c4d6
       .then(res => res.json())
       .then( data => {
         console.log('all decks data has been fetched', data);
