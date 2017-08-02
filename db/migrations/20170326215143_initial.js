@@ -20,7 +20,7 @@ exports.up = function (knex, Promise) {
     //   table.string('gender', 20).nullable();
     // }),
     knex.schema.createTableIfNotExists('auths', function(table) {
-      table.increments('id').unsigned().primary();  
+      table.increments('id').unsigned().primary();
       table.string('type', 8).notNullable();
       table.string('oauth_id', 30).nullable();
       table.string('password', 100).nullable();
@@ -32,6 +32,7 @@ exports.up = function (knex, Promise) {
       table.string('topic', 50).nullable();
       table.string('image', 500).nullable();
       table.string('badge', 500).nullable();
+      table.boolean('default');
     }),
     knex.schema.createTableIfNotExists('cards', function(table) {
       table.increments('id').unsigned().primary();
@@ -62,6 +63,12 @@ exports.up = function (knex, Promise) {
       table.integer('card_id').references('cards.id').onDelete('CASCADE');
       table.integer('high_score').nullable();
     }),
+    knex.schema.createTableIfNotExists('users_recent_decks', function(table) {
+      table.increments('id').unsigned().primary();
+      table.integer('user_id').references('profiles.id').onDelete('CASCADE');
+      table.integer('deck_id').references('cards.id').onDelete('CASCADE');
+      table.bigInteger('time_stamp');
+    }),
   ]);
 };
 
@@ -70,6 +77,7 @@ exports.down = function (knex, Promise) {
     knex.schema.dropTableIfExists('decks_cards'),
     knex.schema.dropTableIfExists('users_decks'),
     knex.schema.dropTableIfExists('users_cards'),
+    knex.schema.dropTableIfExists('users_recent_decks'),
     knex.schema.dropTableIfExists('auths'),
     knex.schema.dropTableIfExists('decks'),
     knex.schema.dropTableIfExists('cards'),

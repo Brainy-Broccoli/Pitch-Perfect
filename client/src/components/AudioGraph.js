@@ -63,8 +63,8 @@ class AudioGraph extends React.Component {
                   : null
               }
           </Grid.Column>
-          <Grid.Column  textAlign='left' width={14}>
-            <canvas width={600} height={400} ref="canvas" style={{
+          <Grid.Column  stretched textAlign='left' width={14}>
+            <canvas height={400} ref="canvas" style={{
               backgroundColor: this.props.backgroundColor || 'white',
               border: `1px solid #dedede`
             }}></canvas>

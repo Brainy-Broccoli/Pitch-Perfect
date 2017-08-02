@@ -6,7 +6,6 @@ import PracticePage from '../components/PracticePage';
 import AudioGraph from '../components/AudioGraph';
 
 const mapStateToProps = (state) => {
-  console.log('state tree', state);
   return {
     currentCard: state.practicePage.currentCard,
     currentDeck: state.practicePage.currentDeck,

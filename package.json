@@ -9,6 +9,7 @@
   "author": "Hack Reactor",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.92.0",
     "babel-core": "^6.24.1",
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.0",
@@ -43,6 +44,7 @@
     "redis": "^2.7.1",
     "redux": "^3.7.2",
     "redux-persist": "^4.8.2",
+    "s3": "^4.4.0",
     "semantic-ui-react": "^0.71.1"
   },
   "devDependencies": {

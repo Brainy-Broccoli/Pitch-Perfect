@@ -4,15 +4,151 @@ const router = express.Router();
 const middleware = require('../middleware');
 const knex = require('../../db').knex;
 
+<<<<<<< HEAD
 router.route('/profile')
   .get(middleware.auth.verify, (req, res) => {
+=======
+router.route('/')
+  .get((req, res) => {
+    res.status(200).send('Hello World!');
+  })
+  .post((req, res) => {
+    console.log('in the correct route');
+    res.status(201).send({ data: 'Posted!' });
+  });
+
+router.route('/cards')
+  .get((req, res) => {
+    const userID = req.user.id;
+
+    knex.from('users_cards')
+      .innerJoin('cards', 'users_cards.card_id', '=', 'cards.id')
+      .where({user_id: userID})
+      .then( data => {
+        res.json({
+          allCards: data
+        })
+      })
+      .catch(err => res.status(500).send('All Cards not retrieved' + err))
+  })
+
+router.route('/create-card')
+  .post((req, res) => {
+    console.log('REQUEST BODY',req.body);
+    knex('cards').insert({
+      translation: req.body.translation,
+      character: req.body.character,
+      pinyin: req.body.pinyin,
+      IPA: req.body.IPA,
+      female_voice: req.body.female_voice,
+      tone: req.body.tone
+    })
+    .returning('id')
+    .then(function(id) {
+      console.log('first id', id);
+      knex('users_cards').insert({
+        user_id:req.user.id,
+        card_id:id[0]
+      })
+      .then(
+        res.status(201).send('Got it')
+      )
+    })
+  })
+
+router.route('/create-custom-deck')
+  .post((req, res) => {
+    knex('decks').insert({
+      topic: req.body.topic,
+      image: req.body.image,
+      badge: req.body.badge,
+      default: false
+    })
+    .returning('id')
+    .then(function(id) {
+      console.log('first id', id);
+      knex('users_decks').insert({
+        user_id:req.user.id,
+        deck_id:id[0],
+        has_badge: false,
+        deck_progress: 0
+      })
+      .returning('deck_id')
+      .then(function(deckId) {
+        console.log('second id', deckId);
+        Promise.all(req.body.cards.map((card) => {
+          return knex('decks_cards').insert({
+            deck_id:deckId[0],
+            card_id:card.card_id
+          })
+        }))
+        return deckId;
+      })
+        // .returning('deck_id')
+        .then(function(deckId) {
+          console.log('third id', deckId);
+          // knex.from('decks')
+          //   .where({id: deckId[0]})
+          //   .then(data => {
+          //     console.log('SERVER DATA', data);
+          //     res.json(data)
+          //   })
+          knex.from('users_decks')
+            // .innerJoin('profiles', 'users_decks.user_id', '=', 'profiles.id')
+            .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
+            .where({deck_id: deckId[0]})
+            .then( data => {
+              console.log('FINAL DATA', data);
+              return data.map( deck => ({
+                id: deck.id,
+                progress: deck.deck_progress,
+                accuracy: deck.accuracy,
+                topic: deck.topic,
+                image: deck.image,
+                badge: deck.badge,
+                has_badge: deck.has_badge
+              }))
+            })
+            .then(deck => {
+              res.json(deck);
+            })
+        })
+      })
+    })
+  // })
+    // .catch(err => res.status(500).send('New Deck not retrieved' + err));
+
+  // .catch(err => res.status(500).send('Deck was not updated' + err));
+
+// router.route('/decks')
+//   .get((req, res) => {
+//     knex.from('users_decks')
+//       .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
+//       .where({user_id: req.user.id})
+//       .then( data => ({
+//         id: deck.deck_id,
+//         progress: deck.deck_progress,
+//         accuracy: deck.accuracy,
+//         topic: deck.topic,
+//         image: deck.image,
+//         badge: deck.badge,
+//         has_badge: deck.has_badge
+//       }))
+//   })
+
+
+
+
+router.route('/profileInfo')
+  .get((req, res) => {
+>>>>>>> 3aa461ba7d40523572e0d86654cc0a976e43c4d6
     const userID = req.user.id;
     knex.from('users_decks')
       .innerJoin('profiles', 'users_decks.user_id', '=', 'profiles.id')
       .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
       .where({user_id: userID})  
       .then( data => data.map( deck => ({
-        id: deck.id,
+        id: deck.deck_id,
         progress: deck.deck_progress,
         accuracy: deck.accuracy,
         topic: deck.topic,
@@ -53,6 +189,170 @@ router.route('/profile')
         }))
       .catch(err => res.status(500).send('Something broke: ' + err));
   });
+router.route('/recentDecks')
+  .get((req, res) => {
+    /* THE OLD WAY OF TRYING TO DO IT */
+    // knex.from('users_recent_decks')
+    //   .innerJoin('profiles', 'profiles.id', 'users_recent_decks.user_id')
+    //   .innerJoin('decks', 'decks.id', 'users_recent_decks.deck_id')
+    //   .select('deck_id', 'topic', 'image', 'badge')
+    //   .then(joinTable => {
+    //     console.log('the join table', joinTable);
+    //     res.json(joinTable);
+    //   })
+    //   .catch(err => {
+    //     console.log('error occurred retrieving decks for user', userID, 'err:', err);
+    //     res.sendStatus(500);
+    //   });
+
+    // having some real trouble here trying to get the deck info for all decks for the user in the users_recent_decks table
+    // take user ID and get all all decksIDs from the from the users_recent_decks table
+    // then select the progress and accuracy from the users_decks table where userID = req.user.id and deck_id in (deckIDs gotten above)
+    // then select * from decks where id in (deckID's gotten from above)
+    // then using a for loop you should be able to iterate through both those arrays and produce an array of objects with all the
+    // properties you'd need 
+
+    /* THE NEW WAY OUTLINED ABOVE */
+    const userID = req.user.id;
+    const recentDecks = [];
+    let recentDeckIDs, userSpecificDeckInfo, timestampInfo, deckMetaInfoRows;
+    knex.select('deck_id', 'time_stamp').from('users_recent_decks').where({'user_id': userID})
+      .then(deckIDRows => {
+        console.log('deckIDRows', deckIDRows);
+        recentDeckIDs = deckIDRows.map(deckIDRow => deckIDRow.deck_id);
+        deckIDRows.sort((a, b) => a.deck_id - b.deck_id);
+        timestampInfo = deckIDRows;
+        console.log('recent Deck IDs', recentDeckIDs);
+        return knex.select('deck_id', 'deck_progress', 'accuracy').from('users_decks')
+          .where({user_id: userID})
+          .andWhere('deck_id', 'in', recentDeckIDs);
+      })
+      .then(userSpecificRows => {
+        //now need to sort it by id so I can use one for loop to iterate through all 
+        userSpecificRows.sort((a, b) => a.deck_id - b.deck_id);
+        userSpecificDeckInfo = userSpecificRows;
+        console.log('user specific rows', userSpecificRows);
+
+        // now time to get the info that is general for each of those decks
+        return knex.select().from('decks').where('id', 'in', recentDeckIDs);
+      })
+      .then(deckMetaInfo => {
+        deckMetaInfo.sort((a, b) => a.id - b.id);
+        console.log('deck meta info', deckMetaInfo);
+        deckMetaInfoRows = deckMetaInfo;
+        //need to grab the total number of cards for each deck
+        //return another knex statement for selection, then do the for loop in the subsequent then
+        return knex.select().from('decks_cards').whereIn('deck_id', recentDeckIDs);
+      })
+      .then(cardsInRecentDecks => {
+        const cardCounts = {}; // id: count
+        //count the total number of cards for every deck id in recent deck IDS
+        recentDeckIDs.forEach(deckID => {
+          for (let i = 0; i < cardsInRecentDecks.length; i++) {
+            if (cardsInRecentDecks[i].deck_id === deckID) {
+              if (cardCounts[deckID]) {
+                cardCounts[deckID]++;
+              } else {
+                cardCounts[deckID] = 1;
+              }
+            }
+          }
+        });
+        //now push all those key value pairs into an array and sort by id so the below for loop works correctly
+        const cardCountsTuples = [];
+        for (let deckID in cardCounts) {
+          cardCountsTuples.push([deckID, cardCounts[deckID]]);
+        }
+        cardCountsTuples.sort((a, b) => a[0] - b[0]);
+        console.log('card counts tuples (deck, # cards)', cardCountsTuples);
+        //now to combine the user specific information with the meta info to create the exact objects we'll need
+        for (let i = 0; i < deckMetaInfoRows.length; i++) {
+          //create the deck object with the combination of info and then push it into the recentDecks array
+          //make sure to have key names be exactly as they are referenced in the components that make use of this data
+          //additionally, will be adding on the actual id as it appears in the db so that the on-click for recent activity won't send a topic
+          recentDecks.push({
+            progress: userSpecificDeckInfo[i].deck_progress,
+            accuracy: userSpecificDeckInfo[i].accuracy,
+            topic: deckMetaInfoRows[i].topic,
+            image: deckMetaInfoRows[i].image,
+            badge: deckMetaInfoRows[i].badge,
+            timestamp: timestampInfo[i].time_stamp,
+            total: cardCountsTuples[i][1],
+            dbID: deckMetaInfoRows[i].id
+          });
+        }
+        recentDecks.sort((a, b) => b.timestamp - a.timestamp);
+        console.log('all recent deck objects', recentDecks);
+        res.json(recentDecks);
+      })
+      .catch(err => {
+        console.log('err', err);
+        res.sendStatus(500);
+      });
+
+
+  })
+  .post((req, res) => {
+    const userID = req.user.id;
+    const { deckDbID, timestamp } = req.body;
+    knex.select().from('users_recent_decks').where({deck_id: deckDbID})
+      .then(existingDeckInfo => {
+        console.log('existingDeckInfo', existingDeckInfo);
+        console.log('deckDbID inside existingDeckInfo block', deckDbID);
+        // if that deck isn't already there, then make an insertion
+        if (!existingDeckInfo.length) {
+          console.log('deck not found -- inserting into users_recent_decks');
+          knex('users_recent_decks').insert({user_id: userID, deck_id: deckDbID, time_stamp: timestamp})
+            .then(insertionInfo => {
+              // now we need to take a look at how many rows are there -- if > 3, we need to delete the oldest
+              return knex.select().from('users_recent_decks').where({user_id: userID});
+            })
+            .then(recentDecksForUser => {
+              if (recentDecksForUser.length > 3) {
+                // time to delete the oldest one
+                console.log('more than 3 recent decks -- deleting');
+                // sort the recentDeck rows by the timestamp
+                recentDecksForUser.sort((a, b) => a - b);
+                //then grab the timestamp of the first row - the lowest time stamp = least recently inserted
+                const oldestTimeStamp = recentDecksForUser[0].time_stamp;
+                knex('users_recent_decks').where({'time_stamp': oldestTimeStamp}).del()
+                  .then(deletionInfo => {
+                    res.sendStatus(201);
+                  })
+                  .catch(err => {
+                    console.log('failure to delete oldest timestamp');
+                    res.sendStatus(500);
+                  });
+              } else {
+                console.log('recent decks number less than 3 -- nothing to delete');
+                // nothing to do, simply send back a successful response
+                res.sendStatus(201);
+              } 
+            })
+            .catch(err => {
+              console.log(err);
+              res.sendStatus(500);
+            });
+        } else {
+          // the deck was already there -- just update the timestamp
+          knex('users_recent_decks').where({deck_id: deckDbID}).update({time_stamp: timestamp})
+            .then(successfulUpdateResult => {
+              console.log('successful update');
+              res.sendStatus(201);
+            })
+            .catch(err => {
+              console.log('error updating deck timestamp');
+              res.sendStatus(500);
+            });
+        }
+      })
+      .catch(err => {
+        console.log('something went wrong', err);
+        res.sendStatus(500);
+      });
+    //on the client side, once the status code has been received (hopefully 201)
+    // send a get request for recentDecks and then update the state accordingly -- the end
+  }); 
 
 router.route('/card/:id')
   .post(middleware.auth.verify, (req, res) => {

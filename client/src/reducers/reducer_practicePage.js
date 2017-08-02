@@ -100,7 +100,7 @@ const recentUserDecksInfo = [
 
 const initialState = {
   currentDeck: basicDeck,
-  currentCard: basicDeck.cards[0],
+  // currentCard: basicDeck.cards[0],
   currentCardIndex: 0,
   allDecks,
   recentUserDecksInfo
@@ -109,11 +109,15 @@ const initialState = {
 // TODO: refactor to use Object.assign() or the object spread operator
 // TODO: remove the conditionals from the card selection cases -- perform the check for currentCardIndex on the client side. as of now, same input (action.type) produces different outputs. 
 const practicePage = (state = initialState, action) => {
-  console.log('state in practice page', state);
+  //console.log('state in practice page', state);
   switch (action.type) {
+    case 'RECEIVE_UPDATED_RECENT_DECKS':
+      console.log('receiving new deck information');
+      return Object.assign({}, state, action.payload);
     case 'LOAD_PRACTICE_PAGE':
       return action.practicePageState;
     case 'SELECT_DECK':
+      console.log('deck has been selected with index', action.deckIndex);
       return {
         currentDeck: state.allDecks[action.deckIndex],
         currentCard: state.allDecks[action.deckIndex].cards[0],
@@ -122,11 +126,11 @@ const practicePage = (state = initialState, action) => {
         recentUserDecksInfo: state.recentUserDecksInfo
       };
     case 'SELECT_RECENT_ACTIVITY_DECK':
-      console.log('a recent activity deck has been selected with topic', action.topic);
-      const selectedTopic = action.topic;
+      //console.log('a recent activity deck has been selected with topic', action.topic);
+      const selectedDeckID = action.dbID;
       let newDeck;
       state.allDecks.forEach(deck => {
-        if (deck.topic === selectedTopic) {
+        if (deck.id === selectedDeckID) {
           newDeck = deck;
         }
       });
@@ -162,6 +166,10 @@ const practicePage = (state = initialState, action) => {
         allDecks: state.allDecks,
         recentUserDecksInfo: state.recentUserDecksInfo
       };
+    case 'ADD_DECK':
+      state.allDecks.push(action.newDeck);
+      console.log('state.allDecks', state.allDecks)
+      return state;
     default:
       return state;
   }

@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const Logout = () => {
-  return (
-    <div>
-      <h1>This is the Logout page</h1>
-    </div>
-  );
+class Logout extends Component {
+
+  componentDidMount() {
+    fetch('/logout')
+      .then(() => {
+        console.log('logged out')
+      })
+  }
+  render() {
+    return (
+      <div>
+        <h1>This is the Logout page</h1>
+      </div>
+    );
+  }
 };
 
 export default Logout;

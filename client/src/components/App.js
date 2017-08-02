@@ -12,6 +12,7 @@ import {
 import Profile from './Profile';
 import DecksContainer from '../containers/DecksContainer';
 import PremiumContent from './PremiumContent';
+import CreateCard from './CreateCard';
 import Logout from './Logout';
 import VisiblePracticePage from '../containers/VisiblePracticePage';
 import CreateCustomDeck from './CreateCustomDeck';
@@ -27,10 +28,15 @@ import { loadPracticePage } from '../actions/actions_practicePage.js';
 class App extends Component {
 
   componentDidMount() {
+<<<<<<< HEAD
     fetch('/api/profile', { credentials: 'include' })
+=======
+    let practicePageState;
+    fetch('/api/profileInfo', { credentials: 'include' })
+>>>>>>> 3aa461ba7d40523572e0d86654cc0a976e43c4d6
       .then(res => res.json())
       .then( data => {
-        console.log('data has been fetched', data);
+        console.log('all decks data has been fetched', data);
         const name = data.display;
         const badgeUrls = data.decks.filter( deck => deck.has_badge ).map( deck => deck.badge);
         const photo = data.photo || 'https://www.cbdeolali.org.in/drupal/sites/default/files/Section%20Head/Alternative-Profile-pic_5.jpg';
@@ -39,16 +45,22 @@ class App extends Component {
 
         this.props.loadProfile(profileState);
 
-        const practicePageState = {
+        practicePageState = {
           currentDeck: data.decks[0],
           currentCardIndex: 0,
           currentCard: data.decks[0].cards[0],
           allDecks: data.decks,
-          recentUserDecksInfo: data.decks.slice(0, 3) // TODO: make this based off timestamp on decks
         };
-        console.log('recentUserDecksInfo', data.decks.slice(0, 3));
+        // finally, need to get the recent deck information
+        return fetch('/api/recentDecks', {credentials: 'include'});
+      })
+      .then(res => res.json())
+      .then(recentDecks => {
+        console.log('recent deck information has been fetched', recentDecks);
+        practicePageState.recentUserDecksInfo = recentDecks;
         this.props.loadPracticePage(practicePageState);
-      });
+      })
+      .catch(err => console.log('error retrieving all information', err));
   }
 
   render() {
@@ -60,12 +72,15 @@ class App extends Component {
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             <Menu.Item name='decks' as={Link} to='/decks' active={this.props.activePage === 'decks'} 
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
-            <Menu.Item name='Premium' as={Link} to='/premium-content' active={this.props.activePage === 'Premium'} 
-              onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
+            {/*<Menu.Item name='Premium' as={Link} to='/premium-content' active={this.props.activePage === 'Premium'} 
+                          onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> */}
             <Menu.Item name='Practice Page' as={Link} to='/practice-page' active={this.props.activePage === 'Practice Page'} 
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
+            <Menu.Item name='Create Card' as={Link} to='/create-card' active={this.props.activePage === 'Create Card'} 
+              onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             <Menu.Menu position='right'>
-              <Menu.Item name='logout' as={Link} to='/logout' active={this.props.activePage === 'logout'} onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/>
+              <Menu.Item href="/logout" name='logout' active={this.props.activePage === 'logout'} 
+                onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/>
             </Menu.Menu>
           </Menu>
 
@@ -75,8 +90,9 @@ class App extends Component {
             <Route path="/decks" component={DecksContainer}/>
             <Route path="/premium-content" component={PremiumContent}/>
             <Route path="/practice-page" component={VisiblePracticePage}/>
-            <Route path="/logout" component={Logout}/>
+            {/*<Route path="/logout" component={Logout}/>*/}
             <Route path="/create-custom-deck" component={CreateCustomDeck}/>
+            <Route path="/create-card" component={CreateCard}/>
           </Segment>
         </div>
       </Router>
