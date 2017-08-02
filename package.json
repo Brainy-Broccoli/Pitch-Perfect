@@ -43,6 +43,7 @@
     "redis": "^2.7.1",
     "redux": "^3.7.2",
     "redux-persist": "^4.8.2",
+    "regression": "^2.0.0",
     "semantic-ui-react": "^0.71.1"
   },
   "devDependencies": {

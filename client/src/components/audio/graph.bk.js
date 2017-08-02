@@ -1,6 +1,7 @@
 import React from 'react';
 import * as pf from 'pitchfinder';
 import { Grid, Button } from 'semantic-ui-react';
+import regression from 'regression';
 var Sound = require('react-sound').default;
 
 class AudioGraph extends React.Component {
@@ -22,6 +23,10 @@ class AudioGraph extends React.Component {
     this.buffer = null;
     this.analyser = null;
 
+    this.highPass = this.audioCtx.createBiquadFilter();
+    this.highPass.type = 'highpass';
+    this.highPass.frequency.value = 100;
+
     this.timerID = null;
     this.startTime = null;
     this.recordedPitchData = [];
@@ -41,37 +46,6 @@ class AudioGraph extends React.Component {
 
   componentWillUnmount() {
     this.audioCtx.close();
-  }
-
-  render() {
-    return (
-      <Grid>
-        <Grid.Row columns={2}>
-          <Grid.Column textAlign='right' width={2}>
-              { this.state.recording
-                ? <Button circular icon='stop' color='red' size='big' onClick={this.stopRecording} />
-                : <Button circular icon='unmute' color='red' size='big' onClick={this.record} />
-              }
-              <Button circular basic icon='repeat' size='big' style={{marginTop: `0.5em`}} onClick={this.playUserVoice} />
-              <Button circular basic icon='volume up' size='big' style={{marginTop: `0.5em`}} onClick={this.onSoundClick} />
-              {
-                this.state.sound
-                  ? <Sound
-                      url={this.props.currentCard.female_voice}
-                      playStatus={Sound.status.PLAYING}
-                      onFinishedPlaying={this.finishedPlaying}/>
-                  : null
-              }
-          </Grid.Column>
-          <Grid.Column  textAlign='left' width={14}>
-            <canvas width={600} height={400} ref="canvas" style={{
-              backgroundColor: this.props.backgroundColor || 'white',
-              border: `1px solid #dedede`
-            }}></canvas>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    );
   }
 
   playUserVoice() {
@@ -127,13 +101,26 @@ class AudioGraph extends React.Component {
                 this.readyToPlay = true;
               })
             }
+            const regressMe = this.recordedPitchData.filter(a=>a.f).map(datum => [datum.t, datum.f]);
+            const reg = regression.polynomial(regressMe, { order: 3, precision: 4 });
+            const coefficients = (reg.equation);
+            console.log(regressMe)
+            console.log(coefficients)
+            console.log(reg.string)
+            const calc = x => (coefficients.reduce( (acc, co, i) => acc += (co * Math.pow(x, coefficients.length - (i + 1))), 0));
+            console.log(calc(1)) 
 
             this.recordedAudioData = [];
           }
           this.analyser = this.audioCtx.createAnalyser();
           this.analyser.fftSize = 1024;
           this.buffer = new Float32Array(this.analyser.fftSize);
-          recordingNode.connect(this.analyser);
+
+          recordingNode.connect(this.highPass);
+          this.highPass.connect(this.analyser);
+
+          //highPass.type = "highpass";
+          //highPass.frequency.value = 85;
 
           //UNCOMMENT THIS LINE TO FORWARD AUDIO TO OUTPUT
           //================================================
@@ -176,7 +163,7 @@ class AudioGraph extends React.Component {
     const detectPitch = new pf.AMDF();
     const pitch = detectPitch(this.buffer);
     this.recordedPitchData.push({f: pitch, t: dt});
-    const maxTime = (this.props.maxTime || 750);
+    const maxTime = (this.props.maxTime || 2500);
 
     const MAX_FREQ = 500;
 
@@ -211,6 +198,13 @@ class AudioGraph extends React.Component {
     gqCtx.strokeStyle = 'rgb(255, 0, 0)';
     gqCtx.beginPath();
     const renderedData = {};
+    const trimmedPitchData = this.recordedPitchData.slice();
+    const trimmedPitchDataStart = [];
+    const trimmedPitchDataEnd = [];
+    while(trimmedPitchData[0] && trimmedPitchData[0].f === null) { trimmedPitchDataStart.push(trimmedPitchData.shift()); }
+    while(trimmedPitchData[0] && trimmedPitchData[trimmedPitchData.length - 1].f === null) { trimmedPitchDataEnd.push(trimmedPitchData.pop()); }
+    const reconstitutedPitchData = trimmedPitchDataStart.concat(trimmedPitchData.filter(a=>a.f)).concat(trimmedPitchDataEnd);
+
     this.recordedPitchData.forEach( pitchAtTime => {
       let px = Math.ceil(pitchAtTime.t / (maxTime / WIDTH));
       if (!renderedData[px]) {
@@ -218,6 +212,7 @@ class AudioGraph extends React.Component {
         renderedData[px] = true;
       }
     });
+
     gqCtx.stroke();
 
     gqCtx.strokeStyle = 'rgb(255, 0, 0)';
