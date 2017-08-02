@@ -6,13 +6,13 @@ import { bindActionCreators } from 'redux';
 import { selectPage } from '../actions/actions_navBar';
 import { receiveUpdatedRecentDecks } from '../actions/actions_practicePage';
 
-// const Deck = () => {
 class Deck extends Component {
   constructor (props) {
     super(props);
   }
   handleDeckClick() {
     this.props.selectPage('Practice Page');
+    console.log('PRROOPPSS', this.props);
     this.props.onDeckSelect(this.props.index);
     const endpoint = '/api/recentDecks';
     const postBody = {
@@ -59,14 +59,14 @@ class Deck extends Component {
   }
   render() {
     return (
-      <Grid.Column width={5}>
+      <Grid.Column width={5} style={{marginTop: 20}}>
         <Link to={`/practice-page`}>
-          <Card>
             <div style={{textAlign: 'center'}}>
               <strong>{this.props.topic}</strong>
             </div>
+          <Card style={{borderRadius: 10}}>
             <div>
-              <Image src={this.props.image} style={{height: 200, width: 400}}
+              <Image src={this.props.image} style={{borderRadius: 10, height: 200, width: 400}}
                 onClick={this.handleDeckClick.bind(this)}
               />
             </div>

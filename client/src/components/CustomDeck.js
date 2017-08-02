@@ -9,14 +9,14 @@ class CustomDeck extends Component {
 
   render() {
     return (
-      <Grid.Column width={5}>
+      <Grid.Column width={5} style={{marginTop: 20}}>
         <Link to={`/create-custom-deck`}>
-          <Card>
-            <div style={{textAlign: 'center'}}>
-              <strong>{this.props.topic}</strong>
-            </div>
+          <div style={{textAlign: 'center'}}>
+            <strong>{this.props.topic}</strong>
+          </div>
+          <Card style={{borderRadius: 10}}>
             <div>
-              <Image src={this.props.image} style={{height: 200, width: 400}}
+              <Image src={this.props.image} style={{borderRadius: 10, height: 200, width: 400}}
               />
             </div>
           </Card>

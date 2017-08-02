@@ -68,14 +68,15 @@ class App extends Component {
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             <Menu.Item name='decks' as={Link} to='/decks' active={this.props.activePage === 'decks'} 
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
-            <Menu.Item name='Premium' as={Link} to='/premium-content' active={this.props.activePage === 'Premium'} 
-              onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
+            {/*<Menu.Item name='Premium' as={Link} to='/premium-content' active={this.props.activePage === 'Premium'} 
+                          onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> */}
             <Menu.Item name='Practice Page' as={Link} to='/practice-page' active={this.props.activePage === 'Practice Page'} 
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             <Menu.Item name='Create Card' as={Link} to='/create-card' active={this.props.activePage === 'Create Card'} 
               onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/> 
             <Menu.Menu position='right'>
-              <Menu.Item name='logout' as={Link} to='/logout' active={this.props.activePage === 'logout'} onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/>
+              <Menu.Item href="/logout" name='logout' active={this.props.activePage === 'logout'} 
+                onClick={(event, itemProps) => this.props.selectPage(itemProps.name)}/>
             </Menu.Menu>
           </Menu>
 
@@ -85,7 +86,7 @@ class App extends Component {
             <Route path="/decks" component={DecksContainer}/>
             <Route path="/premium-content" component={PremiumContent}/>
             <Route path="/practice-page" component={VisiblePracticePage}/>
-            <Route path="/logout" component={Logout}/>
+            {/*<Route path="/logout" component={Logout}/>*/}
             <Route path="/create-custom-deck" component={CreateCustomDeck}/>
             <Route path="/create-card" component={CreateCard}/>
           </Segment>

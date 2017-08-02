@@ -95,10 +95,9 @@ class DecksContainer extends Component {
         <div style={{textAlign: 'center', margin: 0}}>
           Mentorship Progress: {count / total * 100}%
         </div>
-        <Progress active value={count} total={total} style={{margin: 0, height: 13}} color='teal' size='small'/>
-        <Grid verticalAlign="middle" padded>
-          <Grid.Row>
-            {console.log('this.props.allDecks',this.props.allDecks)}
+        <Progress active value={count} total={total} style={{marginTop: 10, marginBottom: -5, height: 13}} color='teal' size='small'/>
+        <Grid columns="equal" verticalAlign="middle" padded centered>
+          <Grid.Row columns={3}>
             {
               this.props.allDecks.map((deck, index) => {
                 console.log('index of decks', index);
@@ -110,7 +109,8 @@ class DecksContainer extends Component {
                     index={index}
                     key={index}
                     onDeckSelect={() => this.props.selectDeck(index)}
-                  />)
+                  />
+                  )
               })
             }
             <CustomDeck
