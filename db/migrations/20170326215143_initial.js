@@ -41,7 +41,9 @@ exports.up = function (knex, Promise) {
       table.string('pinyin', 50).nullable();
       table.string('IPA', 50).nullable();
       table.string('male_voice', 500).nullable();
+      table.json('male_pitch_data').nullable();
       table.string('female_voice', 500).nullable();
+      table.json('female_pitch_data').nullable();
       table.integer('tone');
     }),
     knex.schema.createTableIfNotExists('decks_cards', function(table) {
