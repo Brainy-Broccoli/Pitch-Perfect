@@ -4,7 +4,9 @@
   "scripts": {
     "start": "nodemon server",
     "test": "NODE_ENV=test grunt test",
-    "build": "webpack --watch"
+    "build": "webpack --watch",
+    "heroku-build": "webpack",
+    "postinstall": "npm run heroku-build"
   },
   "author": "Hack Reactor",
   "license": "MIT",
@@ -45,22 +47,22 @@
     "redux": "^3.7.2",
     "redux-persist": "^4.8.2",
     "s3": "^4.4.0",
-    "semantic-ui-react": "^0.71.1"
-  },
-  "devDependencies": {
+    "semantic-ui-react": "^0.71.1",
+    "webpack": "^2.3.2",
+    "webpack-dev-server": "^2.4.2",
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
     "babel-preset-latest": "^6.24.0",
-    "babel-preset-react": "^6.23.0",
+    "babel-preset-react": "^6.23.0"
+  },
+  "devDependencies": {
     "chai": "^3.5.0",
     "grunt": "~0.4.5",
     "grunt-eslint": "^19.0.0",
     "grunt-mocha-test": "^0.13.2",
     "mocha": "^3.2.0",
     "node-mocks-http": "^1.6.1",
-    "supertest": "^3.0.0",
-    "webpack": "^2.3.2",
-    "webpack-dev-server": "^2.4.2"
+    "supertest": "^3.0.0"
   },
   "babel": {
     "plugins": [

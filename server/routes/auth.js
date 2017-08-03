@@ -39,8 +39,6 @@ router.route('/profile')
 
 router.route('/logout')
   .get((req, res) => {
-    console.log('here');
-    console.log(req.logout);
     req.logout();
     res.redirect('/');
   });

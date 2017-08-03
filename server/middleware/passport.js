@@ -175,7 +175,7 @@ const getOrCreateOAuthProfile = (type, oauthProfile, done) => {
       // grab the profile id and for every deck, add an entry into the join table for users_decks
       // first need to grab this array of decks from the decks table --  no bookshelf model for this
       // so i'll be using knex
-      return knex.select('id').from('decks')
+      return knex.select('id').from('decks').where( {default: true} )
         .then(deckRows => {
           const dIDs = deckRows.map(row => row.id);
           console.log('deck ids', dIDs);
