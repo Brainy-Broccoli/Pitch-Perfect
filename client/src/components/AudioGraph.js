@@ -2,47 +2,36 @@ import React from 'react';
 import * as pf from 'pitchfinder';
 import { Grid, Button } from 'semantic-ui-react';
 var Sound = require('react-sound').default;
-
 class AudioGraph extends React.Component {
-
   constructor(props) {
     super(props);
-
     this.state = {
       recording: false,
       sound: false
     };
-
     this.record = this.record.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
     this.draw = this.draw.bind(this);
-
     this.audioCtx = new AudioContext();
     this.stream = null;
     this.buffer = null;
     this.analyser = null;
-
     this.timerID = null;
     this.startTime = null;
     this.recordedPitchData = [];
     this.recordedAudioData = [];
-
     this.onSoundClick = this.onSoundClick.bind(this);
     this.finishedPlaying = this.finishedPlaying.bind(this);
     this.storage = [];
-
     this.source = null;
     this.readyToPlay = false;
     this.source = this.audioCtx.createBufferSource();
     this.recordingBuffer = null;
-
     this.playUserVoice = this.playUserVoice.bind(this);
   }
-
   componentWillUnmount() {
     this.audioCtx.close();
   }
-
   render() {
     return (
       <Grid>
@@ -73,7 +62,6 @@ class AudioGraph extends React.Component {
       </Grid>
     );
   }
-
   playUserVoice() {
     if (this.readyToPlay) {
       this.source = this.audioCtx.createBufferSource();
@@ -82,19 +70,16 @@ class AudioGraph extends React.Component {
       this.source.start(0);
     }
   }
-
   onSoundClick() {
     this.setState({
       sound: true
     })
   }
-
   finishedPlaying() {
     this.setState({
       sound:false
     })
   }
-
   record() {
     if (!this.state.recording) {
       navigator.mediaDevices.getUserMedia({audio: true})
@@ -104,7 +89,6 @@ class AudioGraph extends React.Component {
           this.setState({
             recording: true
           });
-
           const recordingNode = this.audioCtx.createMediaStreamSource(stream);
           this.mediaRecorder = new MediaRecorder(stream);
           this.mediaRecorder.start();
@@ -112,44 +96,34 @@ class AudioGraph extends React.Component {
             this.recordedAudioData.push(e.data);
           }
           this.mediaRecorder.onstop = (e) => {
-
             var blob = new Blob(this.recordedAudioData, {'type': 'audio/ogg; codecs=opus'});
-
             let fileReader = new FileReader();
             fileReader.readAsArrayBuffer(blob);
-
-
             fileReader.onloadend = () => {
               const arrayBuffer = fileReader.result;
-
               this.audioCtx.decodeAudioData(arrayBuffer, (buffer) => {
                 this.recordingBuffer = buffer;
                 this.readyToPlay = true;
               })
             }
-
             this.recordedAudioData = [];
           }
           this.analyser = this.audioCtx.createAnalyser();
           this.analyser.fftSize = 1024;
           this.buffer = new Float32Array(this.analyser.fftSize);
           recordingNode.connect(this.analyser);
-
           //UNCOMMENT THIS LINE TO FORWARD AUDIO TO OUTPUT
           //================================================
           //
           //this.analyser.connect(this.audioCtx.destination)
-
           this.startTime = performance.now();
           this.timerID = requestAnimationFrame(this.draw)
-
       })
       .catch( err => {
         console.error('Oops something broke ', err);
       });
     } 
   }
-
   stopRecording() {
     if(this.state.recording) {
       // console.log('Stop:');
@@ -166,9 +140,7 @@ class AudioGraph extends React.Component {
       cancelAnimationFrame(this.timerID);
     }
   }
-
   draw() {
-
     this.analyser.getFloatTimeDomainData(this.buffer);
     this.storage.push(this.buffer);
     // console.log(this.storage);
@@ -177,29 +149,22 @@ class AudioGraph extends React.Component {
     const pitch = detectPitch(this.buffer);
     this.recordedPitchData.push({f: pitch, t: dt});
     const maxTime = (this.props.maxTime || 750);
-
     const MAX_FREQ = 500;
-
     const canvas = this.refs.canvas;
     const gqCtx = canvas.getContext('2d');
-
     if (dt >= maxTime) {
       this.stopRecording();
       return;
     }
-
     const WIDTH = canvas.width;
     const HEIGHT = canvas.height;
-
     gqCtx.fillStyle = this.props.backgroundColor || 'white';
     gqCtx.fillRect(0, 0, WIDTH, HEIGHT);
     gqCtx.lineWidth = this.props.strokeWidth || 3;
-
     // Calculate where to draw cursor (circle at end of line)
     const lastPitch = this.recordedPitchData[this.recordedPitchData.length - 1];
     const cursorX = Math.ceil(lastPitch.t / (maxTime / WIDTH));
     const cursorY = Math.ceil(lastPitch.f ? HEIGHT-Math.ceil(lastPitch.f * (HEIGHT/MAX_FREQ)) : HEIGHT);
-
     /*  This enables cursor to move along x axis as time passes
     gqCtx.strokeStyle = 'rgb(0, 0, 255)';
     gqCtx.beginPath();
@@ -207,7 +172,6 @@ class AudioGraph extends React.Component {
     gqCtx.lineTo(cursor,HEIGHT);
     gqCtx.stroke();
     */
-
     gqCtx.strokeStyle = 'rgb(255, 0, 0)';
     gqCtx.beginPath();
     const renderedData = {};
@@ -219,15 +183,12 @@ class AudioGraph extends React.Component {
       }
     });
     gqCtx.stroke();
-
     gqCtx.strokeStyle = 'rgb(255, 0, 0)';
     gqCtx.fillStyle = this.props.backgroundColor || 'white';
     gqCtx.beginPath();
     gqCtx.arc(cursorX, cursorY, 5, 0, 2*Math.PI);
     gqCtx.fill();
-
     this.timerID = requestAnimationFrame(this.draw);
   }
 }
-
 export default AudioGraph;
