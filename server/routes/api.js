@@ -120,15 +120,20 @@ router.route('/create-custom-deck')
 //     knex.from('users_decks')
 //       .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
 //       .where({user_id: req.user.id})
-//       .then( data => ({
-//         id: deck.deck_id,
-//         progress: deck.deck_progress,
-//         accuracy: deck.accuracy,
-//         topic: deck.topic,
-//         image: deck.image,
-//         badge: deck.badge,
-//         has_badge: deck.has_badge
-//       }))
+//       .then(data => {
+
+//         console.log('DATAAAAAAAAAA', data);
+//         res.json(data);
+//       //   ({
+//       //   id: deck.deck_id,
+//       //   progress: deck.deck_progress,
+//       //   accuracy: deck.accuracy,
+//       //   topic: deck.topic,
+//       //   image: deck.image,
+//       //   badge: deck.badge,
+//       //   has_badge: deck.has_badge
+//       // })
+//       })
 //   })
 
 
@@ -140,10 +145,12 @@ router.route('/profileInfo')
     const name = `${req.user.first} ${req.user.last}`;
     const badges = [];
     const photo = req.user.photo;
+    const isMentor = req.user.mentor || false;
     const profilePageData = {
       name,
       badges,
-      photo
+      photo,
+      isMentor
     };
 
     const allDecks = [];
@@ -159,7 +166,8 @@ router.route('/profileInfo')
         topic: deck.topic,
         image: deck.image,
         badge: deck.badge,
-        has_badge: deck.has_badge
+        has_badge: deck.has_badge,
+        default: deck.default
       })))
       .then( decks => Promise.all(
         decks.map( deck => 
@@ -381,7 +389,7 @@ router.route('/recentDecks')
   .post((req, res) => {
     const userID = req.user.id;
     const { deckDbID, timestamp } = req.body;
-    knex.select().from('users_recent_decks').where({deck_id: deckDbID})
+    knex.select().from('users_recent_decks').where({deck_id: deckDbID, user_id: userID})
       .then(existingDeckInfo => {
         console.log('existingDeckInfo', existingDeckInfo);
         console.log('deckDbID inside existingDeckInfo block', deckDbID);
@@ -421,7 +429,7 @@ router.route('/recentDecks')
             });
         } else {
           // the deck was already there -- just update the timestamp
-          knex('users_recent_decks').where({deck_id: deckDbID}).update({time_stamp: timestamp})
+          knex('users_recent_decks').where({deck_id: deckDbID, user_id: userID}).update({time_stamp: timestamp})
             .then(successfulUpdateResult => {
               console.log('successful update');
               res.sendStatus(201);

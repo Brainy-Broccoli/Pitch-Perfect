@@ -10,6 +10,7 @@ exports.up = function (knex, Promise) {
       table.string('phone', 100).nullable();
       table.string('photo', 150).nullable();
       table.string('gender', 20).nullable();
+      table.boolean('mentor');
       table.timestamps(true, true);
     }),
     // knex.schema.createTableIfNotExists('users', function (table) {

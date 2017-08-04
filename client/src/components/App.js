@@ -36,7 +36,7 @@ class App extends Component {
         const name = data.display;
         const badgeUrls = data.decks.filter( deck => deck.has_badge ).map( deck => deck.badge);
         const photo = data.photo || 'https://www.cbdeolali.org.in/drupal/sites/default/files/Section%20Head/Alternative-Profile-pic_5.jpg';
-        const isMentor = true; // TODO: FIX ME OR DIE -- need to determine final mentor criteria
+        const isMentor = data.decks.filter( deck => deck.default ).every(deck => deck.has_badge); // TODO: FIX ME OR DIE -- need to determine final mentor criteria
         const profileState = { name, badgeUrls, photo, isMentor };
 
         this.props.loadProfile(profileState);
