@@ -5,8 +5,6 @@ import { bindActionCreators } from 'redux';
 import regression from 'regression';
 import detectPitch from './audio/utils/detectPitch';
 import AWS from '../../../s3/index.js';
-
-
 class CreateCard extends Component {
   constructor(props) {
     super(props);
@@ -20,50 +18,39 @@ class CreateCard extends Component {
       // loading:false,
       visible: false
     };
-
     this.record = this.record.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
-
     this.audioCtx = new AudioContext();
     this.stream = null;
     this.buffer = null;
     this.analyser = null;
-
     this.recordedAudioData = [];
-
-
     this.source = null;
     this.readyToPlay = false;
     this.source = this.audioCtx.createBufferSource();
     this.recordingBuffer = null;
-
     this.playUserVoice = this.playUserVoice.bind(this);
   }
-
   handleEnglishWord(event) {
     this.setState({
       englishWord: event.target.value
     })
   }
-
   handleTone(event) {
     this.setState({
       tone: event.target.value
     })
   }
-
   handleChineseChar(event) {
     this.setState({
       chineseChar: event.target.value
     })
   }
-
   handlePinYin(event) {
     this.setState({
       pinyin: event.target.value
     })
   }
-
   createNewCard() {
     detectPitch(this.state.recordedSound)
       .then(freqsWithTimeData => {
@@ -116,7 +103,6 @@ class CreateCard extends Component {
         })
     })
   }
-
   playUserVoice() {
     if (this.readyToPlay) {
       this.source = this.audioCtx.createBufferSource();
@@ -125,8 +111,6 @@ class CreateCard extends Component {
       this.source.start(0);
     }
   }
-
-
   record() {
     if (!this.state.recording) {
       navigator.mediaDevices.getUserMedia({audio: true})
@@ -137,7 +121,6 @@ class CreateCard extends Component {
             recording: true,
             visible: false
           });
-
           const recordingNode = this.audioCtx.createMediaStreamSource(stream);
           this.mediaRecorder = new MediaRecorder(stream);
           this.mediaRecorder.start();
@@ -145,45 +128,35 @@ class CreateCard extends Component {
             this.recordedAudioData.push(e.data);
           }
           this.mediaRecorder.onstop = (e) => {
-
             var blob = new Blob(this.recordedAudioData, {'type': 'audio/ogg; codecs=opus'});
-
             this.setState({
               recordedSound: blob
             });
-
             let fileReader = new FileReader();
             fileReader.readAsArrayBuffer(blob);
-
-
             fileReader.onloadend = () => {
               const arrayBuffer = fileReader.result;
-
               this.audioCtx.decodeAudioData(arrayBuffer, (buffer) => {
                 this.recordingBuffer = buffer;
                 this.readyToPlay = true;
               })
             }
-
             this.recordedAudioData = [];
           }
           this.analyser = this.audioCtx.createAnalyser();
           this.analyser.fftSize = 1024;
           this.buffer = new Float32Array(this.analyser.fftSize);
           recordingNode.connect(this.analyser);
-
           //UNCOMMENT THIS LINE TO FORWARD AUDIO TO OUTPUT
           //================================================
           //
           //this.analyser.connect(this.audioCtx.destination)
-
       })
       .catch( err => {
         console.error('Oops something broke ', err);
       });
     } 
   }
-
   stopRecording() {
     if(this.state.recording) {
       this.mediaRecorder.stop();
@@ -193,7 +166,6 @@ class CreateCard extends Component {
       });
     }
   }
-
   render() {
     return (
       <div>
@@ -239,14 +211,12 @@ class CreateCard extends Component {
     )
   }
 };
-
 const mapStateToProps = (state) => {
   // Whatever is returned will show up as props 
   return {
     allDecks: state.practicePage.allDecks
   };
 };
-
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({ selectDeck, loadPracticePage, loadProfile }, dispatch);
   // return {
@@ -255,8 +225,5 @@ const mapDispatchToProps = dispatch => {
   //   }
   // };
 };
-
 // export default connect(mapStateToProps,mapDispatchToProps)(DecksContainer);
-
 export default CreateCard;
-

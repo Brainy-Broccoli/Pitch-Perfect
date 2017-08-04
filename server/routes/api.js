@@ -155,15 +155,20 @@ router.route('/create-custom-deck')
 //     knex.from('users_decks')
 //       .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
 //       .where({user_id: req.user.id})
-//       .then( data => ({
-//         id: deck.deck_id,
-//         progress: deck.deck_progress,
-//         accuracy: deck.accuracy,
-//         topic: deck.topic,
-//         image: deck.image,
-//         badge: deck.badge,
-//         has_badge: deck.has_badge
-//       }))
+//       .then(data => {
+
+//         console.log('DATAAAAAAAAAA', data);
+//         res.json(data);
+//       //   ({
+//       //   id: deck.deck_id,
+//       //   progress: deck.deck_progress,
+//       //   accuracy: deck.accuracy,
+//       //   topic: deck.topic,
+//       //   image: deck.image,
+//       //   badge: deck.badge,
+//       //   has_badge: deck.has_badge
+//       // })
+//       })
 //   })
 
 
@@ -172,6 +177,18 @@ router.route('/create-custom-deck')
 router.route('/profileInfo')
   .get((req, res) => {
     const userID = req.user.id;
+    const name = `${req.user.first} ${req.user.last}`;
+    const badges = [];
+    const photo = req.user.photo;
+    const isMentor = req.user.mentor || false;
+    const profilePageData = {
+      name,
+      badges,
+      photo,
+      isMentor
+    };
+
+    const allDecks = [];
     knex.from('users_decks')
       .innerJoin('profiles', 'users_decks.user_id', '=', 'profiles.id')
       .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
@@ -183,7 +200,8 @@ router.route('/profileInfo')
         topic: deck.topic,
         image: deck.image,
         badge: deck.badge,
-        has_badge: deck.has_badge
+        has_badge: deck.has_badge,
+        default: deck.default
       })))
       .then( decks => Promise.all(
         decks.map( deck => 

@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom'
 import AllCardsTableList from './AllCardsTableList';
 import { bindActionCreators } from 'redux';
 import { addDeck } from '../actions/actions_customDeck';
-
-
 class CreateCustomDeck extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +18,6 @@ class CreateCustomDeck extends Component {
       badge: ''
     };
   }
-
   componentDidMount() {
     fetch('/api/cards', { credentials: 'include' })
       .then(res => res.json())
@@ -31,7 +28,6 @@ class CreateCustomDeck extends Component {
         });
       });
   }
-
   selectCards(cards) {
     if (!this.state.created) {
       this.setState({
@@ -44,15 +40,12 @@ class CreateCustomDeck extends Component {
       });
     }
   }
-
   generateDeck() {
     this.setState({
       created: true
     });
   }
-
   createDeck() {
-
     let customDeck = this.state.allCards.filter((card) => {
       for (let i = 0; i < this.state.newDeck.length; i++) {
         let currentCard = this.state.newDeck[i];
@@ -63,7 +56,6 @@ class CreateCustomDeck extends Component {
     });
     console.log('all Decks from store retrieved', this.props.allDecks);
     console.log('array of custom cards', customDeck);
-
     // let deckID = this.props.allDecks.length;
     let createdDeck = {
       // id: deckID + 1,
@@ -79,8 +71,6 @@ class CreateCustomDeck extends Component {
     // let decks = this.props.allDecks;
     // decks.push(createdDeck);
     // this.props.addDeck(createdDeck);
-
-
     fetch('/api/create-custom-deck', {
       headers: {
         'Accept': 'application/json',
@@ -97,31 +87,25 @@ class CreateCustomDeck extends Component {
         console.log('Client received new deck', data);
         this.props.addDeck(data);
       })
-
-
   }
-
   handleTopic(event) {
     console.log(event.target.value);
     this.setState({
       topic: event.target.value
     })
   }
-
   handleImage(event) {
     console.log(event.target.value);
     this.setState({
       image: event.target.value
     })
   }
-
   handleBadge(event) {
     console.log(event.target.value);
     this.setState({
       badge: event.target.value
     })
   }
-
   render() {
     console.log('it works', this.state.allCards)
     return (
@@ -174,23 +158,14 @@ class CreateCustomDeck extends Component {
       </Grid>
     );
   }
-
 }
-
-
 const mapStateToProps = (state) => {
   return {
     allDecks: state.practicePage.allDecks
   };
 };
-
-
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({ addDeck }, dispatch);
 };
-
-
 export default connect(mapStateToProps, mapDispatchToProps)(CreateCustomDeck);
-
 // export default CreateCustomDeck;
-

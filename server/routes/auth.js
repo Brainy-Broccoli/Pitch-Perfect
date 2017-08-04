@@ -39,8 +39,6 @@ router.route('/profile')
 
 router.route('/logout')
   .get((req, res) => {
-    console.log('here');
-    console.log(req.logout);
     req.logout();
     res.redirect('/');
   });
@@ -59,7 +57,7 @@ router.get('/auth/facebook', middleware.passport.authenticate('facebook', {
 }));
 
 router.get('/auth/facebook/callback', middleware.passport.authenticate('facebook', {
-  successRedirect: '/profile',
+  successRedirect: '/',
   failureRedirect: '/login',
   failureFlash: true
 }));
