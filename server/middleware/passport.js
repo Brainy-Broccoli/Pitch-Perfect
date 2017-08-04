@@ -175,19 +175,23 @@ const getOrCreateOAuthProfile = (type, oauthProfile, done) => {
       // grab the profile id and for every deck, add an entry into the join table for users_decks
       // first need to grab this array of decks from the decks table --  no bookshelf model for this
       // so i'll be using knex
-      return knex.select('id').from('decks').where( {default: true} )
+      return knex.select('id').from('decks')
+        .where( {default: true} )
         .then(deckRows => {
           const dIDs = deckRows.map(row => row.id);
           console.log('deck ids', dIDs);
           const insertionPromises = [];
           for (let i = 0; i < dIDs.length; i++) {
             //perform an insertion
+            //build up an object containing the card counts for each of these default decks
+            var totalCards = [14, 5, 3, 1, 1];
             insertionPromises.push(knex('users_decks').insert({
               'deck_id': dIDs[i], 
               'user_id': profile.id,
               'deck_progress': 0,
               'accuracy': null,
-              'has_badge': false
+              'has_badge': false,
+              'total_cards': totalCards[i]
             }));
           }
           console.log('insertionPromises length after associating users with decks', insertionPromises.length);

@@ -77,7 +77,7 @@ class RecentActivity extends Component {
         <Grid.Column width={8}>
           <div style={{position: 'absolute', fontSize: 28, marginTop: 26}}><b>{this.props.recentDeck.topic}</b></div>
           <div style={{fontSize: 18, marginTop: 54}}>
-            <div><b>Accuracy: </b>{this.props.recentDeck.accuracy}</div>
+            <div><b>Accuracy: </b>{Math.floor(this.props.recentDeck.accuracy)}%</div>
             <div><b>Progress: </b>{this.props.recentDeck.progress} / {this.props.recentDeck.total}</div>
             <div><b>Badge: </b><Image src={this.props.recentDeck.badge} style={{height: 40, width: 40}}/></div>
           </div>

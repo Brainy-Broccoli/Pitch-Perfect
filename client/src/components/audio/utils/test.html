@@ -1,0 +1,20 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Audio Test</title>
+  </head>
+  <body>
+    <script src="detectPitch.js"></script>
+    <script src="record.js"></script>
+    <script>
+      window.onload = () => {
+        fetch('apple-pingguo.wav')
+        .then( res => res.blob() )
+        .then( blob => detectPitch(blob) )
+        .then( fz => console.warn(fz) )
+        .catch( e => console.error('OH WAIT YOU DUMB BASS, YOU HAVENT IMPORTED PITCHFINDER') );
+      };
+    </script>
+  </body>
+</html>

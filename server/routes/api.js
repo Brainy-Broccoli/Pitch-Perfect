@@ -1,7 +1,9 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
+const middleware = require('../middleware');
 const knex = require('../../db').knex;
+
 
 router.route('/')
   .get((req, res) => {
@@ -29,27 +31,60 @@ router.route('/cards')
 
 router.route('/create-card')
   .post((req, res) => {
-    console.log('REQUEST BODY',req.body);
+    console.log('REQUEST BODY', typeof req.body.female_pitch_data);
     knex('cards').insert({
       translation: req.body.translation,
       character: req.body.character,
       pinyin: req.body.pinyin,
       IPA: req.body.IPA,
       female_voice: req.body.female_voice,
-      tone: req.body.tone
+      tone: req.body.tone,
+      female_pitch_data: JSON.stringify(req.body.female_pitch_data),
+      regression: JSON.stringify(req.body.regression),
     })
     .returning('id')
     .then(function(id) {
       console.log('first id', id);
       knex('users_cards').insert({
-        user_id:req.user.id,
-        card_id:id[0]
+        user_id: req.user.id,
+        card_id: id[0]
       })
       .then(
         res.status(201).send('Got it')
-      )
-    })
+      );
+    });
+  });
+
+router.route('/card/:id/soundData')
+  .put((req, res) => {
+    console.log('put request received');
+    const { soundData, regression } = req.body;
+    console.log(soundData, regression);
+    knex('cards')
+      .where({id: req.params.id})
+      .update({
+        female_pitch_data: JSON.stringify(soundData),
+        regression: JSON.stringify(regression)
+      })
+      .then(insertionResults => {
+        console.log('successful insertion', insertionResults);
+        res.sendStatus(201);
+      })
+      .catch(err => {
+        console.log('err updating cards table', err);
+        res.sendStatus(500);
+      });
   })
+  .get((req, res) => {
+    knex('cards').select('female_pitch_data', 'regression').where({id: req.params.id})
+      .then(pitchData => {
+        res.json(pitchData);
+      })
+      .catch(err => {
+        console.log('err retrieving pitch data for the card', err);
+        res.sendStatus(500);
+      });
+  });
 
 router.route('/create-custom-deck')
   .post((req, res) => {
@@ -66,7 +101,8 @@ router.route('/create-custom-deck')
         user_id:req.user.id,
         deck_id:id[0],
         has_badge: false,
-        deck_progress: 0
+        deck_progress: 0,
+        total_cards: req.body.total
       })
       .returning('deck_id')
       .then(function(deckId) {
@@ -154,7 +190,6 @@ router.route('/profileInfo')
     };
 
     const allDecks = [];
-
     knex.from('users_decks')
       .innerJoin('profiles', 'users_decks.user_id', '=', 'profiles.id')
       .innerJoin('decks', 'users_decks.deck_id', '=', 'decks.id')
@@ -177,7 +212,6 @@ router.route('/profileInfo')
             .innerJoin('cards', 'decks_cards.card_id', '=', 'cards.id')
             .where({deck_id: deck.id, user_id: userID})
             .then( cards => {
-              console.log(cards.length)
               const destructuredCards = cards.map( card => ({
                 id: card.card_id,
                 character: card.character,
@@ -186,6 +220,8 @@ router.route('/profileInfo')
                 translation: card.translation,
                 male_voice: card.male_voice,
                 female_voice: card.female_voice,
+                female_pitch_data: card.female_pitch_data,
+                regression: card.regression,
                 tone: card.tone,
                 high_score: card.high_score
               }));
@@ -195,7 +231,6 @@ router.route('/profileInfo')
             })
         ))
         .then( decksWithCards => {
-          //console.log(decksWithCards.map(deck=>`${deck.id}: ${JSON.stringify(deck.cards)}`));
           res.json({ 
             display: req.user.display,
             photo: req.user.photo,
@@ -203,85 +238,6 @@ router.route('/profileInfo')
           });
         }))
       .catch(err => res.status(500).send('Something broke: ' + err));
-    //take id, go into users_decks table
-    //build up array of objects (that will ultimately become the fleshed out deck objects) and grab the user specific info
-    /*
-      [
-        {
-          id: 1
-          progress, accuracy, has badge
-        }
-      ]
-    */
-    //then iterate through the collection of objects, plucking the id for each one
-    //at this point, create the empty array for card objects
-    //using the id, find all the card objects associated with each deck, taking the meta information and adding it to the card obj
-    // similar structure to above
-    /*
-      [
-        {
-          id: 1
-          cards: [
-            {
-              id: 1
-              highscore: 
-            }
-          ]
-          progress, accuracy, has badge
-        }
-      ]
-    */
-    //then iterate through each of the objects inside the cards array, looking it up in the cards table to get the static
-    //information for each one like the character, translation, and ipa
-    /*
-      [
-        {
-          id: 1
-          cards: [
-            {
-              id: 1
-              character:
-              translation:
-              ...
-              highscore: 
-            }
-          ]
-          progress, 
-          accuracy, 
-          has_badge,
-          topic
-        }
-      ]
-    */
-    // then create the object that will reference the allDecks array and create all the keys seen in the practicePage reducer's initial state
-    const practicePageState = {
-      currentDeck: null,
-      currentCard: null,
-      currentCardIndex: 0,
-      allDecks: null,
-      recentUserDecksInfo: null
-    };
-    //add on the currentDeck -- (iterate through and find the basic Deck), set that to the current
-    //currentCard will be currentDeck will be currentDeck.cards[0]
-    //currentCardIndex will be 0
-    //allDecks will be set to the massive array created up top
-    //recentUserDecksInfo will be created by taking the first 2 things in the allDecks array minus the cards array
-
-    // then create a massive object (call it state tree)
-    const stateTree = {};
-    //add in both the practicePageState and the profileInfo as keys on it
-    //res.json the state tree
-
-
-    // grab the 
-    //inside the decks table
-    // all Decks that the user is associated with
-    //inside the users_decks table
-      // the accuracy and deck progress added onto each deck object
-      // then take a look at the has_badge to add to the badges array
-    // all the cards for each deck 
-    // highscore information for each card added to each card
-    // recent Decks (determined by timestamp) -- but for now will be the first 3 decks in the all decks array
   });
 router.route('/recentDecks')
   .get((req, res) => {
@@ -391,11 +347,11 @@ router.route('/recentDecks')
     const { deckDbID, timestamp } = req.body;
     knex.select().from('users_recent_decks').where({deck_id: deckDbID, user_id: userID})
       .then(existingDeckInfo => {
-        console.log('existingDeckInfo', existingDeckInfo);
-        console.log('deckDbID inside existingDeckInfo block', deckDbID);
+        // console.log('existingDeckInfo', existingDeckInfo);
+        // console.log('deckDbID inside existingDeckInfo block', deckDbID);
         // if that deck isn't already there, then make an insertion
         if (!existingDeckInfo.length) {
-          console.log('deck not found -- inserting into users_recent_decks');
+          // console.log('deck not found -- inserting into users_recent_decks');
           knex('users_recent_decks').insert({user_id: userID, deck_id: deckDbID, time_stamp: timestamp})
             .then(insertionInfo => {
               // now we need to take a look at how many rows are there -- if > 3, we need to delete the oldest
@@ -447,5 +403,80 @@ router.route('/recentDecks')
     //on the client side, once the status code has been received (hopefully 201)
     // send a get request for recentDecks and then update the state accordingly -- the end
   }); 
+
+router.route('/card/:id')
+  .post(middleware.auth.verify, (req, res) => {
+    console.log(req.body);
+    const userID = req.user.id;
+    const cardID = req.params.id;
+    knex.select('high_score').from('users_cards')
+      .where({ card_id: cardID, user_id: userID })
+      .then( hs => knex.from('users_cards')
+        .where({ card_id: cardID, user_id: userID })
+        // Plz don't hack
+        .update({high_score: Math.min(Math.max(Number(hs[0]['high_score']), req.body.score, 0), 100)})
+      ).then( () => knex.from('users_decks')
+        .where({user_id: userID})
+      ).then( usersDecks => Promise.all(
+        usersDecks.map(deck => 
+          knex.count('users_cards.card_id')
+            .from('users_decks')
+            .innerJoin('decks_cards', 'users_decks.deck_id', '=', 'decks_cards.deck_id')
+            .innerJoin('users_cards', 'decks_cards.card_id', '=', 'users_cards.card_id')
+            .where('high_score', '>=', '80')
+            .andWhere({ 
+              'users_decks.user_id': userID,
+              'users_cards.user_id': userID,
+              'users_decks.deck_id': deck.deck_id 
+            }).then( cardsAboveEighty =>({
+              deckID: deck.deck_id,
+              completeCount: parseInt(cardsAboveEighty[0].count)
+            })).then( deckCompletion => knex.avg('high_score')
+              .from('users_cards')
+              .innerJoin('decks_cards', 'users_cards.card_id', '=', 'decks_cards.card_id')
+              .innerJoin('users_decks', 'users_decks.deck_id', '=', 'decks_cards.deck_id')
+              .where({
+                'users_cards.user_id': userID,
+                'users_decks.user_id': userID,
+                'users_decks.deck_id': deckCompletion.deckID
+              })
+              .then( average => Object.assign(deckCompletion, { average: average[0].avg }))
+            )
+        ))).then( deckCompletions => 
+        Promise.all( deckCompletions.map( deck => 
+          knex.from('users_decks')
+            .where({
+              user_id: userID,
+              deck_id: deck.deckID
+            })
+            .update({
+              deck_progress: deck.completeCount,
+              accuracy: deck.average
+            })
+            .returning('deck_id')
+            .then( (deckIDs) => {
+              console.log('deckIDs', deckIDs);
+              return Promise.all(deckIDs.map(deckID => 
+                console.log('typeof deckID', typeof deckID) || 
+                knex.select('deck_id', 'user_id', 'deck_progress', 'total_cards').from('users_decks')
+                  .where({deck_id: deckID, user_id: userID})
+                  .then(progressAndTotal => {
+                    console.log('progressAndTotal', progressAndTotal);
+                    Promise.all(progressAndTotal.map(progressAndTotalRow => {
+                      if (progressAndTotalRow.deck_progress === progressAndTotalRow.total_cards) {
+                        return knex('users_decks')
+                          .where({deck_id: progressAndTotalRow.deck_id, user_id: progressAndTotalRow.user_id})
+                          .update({has_badge: true});
+                      }
+                    })
+                    );
+                  })
+              ));
+            })
+            .then(successfulUpdateResult => console.log('success', successfulUpdateResult))
+            .catch(err => console.log('error updating has_badge', err))
+            
+        ))).then(()=>res.send('ok')).catch( err=> console.error(err) || res.status(500).send(err));
+  });
 
 module.exports = router;

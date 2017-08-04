@@ -1,4 +1,15 @@
 // basic deck's cards
+
+// const cardMom = {
+//   character: '妈妈',
+//   IPA: 'mama',
+//   female_pitch_data: '11234',
+//   pinyin: 'mama',
+//   translation: 'mom',
+//   userAccuracy: 85,        
+//   female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/mother-ma-2.wav'
+// };
+
 // const cardMom = {
 //   character: '妈妈',
 //   IPA: 'mama',
@@ -7,6 +18,7 @@
 //   userAccuracy: 85,        
 //   female_voice: 'https://s3-us-west-1.amazonaws.com/pitch-perfect-thesis/Female+sound+files/mother-ma-2.wav'
 // };
+
 
 // const cardDog = {
 //   character: '狗',
@@ -100,7 +112,7 @@
 
 const initialState = {
   currentDeck: {},
-  // currentCard: basicDeck.cards[0],
+  currentCard: {},
   currentCardIndex: 0,
   allDecks: [],
   recentUserDecksInfo: []
@@ -111,6 +123,17 @@ const initialState = {
 const practicePage = (state = initialState, action) => {
   //console.log('state in practice page', state);
   switch (action.type) {
+    case 'UPDATE_CARD_HIGHSCORE':
+      console.log('trying to update highscores');
+      state.allDecks.forEach(deck => {
+        deck.cards.forEach(card => {
+          if (card.id === action.payload.cardID && action.payload.highscore > card.high_score) {
+            console.log('updating card', card.id, 'with highscore', action.payload.highscore);
+            card.high_score = Math.min(action.payload.highscore, 100);
+          }
+        });
+      });
+      return Object.assign({}, state);
     case 'RECEIVE_UPDATED_RECENT_DECKS':
       console.log('receiving new deck information');
       return Object.assign({}, state, action.payload);

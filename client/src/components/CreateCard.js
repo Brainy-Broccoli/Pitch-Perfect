@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Dimmer, Loader, Grid, Image, Input, Button, Transition, Popup } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
+import regression from 'regression';
+import detectPitch from './audio/utils/detectPitch';
 import AWS from '../../../s3/index.js';
 class CreateCard extends Component {
   constructor(props) {
@@ -50,45 +52,55 @@ class CreateCard extends Component {
     })
   }
   createNewCard() {
-    AWS.S3.upload(AWS.createParams(this.state.englishWord + '.ogg', this.state.recordedSound), (err, data) => {
-      if (err) {
-        console.log('error occurred uploading', err);
-      } else {
-        console.log('data returned from upload', data);
-        console.log(data.Location);
-        let options = {
-          translation: this.state.englishWord,
-          character: this.state.chineseChar,
-          tone: this.state.tone,
-          pinyin: this.state.pinyin,
-          IPA: this.state.pinyin,
-          female_voice: data.Location
-        }
-        // this.setState({ loading: true });
-        fetch('/api/create-card', {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          method: 'POST',
-          body: JSON.stringify(options)
+    detectPitch(this.state.recordedSound)
+      .then(freqsWithTimeData => {
+        //comp the regression
+        const regressMe = freqsWithTimeData.filter(a=>a.freq).map(datum => [datum.time, datum.freq]);
+        const reg = regression.polynomial(regressMe, { order: 3, precision: 4 });
+        const coefficients = (reg.equation);
+      
+        AWS.S3.upload(AWS.createParams(this.state.englishWord + '.ogg', this.state.recordedSound), (err, data) => {
+          if (err) {
+            console.log('error occurred uploading', err);
+          } else {
+            console.log('data returned from upload', data);
+            console.log(data.Location);
+            let options = {
+              translation: this.state.englishWord,
+              character: this.state.chineseChar,
+              tone: this.state.tone,
+              pinyin: this.state.pinyin,
+              IPA: this.state.pinyin,
+              female_voice: data.Location,
+              female_pitch_data: freqsWithTimeData,
+              regression: coefficients,
+            };
+            // this.setState({ loading: true });
+            fetch('/api/create-card', {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              credentials: 'include',
+              method: 'POST',
+              body: JSON.stringify(options)
+            })
+            // .then(res => res.json())
+            .then((data) => {
+              console.log(data);
+              this.readyToPlay = false;
+              this.setState({
+                // loading: false,
+                visible: true,
+                englishWord: '',
+                tone: '',
+                chineseChar: '',
+                pinyin: '',
+                recordedSound: null
+               });
+            })
+          }
         })
-        // .then(res => res.json())
-        .then((data) => {
-          console.log(data);
-          this.readyToPlay = false;
-          this.setState({
-            // loading: false,
-            visible: true,
-            englishWord: '',
-            tone: '',
-            chineseChar: '',
-            pinyin: '',
-            recordedSound: null
-           });
-        })
-      }
     })
   }
   playUserVoice() {
@@ -139,7 +151,6 @@ class CreateCard extends Component {
           //================================================
           //
           //this.analyser.connect(this.audioCtx.destination)
-          setTimeout(this.stopRecording, 1500);
       })
       .catch( err => {
         console.error('Oops something broke ', err);
@@ -156,7 +167,6 @@ class CreateCard extends Component {
     }
   }
   render() {
-    console.log('AWS', AWS);
     return (
       <div>
         <Grid padded stretched={true}>

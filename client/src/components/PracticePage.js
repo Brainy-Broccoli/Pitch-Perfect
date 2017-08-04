@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
-import { Grid, Header, Divider, Button, Icon, Label } from 'semantic-ui-react';
+import { Grid, Header, Divider, Button, Icon, Label, Statistic } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 import QuickSelectDropdown from './QuickSelectDropdown';
-import AudioGraph from './AudioGraph.js';
+import AudioGraph from './audio';
 
 class PracticePage extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentWillReceiveProps(newProps) {
+    console.log('receiving new props', newProps);
+  }
+
   render() {
+    console.log('practicePage props', this.props);
     return (
       <Grid textAlign='center' columns={2} divided="vertically">
         <Grid.Row>
@@ -21,6 +31,7 @@ class PracticePage extends Component {
               onClick={this.props.onNextCardSelect}
             />
           </Button.Group>
+          
           </Grid.Column>
           <Grid.Column>
             <QuickSelectDropdown 
@@ -28,6 +39,10 @@ class PracticePage extends Component {
               currentCard={this.props.currentCard}
               onCardSelect={this.props.onCardSelect}
             />
+          <Statistic style = {{marginLeft: '5em'}}> 
+            <Statistic.Value>{this.props.cardHighScore || '--' }</Statistic.Value>
+            <Statistic.Label>Highscore</Statistic.Label>
+          </Statistic>
           </Grid.Column>  
         </Grid.Row>
         <Grid.Row columns={2}>
@@ -45,5 +60,12 @@ class PracticePage extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  console.log('mapping state to props in the practice page');
+  return {
+    cardHighScore: state.practicePage.currentCard.high_score,
+  };
+};
 
-export default PracticePage;
+
+export default connect(mapStateToProps, null)(PracticePage);

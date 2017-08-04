@@ -42,7 +42,10 @@ exports.up = function (knex, Promise) {
       table.string('pinyin', 50).nullable();
       table.string('IPA', 50).nullable();
       table.string('male_voice', 500).nullable();
+      table.json('male_pitch_data').nullable();
       table.string('female_voice', 500).nullable();
+      table.json('female_pitch_data').nullable();
+      table.json('regression').nullable();
       table.integer('tone');
     }),
     knex.schema.createTableIfNotExists('decks_cards', function(table) {
@@ -55,8 +58,9 @@ exports.up = function (knex, Promise) {
       table.integer('deck_id').references('decks.id').onDelete('CASCADE');
       table.integer('user_id').references('profiles.id').onDelete('CASCADE');
       table.integer('deck_progress');
-      table.integer('accuracy');
+      table.float('accuracy');
       table.boolean('has_badge');
+      table.integer('total_cards');
     }),
     knex.schema.createTableIfNotExists('users_cards', function(table) {
       table.increments('id').unsigned().primary();

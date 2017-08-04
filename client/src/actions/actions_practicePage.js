@@ -1,4 +1,4 @@
-import { SELECT_CARD, SELECT_PREVIOUS_CARD, SELECT_NEXT_CARD, SELECT_DECK, SELECT_RECENT_ACTIVITY_DECK, LOAD_PRACTICE_PAGE, RECEIVE_UPDATED_RECENT_DECKS } from './actionTypes';
+import { SELECT_CARD, SELECT_PREVIOUS_CARD, SELECT_NEXT_CARD, SELECT_DECK, SELECT_RECENT_ACTIVITY_DECK, LOAD_PRACTICE_PAGE, RECEIVE_UPDATED_RECENT_DECKS, UPDATE_CARD_HIGHSCORE } from './actionTypes';
 
 export const selectCard = (cardPos) => {
   return {
@@ -42,4 +42,12 @@ export const loadPracticePage = (practicePageState) => ({
 export const receiveUpdatedRecentDecks = (recentUserDecksInfo) => ({
   type: RECEIVE_UPDATED_RECENT_DECKS,
   payload: {recentUserDecksInfo}
+});
+
+export const updateCardHighscore = (highscore, cardID) => ({
+  type: UPDATE_CARD_HIGHSCORE,
+  payload: {
+    highscore,
+    cardID
+  }
 });
