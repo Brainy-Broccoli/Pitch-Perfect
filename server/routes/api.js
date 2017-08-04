@@ -145,10 +145,12 @@ router.route('/profileInfo')
     const name = `${req.user.first} ${req.user.last}`;
     const badges = [];
     const photo = req.user.photo;
+    const isMentor = req.user.mentor || false;
     const profilePageData = {
       name,
       badges,
-      photo
+      photo,
+      isMentor
     };
 
     const allDecks = [];
@@ -164,7 +166,8 @@ router.route('/profileInfo')
         topic: deck.topic,
         image: deck.image,
         badge: deck.badge,
-        has_badge: deck.has_badge
+        has_badge: deck.has_badge,
+        default: deck.default
       })))
       .then( decks => Promise.all(
         decks.map( deck => 
