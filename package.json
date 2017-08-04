@@ -51,9 +51,7 @@
     "regression": "^2.0.0",
     "s3": "^4.4.0",
     "semantic-ui-react": "^0.71.1",
-    "wav-decoder": "^1.1.1"
-  },
-  "devDependencies": {
+    "wav-decoder": "^1.1.1",
     "webpack": "^2.3.2",
     "webpack-dev-server": "^2.4.2",
     "babel-loader": "^7.0.0",
