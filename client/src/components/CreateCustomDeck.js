@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Grid, Menu, Dropdown, Button, Input } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Grid, Menu, Dropdown, Button, Input } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 // import { Dropdown } from 'semantic-ui-react';
 import AllCardsTableList from './AllCardsTableList';
 import { bindActionCreators } from 'redux';
@@ -18,6 +18,7 @@ class CreateCustomDeck extends Component {
       badge: ''
     };
   }
+  
   componentDidMount() {
     fetch('/api/cards', { credentials: 'include' })
       .then(res => res.json())
@@ -65,8 +66,8 @@ class CreateCustomDeck extends Component {
       image: this.state.image || 'http://saveabandonedbabies.org/wp-content/uploads/2015/08/default.png',
       badge: this.state.badge || 'https://previews.123rf.com/images/viktorijareut/viktorijareut1508/viktorijareut150800476/44097508-Vector-illustration-of-golden-trophy-cup-for-first-place-with-laurel-wreath-Trophy-icon-Sport-award--Stock-Vector.jpg',
       has_badge: false,
-      cards: customDeck
-      // total: customDeck.length
+      cards: customDeck,
+      total: customDeck.length
     };
     // let decks = this.props.allDecks;
     // decks.push(createdDeck);
@@ -82,32 +83,32 @@ class CreateCustomDeck extends Component {
     })
       .then(res => res.json())
       .then( data => {
+        data = data[0];
         data.cards = customDeck;
         data.total = customDeck.length;
         console.log('Client received new deck', data);
         this.props.addDeck(data);
-      })
+      });
   }
   handleTopic(event) {
     console.log(event.target.value);
     this.setState({
       topic: event.target.value
-    })
+    });
   }
   handleImage(event) {
     console.log(event.target.value);
     this.setState({
       image: event.target.value
-    })
+    });
   }
   handleBadge(event) {
     console.log(event.target.value);
     this.setState({
       badge: event.target.value
-    })
+    });
   }
   render() {
-    console.log('it works', this.state.allCards)
     return (
       <Grid padded>
         <Grid.Row style={{minHeight: 200}}>
@@ -118,7 +119,7 @@ class CreateCustomDeck extends Component {
                   key: index,
                   text: card.translation, 
                   value: card.translation 
-                }
+                };
               })} 
             />
           </Grid.Column>
@@ -135,7 +136,7 @@ class CreateCustomDeck extends Component {
                 <Menu vertical style={{minHeight: 50, maxHeight: 200, 'overflowY': 'scroll', marginLeft: 'auto', marginRight: 'auto'}}>
                   {
                     this.state.newDeck.map((card, index) => {
-                      return (<AllCardsTableList key={index} card={card}/>)
+                      return (<AllCardsTableList key={index} card={card}/>);
                     })
                   }
                 </Menu> 
@@ -146,26 +147,29 @@ class CreateCustomDeck extends Component {
                 <Input placeholder='Deck Badge (optional)' value={this.state.badge} onChange={this.handleBadge.bind(this)} style={{marginTop: 5}}/>
               </Grid.Column>
               <Grid.Column width={3} style={{marginLeft: 'auto', marginRight: 'auto'}}>
-                <Link to={`/decks`}>
+                <Link to={'/decks'}>
                   <Button onClick={() => this.createDeck()}>
                     Create Deck!
                   </Button>
                 </Link>
               </Grid.Column>
             </Grid.Row>
-          : null
+            : null
         }
       </Grid>
     );
   }
 }
+
 const mapStateToProps = (state) => {
   return {
     allDecks: state.practicePage.allDecks
   };
 };
+
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({ addDeck }, dispatch);
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(CreateCustomDeck);
 // export default CreateCustomDeck;

@@ -60,6 +60,7 @@ exports.up = function (knex, Promise) {
       table.integer('deck_progress');
       table.float('accuracy');
       table.boolean('has_badge');
+      table.integer('total_cards');
     }),
     knex.schema.createTableIfNotExists('users_cards', function(table) {
       table.increments('id').unsigned().primary();

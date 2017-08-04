@@ -9,6 +9,10 @@ class PracticePage extends Component {
     super(props);
   }
 
+  componentWillReceiveProps(newProps) {
+    console.log('receiving new props', newProps);
+  }
+
   render() {
     console.log('practicePage props', this.props);
     return (
@@ -57,6 +61,7 @@ class PracticePage extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log('mapping state to props in the practice page');
   return {
     cardHighScore: state.practicePage.currentCard.high_score,
   };

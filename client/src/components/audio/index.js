@@ -2,9 +2,11 @@ import React from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import regression from 'regression';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import record from './utils/record';
 import Controls from './Controls';
 import { compareRegressions } from './utils/compareRegressions';
+import { updateCardHighscore } from '../../actions/actions_practicePage';
 class AudioGraph extends React.Component {
 
   constructor(props) {
@@ -33,7 +35,7 @@ class AudioGraph extends React.Component {
   }
   componentWillReceiveProps() {
     console.log('ASLDIJFALKSJDF');
-    setTimeout(() => this.draw([]), 10);
+    setTimeout(() => this.draw([], true), 10);
   }
 
   componentDidMount() {
@@ -200,7 +202,11 @@ class AudioGraph extends React.Component {
         credentials: 'include',
         method: 'POST',
         body: JSON.stringify({ score: Math.floor(score)}),
-      }).then( res => console.log(res) )
+      }).then( res => {
+        console.log(res);
+        // we know it was successful, so update the state
+        this.props.updateCardHighscore(Math.floor(score), this.props.cardID);
+      })
         .catch( res => console.error(res) );
       //end of drawing -- now need to display the results of the comparison 
     }
@@ -234,4 +240,9 @@ const mapStateToProps = (state) => {
     recordingLength: (femalePitchData && (femalePitchData[femalePitchData.length - 1]['time'] * 1000)) || 1000, // could be trying to read pitch data for a card that hasn't been updated yet (via the sample data)
   };
 };
-export default connect(mapStateToProps, null)(AudioGraph);
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({updateCardHighscore}, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AudioGraph);

@@ -123,6 +123,17 @@ const initialState = {
 const practicePage = (state = initialState, action) => {
   //console.log('state in practice page', state);
   switch (action.type) {
+    case 'UPDATE_CARD_HIGHSCORE':
+      console.log('trying to update highscores');
+      state.allDecks.forEach(deck => {
+        deck.cards.forEach(card => {
+          if (card.id === action.payload.cardID && action.payload.highscore > card.high_score) {
+            console.log('updating card', card.id, 'with highscore', action.payload.highscore);
+            card.high_score = Math.min(action.payload.highscore, 100);
+          }
+        });
+      });
+      return Object.assign({}, state);
     case 'RECEIVE_UPDATED_RECENT_DECKS':
       console.log('receiving new deck information');
       return Object.assign({}, state, action.payload);

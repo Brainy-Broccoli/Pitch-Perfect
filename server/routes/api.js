@@ -101,7 +101,8 @@ router.route('/create-custom-deck')
         user_id:req.user.id,
         deck_id:id[0],
         has_badge: false,
-        deck_progress: 0
+        deck_progress: 0,
+        total_cards: req.body.total
       })
       .returning('deck_id')
       .then(function(deckId) {
@@ -451,11 +452,30 @@ router.route('/card/:id')
             .update({
               deck_progress: deck.completeCount,
               accuracy: deck.average
-            }).then( () => 
-              knex.from('users_decks')
-                .where({user_id: userID})
-                .then( decks => Promise.all(decks.map( deck => knex.from('users_cards'))))
-            )
+            })
+            .returning('deck_id')
+            .then( (deckIDs) => {
+              console.log('deckIDs', deckIDs);
+              return Promise.all(deckIDs.map(deckID => 
+                console.log('typeof deckID', typeof deckID) || 
+                knex.select('deck_id', 'user_id', 'deck_progress', 'total_cards').from('users_decks')
+                  .where({deck_id: deckID, user_id: userID})
+                  .then(progressAndTotal => {
+                    console.log('progressAndTotal', progressAndTotal);
+                    Promise.all(progressAndTotal.map(progressAndTotalRow => {
+                      if (progressAndTotalRow.deck_progress === progressAndTotalRow.total_cards) {
+                        return knex('users_decks')
+                          .where({deck_id: progressAndTotalRow.deck_id, user_id: progressAndTotalRow.user_id})
+                          .update({has_badge: true});
+                      }
+                    })
+                    );
+                  })
+              ));
+            })
+            .then(successfulUpdateResult => console.log('success', successfulUpdateResult))
+            .catch(err => console.log('error updating has_badge', err))
+            
         ))).then(()=>res.send('ok')).catch( err=> console.error(err) || res.status(500).send(err));
   });
 
