@@ -85,11 +85,13 @@ class DecksContainer extends Component {
     this.props.allDecks.forEach((deck) => {
       deck.cards.forEach((card) => {
         total++;
-        if (card.userAccuracy >= 50) {
+        if (card.high_score >= 80) {
           count++;
         }
       })
     });
+    console.log(count);
+    console.log(total);
     return (
       <div>
         <div style={{textAlign: 'center', margin: 0}}>
@@ -141,7 +143,7 @@ const mapDispatchToProps = dispatch => {
   // };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(DecksContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(DecksContainer);
 
 // export default VisibleDeckPage;
 

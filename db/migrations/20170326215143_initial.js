@@ -44,6 +44,7 @@ exports.up = function (knex, Promise) {
       table.json('male_pitch_data').nullable();
       table.string('female_voice', 500).nullable();
       table.json('female_pitch_data').nullable();
+      table.json('regression').nullable();
       table.integer('tone');
     }),
     knex.schema.createTableIfNotExists('decks_cards', function(table) {

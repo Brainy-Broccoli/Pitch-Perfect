@@ -2,6 +2,7 @@
 const cardMom = {
   character: '妈妈',
   IPA: 'mama',
+  female_pitch_data: '11234',
   pinyin: 'mama',
   translation: 'mom',
   userAccuracy: 85,        
@@ -100,7 +101,7 @@ const recentUserDecksInfo = [
 
 const initialState = {
   currentDeck: basicDeck,
-  // currentCard: basicDeck.cards[0],
+  currentCard: basicDeck.cards[0],
   currentCardIndex: 0,
   allDecks,
   recentUserDecksInfo

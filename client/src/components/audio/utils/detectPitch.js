@@ -1,6 +1,6 @@
-import * as Pitchfinder from 'pitchfinder';
+import Pitchfinder from 'pitchfinder';
 
-export const detectPitch = (blob, ctx) => 
+const detectPitch = (blob, ctx) => 
 
   new Promise( (resolve, reject) => {
 
@@ -18,7 +18,7 @@ export const detectPitch = (blob, ctx) =>
         .then( audioData => {
 
           const data = audioData.getChannelData(0);
-          const detection = [Pitchfinder.YIN(), Pitchfinder.AMDF()]; 
+          const detection = new Pitchfinder.AMDF(); 
 
           const config = {
             tempo: 1200,
@@ -26,11 +26,22 @@ export const detectPitch = (blob, ctx) =>
           };
 
           const frequencies = Pitchfinder.frequencies(detection, data, config); 
-          resolve(frequencies);
 
+          const frequenciesWithTimeData = frequencies.map( (freq, idx) => ({
+            freq: freq,
+            time: ( idx / ( (config.tempo / 60) * config.quantization) ),
+          }));
+          ctx.close();
+          resolve(frequenciesWithTimeData);
+
+        })
+        .catch( err => {
+          reject(err);
         });
-      };
+    };
 
-      fileReader.readAsArrayBuffer(blob);
+    fileReader.readAsArrayBuffer(blob);
+ 
+  });
 
-  };
+export default detectPitch;

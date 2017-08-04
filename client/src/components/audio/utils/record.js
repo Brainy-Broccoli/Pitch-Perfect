@@ -1,4 +1,6 @@
-const record = (ctx, callback) => 
+import detectPitch from './detectPitch';
+
+const record = (callback) => 
 
   navigator.mediaDevices.getUserMedia({audio: true})
     .then( stream => {
@@ -14,16 +16,15 @@ const record = (ctx, callback) =>
 
       mediaRecorder.onstop = () => {
         const blob = new Blob(buffer, { 'type': 'audio/ogg; codecs=opus' });
-        const fileReader = new FileReader();
-
-        fileReader.readAsArrayBuffer(blob);
-
-        fileReader.onloadend = () => {
-          const audioBuffer = fileReader.result; 
-          ctx.decodeAudioData(audioBuffer, callback);
-        };
+        detectPitch(blob)
+          .then( data => {
+            stream.getTracks().forEach(track => { track.stop(); });
+            callback({blob, data});
+          });
       };
 
       return mediaRecorder;
 
     });
+
+export default record;

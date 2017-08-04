@@ -32,8 +32,7 @@ class AudioGraph extends React.Component {
     this.recordedPitchData = [];
     this.recordedAudioData = [];
 
-    this.onSoundClick = this.onSoundClick.bind(this);
-    this.finishedPlaying = this.finishedPlaying.bind(this);
+    
     this.storage = [];
 
     this.source = null;

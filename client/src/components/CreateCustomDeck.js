@@ -18,7 +18,7 @@ class CreateCustomDeck extends Component {
       topic: '',
       image: '',
       badge: ''
-    }
+    };
   }
 
   componentDidMount() {
@@ -28,27 +28,27 @@ class CreateCustomDeck extends Component {
         console.log('API CARDS DATA', data.allCards);
         this.setState({
           allCards: data.allCards
-        })
-      })
+        });
+      });
   }
 
   selectCards(cards) {
     if (!this.state.created) {
       this.setState({
         newDeck: cards
-      })
+      });
     } else {
       this.setState({
         newDeck: cards,
         created: false
-      })
+      });
     }
   }
 
   generateDeck() {
     this.setState({
       created: true
-    })
+    });
   }
 
   createDeck() {
@@ -60,7 +60,7 @@ class CreateCustomDeck extends Component {
           return true;
         }
       }
-    })
+    });
     console.log('all Decks from store retrieved', this.props.allDecks);
     console.log('array of custom cards', customDeck);
 
@@ -75,8 +75,7 @@ class CreateCustomDeck extends Component {
       has_badge: false,
       cards: customDeck
       // total: customDeck.length
-    }
-
+    };
     // let decks = this.props.allDecks;
     // decks.push(createdDeck);
     // this.props.addDeck(createdDeck);

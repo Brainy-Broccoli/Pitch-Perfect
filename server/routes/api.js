@@ -31,27 +31,60 @@ router.route('/cards')
 
 router.route('/create-card')
   .post((req, res) => {
-    console.log('REQUEST BODY',req.body);
+    console.log('REQUEST BODY', typeof req.body.female_pitch_data);
     knex('cards').insert({
       translation: req.body.translation,
       character: req.body.character,
       pinyin: req.body.pinyin,
       IPA: req.body.IPA,
       female_voice: req.body.female_voice,
-      tone: req.body.tone
+      tone: req.body.tone,
+      female_pitch_data: JSON.stringify(req.body.female_pitch_data),
+      regression: JSON.stringify(req.body.regression),
     })
     .returning('id')
     .then(function(id) {
       console.log('first id', id);
       knex('users_cards').insert({
-        user_id:req.user.id,
-        card_id:id[0]
+        user_id: req.user.id,
+        card_id: id[0]
       })
       .then(
         res.status(201).send('Got it')
-      )
-    })
+      );
+    });
+  });
+
+router.route('/card/:id/soundData')
+  .put((req, res) => {
+    console.log('put request received');
+    const { soundData, regression } = req.body;
+    console.log(soundData, regression);
+    knex('cards')
+      .where({id: req.params.id})
+      .update({
+        female_pitch_data: JSON.stringify(soundData),
+        regression: JSON.stringify(regression)
+      })
+      .then(insertionResults => {
+        console.log('successful insertion', insertionResults);
+        res.sendStatus(201);
+      })
+      .catch(err => {
+        console.log('err updating cards table', err);
+        res.sendStatus(500);
+      });
   })
+  .get((req, res) => {
+    knex('cards').select('female_pitch_data', 'regression').where({id: req.params.id})
+      .then(pitchData => {
+        res.json(pitchData);
+      })
+      .catch(err => {
+        console.log('err retrieving pitch data for the card', err);
+        res.sendStatus(500);
+      });
+  });
 
 router.route('/create-custom-deck')
   .post((req, res) => {
@@ -168,6 +201,8 @@ router.route('/profileInfo')
                 translation: card.translation,
                 male_voice: card.male_voice,
                 female_voice: card.female_voice,
+                female_pitch_data: card.female_pitch_data,
+                regression: card.regression,
                 tone: card.tone,
                 high_score: card.high_score
               }));
@@ -291,13 +326,13 @@ router.route('/recentDecks')
   .post((req, res) => {
     const userID = req.user.id;
     const { deckDbID, timestamp } = req.body;
-    knex.select().from('users_recent_decks').where({deck_id: deckDbID})
+    knex.select().from('users_recent_decks').where({deck_id: deckDbID, user_id: userID})
       .then(existingDeckInfo => {
-        console.log('existingDeckInfo', existingDeckInfo);
-        console.log('deckDbID inside existingDeckInfo block', deckDbID);
+        // console.log('existingDeckInfo', existingDeckInfo);
+        // console.log('deckDbID inside existingDeckInfo block', deckDbID);
         // if that deck isn't already there, then make an insertion
         if (!existingDeckInfo.length) {
-          console.log('deck not found -- inserting into users_recent_decks');
+          // console.log('deck not found -- inserting into users_recent_decks');
           knex('users_recent_decks').insert({user_id: userID, deck_id: deckDbID, time_stamp: timestamp})
             .then(insertionInfo => {
               // now we need to take a look at how many rows are there -- if > 3, we need to delete the oldest
@@ -331,7 +366,7 @@ router.route('/recentDecks')
             });
         } else {
           // the deck was already there -- just update the timestamp
-          knex('users_recent_decks').where({deck_id: deckDbID}).update({time_stamp: timestamp})
+          knex('users_recent_decks').where({deck_id: deckDbID, user_id: userID}).update({time_stamp: timestamp})
             .then(successfulUpdateResult => {
               console.log('successful update');
               res.sendStatus(201);
@@ -352,6 +387,7 @@ router.route('/recentDecks')
 
 router.route('/card/:id')
   .post(middleware.auth.verify, (req, res) => {
+    console.log(req.body);
     const userID = req.user.id;
     const cardID = req.params.id;
     knex.select('high_score').from('users_cards')
@@ -387,7 +423,8 @@ router.route('/card/:id')
               })
               .then( average => Object.assign(deckCompletion, { average: average[0].avg }))
             )
-        ))).then( deckCompletions => Promise.all(deckCompletions.map( deck => 
+        ))).then( deckCompletions => 
+        Promise.all( deckCompletions.map( deck => 
           knex.from('users_decks')
             .where({
               user_id: userID,
@@ -401,8 +438,7 @@ router.route('/card/:id')
                 .where({user_id: userID})
                 .then( decks => Promise.all(decks.map( deck => knex.from('users_cards'))))
             )
-        )))
-      .then(()=>res.send('ok')).catch( err=> console.error(err) || res.status(500).send(err));
-  })
+        ))).then(()=>res.send('ok')).catch( err=> console.error(err) || res.status(500).send(err));
+  });
 
 module.exports = router;
