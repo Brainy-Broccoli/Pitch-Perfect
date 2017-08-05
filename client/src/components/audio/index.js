@@ -142,19 +142,19 @@ class AudioGraph extends React.Component {
     gqCtx.lineWidth = this.props.strokeWidth || 3;
     
     // Draws raw pitch data
-    gqCtx.strokeStyle = 'rgb(255, 0, 0)';
-    gqCtx.beginPath();
+    // gqCtx.strokeStyle = 'rgb(255, 0, 0)';
+    // gqCtx.beginPath();
 
-    const usedPixels = {};
+    // const usedPixels = {};
 
-    frequencyData.forEach( frequency => {
-      let px = Math.ceil( (frequency.time * 1000) / (maxTime / WIDTH));
-      if (!usedPixels[px]) {
-        gqCtx.lineTo(px, (frequency.freq ? HEIGHT - Math.ceil(frequency.freq * (HEIGHT / MAX_FREQ)) : HEIGHT));
-        usedPixels[px] = true;
-      }
-    });
-    gqCtx.stroke();
+    // frequencyData.forEach( frequency => {
+    //   let px = Math.ceil( (frequency.time * 1000) / (maxTime / WIDTH));
+    //   if (!usedPixels[px]) {
+    //     gqCtx.lineTo(px, (frequency.freq ? HEIGHT - Math.ceil(frequency.freq * (HEIGHT / MAX_FREQ)) : HEIGHT));
+    //     usedPixels[px] = true;
+    //   }
+    // });
+    // gqCtx.stroke();
 
     // Draws regression of user frequency data
     gqCtx.strokeStyle = 'rgb(127, 255, 0)';
